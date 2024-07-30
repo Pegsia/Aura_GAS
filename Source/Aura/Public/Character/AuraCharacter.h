@@ -17,6 +17,11 @@ class AURA_API AAuraCharacter : public AAuraCharacterBase
 public:
 	AAuraCharacter();
 
+	//~ Begin APawn Interface
+	virtual void PossessedBy(AController* NewController) override;
+	virtual void OnRep_PlayerState() override;
+	//~ End APawn Interface
+
 protected:
 	UPROPERTY(VisibleAnywhere, Category = "Component")
 	TObjectPtr<UCameraComponent> CameraComponent;
@@ -25,5 +30,8 @@ protected:
 	TObjectPtr<USpringArmComponent> SpringArmComponent;
 
 	UPROPERTY(EditAnywhere, Category = "Component")
-	FRotator AuraRotationRate;
+	FRotator AuraRotationRate{0.f, 400.f, 0.f};
+
+private:
+	void InitAbilityActorInfo();
 };

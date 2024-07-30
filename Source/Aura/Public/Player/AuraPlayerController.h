@@ -39,8 +39,8 @@ private:
 
 	void Move(const FInputActionValue& InputActionValue);
 
+	// Show Outline
 	void CursorTrace();
-
 	TScriptInterface<IEnemyInterface> LastActor;
 	TScriptInterface<IEnemyInterface> ThisActor;
 };
