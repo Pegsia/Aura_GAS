@@ -19,7 +19,10 @@ public class Aura : ModuleRules
         PublicIncludePaths.AddRange(new string[]
         {
             "Aura/Public/Character",
-        });
+			"Aura/Public/Game",
+			"Aura/Public/Interaction",
+			"Aura/Public/Player",
+		});
 
         PrivateDependencyModuleNames.AddRange(new string[] {  });
 
