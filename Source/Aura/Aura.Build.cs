@@ -32,7 +32,9 @@ public class Aura : ModuleRules
             "Aura/Public/Game",
             "Aura/Public/Interaction",
             "Aura/Public/Player",
-        });
+			"Aura/Public/UI/Widget",
+			"Aura/Public/UI/WidgetController",
+		});
 
         // Uncomment if you are using Slate UI
         // PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
