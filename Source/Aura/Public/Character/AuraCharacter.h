@@ -8,6 +8,7 @@
 
 class UCameraComponent;
 class USpringArmComponent;
+class AAuraHUD;
 
 UCLASS()
 class AURA_API AAuraCharacter : public AAuraCharacterBase

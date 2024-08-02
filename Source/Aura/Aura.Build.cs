@@ -32,6 +32,7 @@ public class Aura : ModuleRules
             "Aura/Public/Game",
             "Aura/Public/Interaction",
             "Aura/Public/Player",
+			"Aura/Public/UI/HUD",
 			"Aura/Public/UI/Widget",
 			"Aura/Public/UI/WidgetController",
 		});
