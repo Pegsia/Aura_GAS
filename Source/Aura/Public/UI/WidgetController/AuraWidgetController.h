@@ -9,8 +9,6 @@
 class UAbilitySystemComponent;
 class UAttributeSet;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeChangedSignature, float, NewValue);
-
 USTRUCT(BlueprintType)
 struct FWidgetControllerParams
 {
@@ -43,13 +41,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetWidgetControllerParams(const FWidgetControllerParams& WCParams);
 
-	UPROPERTY(BlueprintAssignable)
-	FOnAttributeChangedSignature OnHealthChanged;
-
-	UPROPERTY(BlueprintAssignable)
-	FOnAttributeChangedSignature OnMaxHealthChanged;
-
 	virtual void BroadcastInitialValue();
+	virtual void BindCallBacksToDependencies();
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "WidgetController")
 	TObjectPtr<APlayerController> PlayerController;

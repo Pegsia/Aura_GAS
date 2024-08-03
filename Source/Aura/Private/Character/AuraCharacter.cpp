@@ -57,6 +57,7 @@ void AAuraCharacter::InitAbilityActorInfo()
 	AbilitySystemComponent = AuraPlayerState->GetAbilitySystemComponent();
 	AttributeSet = AuraPlayerState->GetAttributeSet();
 
+	// Init AuraHUD:Include UAuraWideget(WBP_Overlay) && UAuraWidgetController(BP_OverlayWidgetController)
 	if (AAuraPlayerController* AuraPlayerController = GetController<AAuraPlayerController>())
 	{
 		if (AAuraHUD* AuraHUD = AuraPlayerController->GetHUD<AAuraHUD>())
