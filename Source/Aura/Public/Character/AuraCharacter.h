@@ -34,5 +34,7 @@ protected:
 	FRotator AuraRotationRate{0.f, 400.f, 0.f};
 
 private:
-	void InitAbilityActorInfo();
+	//~ Begin AuraCharacterBase Interface
+	virtual void InitAbilityActorInfo() override;
+	//~ End AuraCharacterBase Interface
 };

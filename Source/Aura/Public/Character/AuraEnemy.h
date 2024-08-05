@@ -21,5 +21,9 @@ public:
 	//~ End IEnemyInterface
 
 protected:
+	//~ Begin AuraCharacterBase Interface
+	virtual void InitAbilityActorInfo() override;
+	//~ End AuraCharacterBase Interface
+
 	virtual void BeginPlay() override;
 };
