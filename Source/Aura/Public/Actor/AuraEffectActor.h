@@ -39,6 +39,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Apllied Effect")
 	bool bDestroyOnEffectRemoval = false;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Apllied Effect")
+	float ActorLevel = 1.f;
+
 	UFUNCTION(BlueprintCallable)
 	void OnBeginOverlap(AActor* TargetActor);
 
