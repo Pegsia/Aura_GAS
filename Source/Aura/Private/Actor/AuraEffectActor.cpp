@@ -74,9 +74,9 @@ void AAuraEffectActor::OnEndOverlap(AActor* TargetActor)
 	}
 
 	// Remove Infinite Effect
-	TArray<FActiveGameplayEffectHandle> HandlesToRemove;
 	if (InfiniteEffectRemovalPolicy == EEffectRemovalPolicy::RemoveOnEndOverlap)
 	{
+		TArray<FActiveGameplayEffectHandle> HandlesToRemove;
 		UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
 		if (!IsValid(TargetASC)) return;
 		// 通过ASC寻找当前Actor的FActiveGameplayEffectHandle
