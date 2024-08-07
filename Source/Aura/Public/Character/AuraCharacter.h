@@ -35,6 +35,6 @@ protected:
 
 private:
 	//~ Begin AuraCharacterBase Interface
-	virtual void InitAbilityActorInfo() override;
+	virtual void InitialAbilityActorInfo() override;
 	//~ End AuraCharacterBase Interface
 };

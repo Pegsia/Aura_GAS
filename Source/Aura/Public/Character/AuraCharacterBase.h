@@ -9,6 +9,7 @@
 
 class UAbilitySystemComponent;
 class UAttributeSet;
+class UGameplayEffect;
 
 UCLASS(Abstract)
 class AURA_API AAuraCharacterBase : public ACharacter, public IAbilitySystemInterface
@@ -32,11 +33,19 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Combat")
 	FName WeaponSocketName{"WeaponHandSocket"};
 
+	// Initial Ability Actor Info(PC, PS, ASC, AS)
 	UPROPERTY()
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 
 	UPROPERTY()
 	TObjectPtr<UAttributeSet> AttributeSet;
 
-	virtual void InitAbilityActorInfo();
+	virtual void InitialAbilityActorInfo();
+
+	// Init Primary Attributes
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attribute")
+	TSubclassOf<UGameplayEffect> DefaultPrimaryAttribute;
+
+	void InitialPrimaryAttributes();
+	
 };

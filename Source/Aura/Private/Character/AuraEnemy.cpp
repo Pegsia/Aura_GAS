@@ -22,10 +22,10 @@ void AAuraEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 
-	InitAbilityActorInfo();
+	InitialAbilityActorInfo();
 }
 
-void AAuraEnemy::InitAbilityActorInfo()
+void AAuraEnemy::InitialAbilityActorInfo()
 {
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();

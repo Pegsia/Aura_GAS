@@ -38,7 +38,7 @@ void AAuraCharacter::PossessedBy(AController* NewController)
 	Super::PossessedBy(NewController);
 
 	// Init Ability Actor Info for the Server
-	InitAbilityActorInfo();
+	InitialAbilityActorInfo();
 	
 }
 
@@ -47,10 +47,10 @@ void AAuraCharacter::OnRep_PlayerState()
 	Super::OnRep_PlayerState();
 
 	// Init Ability Actor Info for the Client
-	InitAbilityActorInfo();
+	InitialAbilityActorInfo();
 }
 
-void AAuraCharacter::InitAbilityActorInfo()
+void AAuraCharacter::InitialAbilityActorInfo()
 {
 	AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
 	check(AuraPlayerState);
@@ -59,6 +59,8 @@ void AAuraCharacter::InitAbilityActorInfo()
 
 	AbilitySystemComponent = AuraPlayerState->GetAbilitySystemComponent();
 	AttributeSet = AuraPlayerState->GetAttributeSet();
+
+	InitialPrimaryAttributes(); // 可以只在Server端调用，因为所有变量都是Replicated的，而且ASC复制模式为Mixed
 
 	// Init AuraHUD:Include UAuraWideget(WBP_Overlay) && UAuraWidgetController(BP_OverlayWidgetController)
 	if (AAuraPlayerController* AuraPlayerController = GetController<AAuraPlayerController>())
