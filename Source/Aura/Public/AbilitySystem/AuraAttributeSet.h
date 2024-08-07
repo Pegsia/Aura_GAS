@@ -57,6 +57,7 @@ public:
 	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
 	//~ End UAttributeSet Interface
 
+	// Vital Attributes
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = "OnRep_Health", Category = "Vital Attributes")
 	FGameplayAttributeData Health;
 
@@ -69,10 +70,25 @@ public:
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = "OnRep_MaxMana", Category = "Vital Attributes")
 	FGameplayAttributeData MaxMana;
 	
+	// Primary Attributes
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = "OnRep_Strength", Category = "Primary Attributes")
+	FGameplayAttributeData Strength;
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = "OnRep_Intelligence", Category = "Primary Attributes")
+	FGameplayAttributeData Intelligence;
+	
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = "OnRep_Resilience", Category = "Primary Attributes")
+	FGameplayAttributeData Resilience;
+	
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = "OnRep_Vigor", Category = "Primary Attributes")
+	FGameplayAttributeData Vigor;
+
 private:
+	// Store Effect Properties when a GameplayEffect is applied
 	void SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props) const;
 
 public:
+	// Vital Attributes
 	UFUNCTION()
 	void OnRep_Health(const FGameplayAttributeData& OldHealth) const;
 	UFUNCTION()
@@ -82,8 +98,25 @@ public:
 	UFUNCTION()
 	void OnRep_MaxMana(const FGameplayAttributeData& OldMaxMana) const;
 
+	// Primary Attributes
+	UFUNCTION()
+	void OnRep_Strength(const FGameplayAttributeData& OldStrength) const;
+	UFUNCTION()
+	void OnRep_Intelligence(const FGameplayAttributeData& OldIntelligence) const;
+	UFUNCTION()
+	void OnRep_Resilience(const FGameplayAttributeData& OldResilience) const;
+	UFUNCTION()
+	void OnRep_Vigor(const FGameplayAttributeData& OldVigor) const;
+
+	// Vital Attributes
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, Health);
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, MaxHealth);
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, Mana);
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, MaxMana);
+
+	// Primary Attributes
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, Strength);
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, Intelligence);
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, Resilience);
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, Vigor);
 };
