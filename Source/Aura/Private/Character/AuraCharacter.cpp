@@ -54,15 +54,22 @@ void AAuraCharacter::InitialAbilityActorInfo()
 {
 	AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
 	check(AuraPlayerState);
-	AuraPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(AuraPlayerState, this);
-	Cast<UAuraAbilitySystemComponent>(AuraPlayerState->GetAbilitySystemComponent())->AbilityActorInfoSet();
 
+	// Init ASC, AS
 	AbilitySystemComponent = AuraPlayerState->GetAbilitySystemComponent();
+	AbilitySystemComponent->InitAbilityActorInfo(AuraPlayerState, this);
+	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
 	AttributeSet = AuraPlayerState->GetAttributeSet();
 
-	InitialPrimaryAttributes(); // 可以只在Server端调用，因为所有变量都是Replicated的，而且ASC复制模式为Mixed
+	// Init Attribute through GameplayEffects
+	InitialDefaultAttributes(); // 可以只在Server端调用，因为所有变量都是Replicated的，而且ASC复制模式为Mixed
 
-	// Init AuraHUD:Include UAuraWideget(WBP_Overlay) && UAuraWidgetController(BP_OverlayWidgetController)
+	/**
+	 * Init AuraHUD
+	 *  - Set UAuraWideget(WBP_Overlay) && UAuraWidgetController(BP_OverlayWidgetController)
+	 *  - Bind Call Backs through WidgetController
+	 *	- Broadcast Init Attributes
+	 */ 
 	if (AAuraPlayerController* AuraPlayerController = GetController<AAuraPlayerController>())
 	{
 		if (AAuraHUD* AuraHUD = AuraPlayerController->GetHUD<AAuraHUD>())
@@ -73,4 +80,9 @@ void AAuraCharacter::InitialAbilityActorInfo()
 	
 }
 
-
+int32 AAuraCharacter::GetPlayerLevel()
+{
+	const AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
+	check(AuraPlayerState);
+	return AuraPlayerState->GetPlayerLevel();
+}

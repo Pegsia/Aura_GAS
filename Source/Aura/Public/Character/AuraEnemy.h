@@ -20,10 +20,19 @@ public:
 	virtual void UnHighLightActor() override;
 	//~ End IEnemyInterface
 
+	//~ Begin ICombatInterface
+	virtual int32 GetPlayerLevel() override { return Level; }
+	//~ End ICombatInterface
+
 protected:
 	//~ Begin AuraCharacterBase Interface
 	virtual void InitialAbilityActorInfo() override;
 	//~ End AuraCharacterBase Interface
 
 	virtual void BeginPlay() override;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character Class Defaluts")
+	int32 Level;
+private:
+	
 };

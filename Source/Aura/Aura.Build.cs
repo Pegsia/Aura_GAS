@@ -27,6 +27,7 @@ public class Aura : ModuleRules
         PublicIncludePaths.AddRange(new string[]
         {
             "Aura/Public/AbilitySystem",
+			"Aura/Public/AbilitySystem/ModMagCalc",
 			"Aura/Public/Actor",
 			"Aura/Public/Character",
             "Aura/Public/Game",
