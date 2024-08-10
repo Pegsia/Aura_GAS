@@ -13,6 +13,9 @@ GAMEPLAYATTRIBUTE_VALUE_GETTER(PropertyName) \
 GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) \
 GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
 
+template<class T>
+using TStaticFuncPtr = typename TBaseStaticDelegateInstance<T, FDefaultDelegateUserPolicy>::FFuncPtr;
+
 /**
  * struct stores useful properties in PostGameplayEffectExecute
  */
@@ -54,6 +57,9 @@ class AURA_API UAuraAttributeSet : public UAttributeSet
 public:
 	UAuraAttributeSet();
 
+	// 其他实现方法见最后
+	TMap<FGameplayTag, TStaticFuncPtr<FGameplayAttribute()>> TagsToAttributesFuncPtr;
+	
 	//~ Begin UAttributeSet Interface
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
 	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
@@ -118,10 +124,10 @@ public:
 	FGameplayAttributeData CriticalHitResistance;
 
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = "OnRep_HealthReneration", Category = "Secondary Attributes")
-	FGameplayAttributeData HealthReneration;
+	FGameplayAttributeData HealthRegeneration;
 
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = "OnRep_ManaRegenration", Category = "Secondary Attributes")
-	FGameplayAttributeData ManaRegenration;
+	FGameplayAttributeData ManaRegeneration;
 
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = "OnRep_MaxHealth", Category = "Secondary Attributes")
 	FGameplayAttributeData MaxHealth;
@@ -198,8 +204,45 @@ public:
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, CriticalHitChance);
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, CriticalHitDamage);
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, CriticalHitResistance);
-	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, HealthReneration);
-	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, ManaRegenration);
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, HealthRegeneration);
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, ManaRegeneration);
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, MaxHealth);
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, MaxMana);
 };
+
+/**
+*	实现函数指针的几种方法
+*	1. Delegate
+*	DECLARE_DELEGATE_RetVal(FGameplayAttribute, FAttributeSignature)
+*	TMap<FGameplayTag, FAttributeSignature> TagsToAttributes;
+* 
+*	Delegate 也是存储C++函数指针，可以不用UE的Delegate包装
+*	FAttributeSignature StrengthDelegate;
+*	StrengthDelegate.BindStatic(GetStrengthAttribute);
+*	TagsToAttributes.Add(GameplayTags.Attributes_Primary_Strength, StrengthDelegate);
+* 
+*	2. UE的FuncPtr
+*	TMap<FGameplayTag, TBaseStaticDelegateInstance<FGameplayAttribute(), FDefaultDelegateUserPolicy>::FFuncPtr> TagsToAttributes;
+*	
+*	3. Raw C++的FuncPtr
+*	TMap<FGameplayTag, FGameplayAttribute(*)()> TagsToAttributesFunc;
+*  
+*	4. 重命名的指针种类，注意按照UE命名标准，需要在类型前加入前缀，如这里的F
+*	typedef TBaseStaticDelegateInstance<FGameplayAttribute(), FDefaultDelegateUserPolicy>::FFuncPtr FAttributeFuncPtr;
+*	TMap<FGameplayTag, FAttributeFuncPtr> TagsToAttributesFunc;
+*  
+*	5. Modern C++的模板重命名，因为是模板这里前缀选择T
+*	template<class T>
+*	using TStaticFuncPtr = typename TBaseStaticDelegateInstance<T, FDefaultDelegateUserPolicy>::FFuncPtr;
+*	TMap<FGameplayTag, TStaticFuncPtr<FGameplayAttribute()>> TagsToAttributesFuncPtr;
+* 
+*	其他类型举例
+*	TStaticFuncPtr<float(int32, float, double)> RandomFunctionPtr;
+*	static float RandomFunction(int32 I, float f, double d);
+* 
+*	RandomFunctionPtr = RandomFunction;
+*	float F = RandomFunctionPtr(1, 2.f, 3.f);
+* 
+*	float(*RawFuncPtr)(int32, float, double) = RandomFunction;
+*	float F = RawFuncPtr(1, 2.f, 3.f);
+*/
