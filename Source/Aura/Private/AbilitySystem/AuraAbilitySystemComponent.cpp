@@ -17,3 +17,13 @@ void UAuraAbilitySystemComponent::OnEffectApplied(UAbilitySystemComponent* Abili
 
 	EffectAssetTagsDelegate.Broadcast(AssetTagContainer);
 }
+
+void UAuraAbilitySystemComponent::AddCharacterStatrupAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupAbilities)
+{
+	for (TSubclassOf<UGameplayAbility> AbilityClass : StartupAbilities)
+	{
+		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
+		//GiveAbility(AbilitySpec);
+		GiveAbilityAndActivateOnce(AbilitySpec);
+	}
+}

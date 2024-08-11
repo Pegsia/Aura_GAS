@@ -14,10 +14,14 @@ class AURA_API UAuraAbilitySystemComponent : public UAbilitySystemComponent
 	GENERATED_BODY()
 	
 public:
-	void AbilityActorInfoSet();
-
 	FEffectAssetTagsDelegate EffectAssetTagsDelegate;
-protected:
+	
+	void AbilityActorInfoSet();
+	
+	void AddCharacterStatrupAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupAbilities);
 
+protected:
 	void OnEffectApplied(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveEffectHandle);
+
+	
 };

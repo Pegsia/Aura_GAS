@@ -2,7 +2,7 @@
 
 
 #include "AuraCharacterBase.h"
-#include "AbilitySystemComponent.h"
+#include "AuraAbilitySystemComponent.h"
 
 AAuraCharacterBase::AAuraCharacterBase()
 {
@@ -40,6 +40,13 @@ void AAuraCharacterBase::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> Gameplay
 	EffectContext.AddSourceObject(this);
 	const FGameplayEffectSpecHandle EffectSpecHandle = TargetASC->MakeOutgoingSpec(GameplayEffectClass, Level, EffectContext);
 	TargetASC->ApplyGameplayEffectSpecToTarget(*EffectSpecHandle.Data.Get(), TargetASC);
+}
+
+void AAuraCharacterBase::InitStartupAbilities()
+{
+	if (!HasAuthority()) return;
+	UAuraAbilitySystemComponent* AuraASC = CastChecked<UAuraAbilitySystemComponent>(GetAbilitySystemComponent());
+	AuraASC->AddCharacterStatrupAbilities(StartupAbilities);
 }
 
 void AAuraCharacterBase::InitialAbilityActorInfo()

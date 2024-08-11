@@ -9,7 +9,7 @@
 
 UOverlayWidgetController* UAuraAbilitySystemLibrary::GetOverlayWidgetController(const UObject* WorldContextObject)
 {
-	
+	// Widget Only exist on clients, PC is the local controlled controller
 	if (APlayerController* PC = UGameplayStatics::GetPlayerController(WorldContextObject, 0))
 	{
 		if (AAuraHUD* AuraHUD = PC->GetHUD<AAuraHUD>())
