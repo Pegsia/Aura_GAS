@@ -32,6 +32,7 @@ class AURA_API UAuraInputConfig : public UDataAsset
 public:
 	const UInputAction* FindAbilityInputActionByTag(const FGameplayTag& InputTag, bool bLogNotFound = false) const;
 
+	// AuraInputComponent
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TArray<FAuraInputAction> AbilityInputActions;
 };

@@ -12,6 +12,8 @@ class UInputMappingContext;
 class UInputAction;
 struct FInputActionValue;
 class UAuraInputConfig;
+class UAuraAbilitySystemComponent;
+class USplineComponent;
 
 UCLASS()
 class AURA_API AAuraPlayerController : public APlayerController
@@ -41,15 +43,39 @@ private:
 
 	void Move(const FInputActionValue& InputActionValue);
 
-	// Show Outline
+	// Show Enemy Outline
+	FHitResult CursorHit;
 	void CursorTrace();
-	TScriptInterface<IEnemyInterface> LastActor;
-	TScriptInterface<IEnemyInterface> ThisActor;
+	TScriptInterface<IEnemyInterface> LastEnemyActor;
+	TScriptInterface<IEnemyInterface> ThisEnemyActor;
 
+	// Input CallBacks
 	void AbilityInputTagPressed(FGameplayTag InputTag);
 	void AbilityInputTagReleased(FGameplayTag InputTag);
 	void AbilityInputTagHeld(FGameplayTag InputTag);
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
-	TObjectPtr<UAuraInputConfig> InputConfig;
+	TObjectPtr<UAuraInputConfig> InputConfig; // FAuraInputAction: UInputAcion, FGameplayTag
+
+	UPROPERTY()
+	TObjectPtr<UAuraAbilitySystemComponent> AuraAbilitySystemComponent;
+
+	UAuraAbilitySystemComponent* GetAuraASC();
+
+	// Click To Move
+	FVector CachedDestination = FVector::ZeroVector;
+	float FollowTime = 0.f;
+	float ShortPressThreshold = 0.5f;
+	float bTargeting = false;
+
+	// Auto Run
+	bool bAutoRunning = false;
+
+	UPROPERTY(EditDefaultsOnly)
+	float AutoRunAcceptanceRadius = 30.f;
+
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<USplineComponent> SplineComponent;	
+
+	void AutoRun();
 };

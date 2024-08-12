@@ -18,10 +18,16 @@ public:
 	
 	void AbilityActorInfoSet();
 	
+	// Init Ability
 	void AddCharacterStatrupAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupAbilities);
 
+	// Input Ability
+	void AbilityInputHeld(const FGameplayTag& InputTag);
+	void AbilityInputReleased(const FGameplayTag& InputTag);
+
 protected:
-	void OnEffectApplied(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveEffectHandle);
+	UFUNCTION(Client, Reliable)
+	void ClientEffectApplied(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveEffectHandle);
 
 	
 };

@@ -9,7 +9,6 @@
 
 class UOverlayWidgetController;
 class UAttributeMenuWidgetController;
-//struct FWidgetControllerParams;
 /**
  * 
  */
@@ -24,7 +23,4 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|WidgetController")
 	static UAttributeMenuWidgetController* GetAttributeMenuWidgetController(const UObject* WorldContextObject);
-
-private:
-	//FWidgetControllerParams& GetWidgetControllerParams(const UObject* WorldContextObject);
 };
