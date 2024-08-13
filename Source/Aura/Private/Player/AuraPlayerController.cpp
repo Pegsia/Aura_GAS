@@ -176,6 +176,7 @@ void AAuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag) // tick
 
 void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
 {
+	bAutoRunning = false;
 	const FVector2D InputActionVector = InputActionValue.Get<FVector2D>();
 
 	const FRotator YawRotation(0.f, GetControlRotation().Yaw, 0.f);

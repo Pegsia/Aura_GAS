@@ -29,12 +29,20 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	// Combat
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
 
 	UPROPERTY(VisibleAnywhere, Category = "Combat")
 	FName WeaponSocketName{"WeaponHandSocket"};
 
+	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	FName WeaponTipSocketName;  // Location to spawn projectiles
+
+	//~ Begin ICombatInterface
+	virtual FVector GetCombatSocketLocation() override;
+	//~ End ICombatInterface
+	
 	// Initial Ability Actor Info(PC, PS, ASC, AS)
 	UPROPERTY()
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;

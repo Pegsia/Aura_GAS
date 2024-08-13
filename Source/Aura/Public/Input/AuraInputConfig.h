@@ -22,7 +22,7 @@ struct FAuraInputAction
 };
 
 /**
- * 
+ * Associates Input Tags to Input Actions
  */
 UCLASS()
 class AURA_API UAuraInputConfig : public UDataAsset

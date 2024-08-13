@@ -33,6 +33,7 @@ void UAuraAbilitySystemComponent::AddCharacterStatrupAbilities(const TArray<TSub
 	}
 }
 
+// 判断该InputTag下有无可以启动的GA, Called by AuraPlayerController
 void UAuraAbilitySystemComponent::AbilityInputHeld(const FGameplayTag& InputTag)
 {
 	if (!InputTag.IsValid()) return;
@@ -42,7 +43,7 @@ void UAuraAbilitySystemComponent::AbilityInputHeld(const FGameplayTag& InputTag)
 		if (AbilitySpec.DynamicAbilityTags.HasTagExact(InputTag))
 		{
 			AbilitySpecInputPressed(AbilitySpec);
-			if (!AbilitySpec.IsActive())
+			if (!AbilitySpec.IsActive()) //Do Not Active it again
 			{
 				TryActivateAbility(AbilitySpec.Handle);
 			}
@@ -50,6 +51,7 @@ void UAuraAbilitySystemComponent::AbilityInputHeld(const FGameplayTag& InputTag)
 	}
 }
 
+// 判断该InputTag下有无可以启动的GA
 void UAuraAbilitySystemComponent::AbilityInputReleased(const FGameplayTag& InputTag)
 {
 	if (!InputTag.IsValid()) return;

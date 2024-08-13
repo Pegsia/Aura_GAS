@@ -21,12 +21,13 @@ public:
 	void BindAbilityActions(const UAuraInputConfig* InputConfig, UserClass* Object, PressedFuncType PressedFunc, ReleasedFuncType ReleasedFunc, HeldFuncType HeldFUnc);
 };
 
+//为所有InputAction绑定三种行为
 template<class UserClass, typename PressedFuncType, typename ReleasedFuncType, typename HeldFuncType>
 void UAuraInputComponent::BindAbilityActions(const UAuraInputConfig* InputConfig, UserClass* Object, PressedFuncType PressedFunc, ReleasedFuncType ReleasedFunc, HeldFuncType HeldFUnc)
 {
 	check(InputConfig);
 
-	for (const FAuraInputAction& Action : InputConfig->AbilityInputActions)
+	for (const FAuraInputAction& Action : InputConfig->AbilityInputActions) 
 	{
 		if (Action.InputAction && Action.InputTag.IsValid())
 		{
