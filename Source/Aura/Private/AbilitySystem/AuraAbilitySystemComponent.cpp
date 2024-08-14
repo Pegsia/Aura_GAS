@@ -33,6 +33,7 @@ void UAuraAbilitySystemComponent::AddCharacterStatrupAbilities(const TArray<TSub
 	}
 }
 
+// UAbilitySystemComponent provides RPC replication for the actual activation of abilities
 // 判断该InputTag下有无可以启动的GA, Called by AuraPlayerController
 void UAuraAbilitySystemComponent::AbilityInputHeld(const FGameplayTag& InputTag)
 {
