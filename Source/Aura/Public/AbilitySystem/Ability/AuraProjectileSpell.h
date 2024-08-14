@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystem/Ability/AuraGameplayAbility.h"
-#include "../Plugins/Runtime/GameplayAbilities/Source/GameplayAbilities/Public/Abilities/GameplayAbilityTypes.h"
 #include "AuraProjectileSpell.generated.h"
 
 class AAuraProjectile;
@@ -21,9 +20,6 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	void SpawnFireBolt();
-
-	UFUNCTION()
-	void SpawnFireBolt2(FGameplayEventData Payload);
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Projectile")
 	TSubclassOf<AAuraProjectile> ProjectileClass;
