@@ -9,6 +9,7 @@
 class UCameraComponent;
 class USpringArmComponent;
 class AAuraHUD;
+class UMotionWarpingComponent;
 
 UCLASS()
 class AURA_API AAuraCharacter : public AAuraCharacterBase
@@ -33,6 +34,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Category = "Component")
 	TObjectPtr<USpringArmComponent> SpringArmComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
+	TObjectPtr<UMotionWarpingComponent> MotionWarpingComponent;
 
 	UPROPERTY(EditAnywhere, Category = "Component")
 	FRotator AuraRotationRate{0.f, 400.f, 0.f};

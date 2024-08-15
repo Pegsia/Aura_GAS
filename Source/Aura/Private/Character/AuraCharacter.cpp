@@ -11,6 +11,7 @@
 #include "AuraHUD.h"
 #include "AuraPlayerController.h"
 #include "AuraAbilitySystemComponent.h"
+#include "MotionWarpingComponent.h"
 
 AAuraCharacter::AAuraCharacter()
 {
@@ -31,6 +32,8 @@ AAuraCharacter::AAuraCharacter()
 	SpringArmComponent->bInheritPitch = false;
 	SpringArmComponent->bInheritRoll = false;
 	SpringArmComponent->bInheritYaw = false;
+
+	MotionWarpingComponent = CreateDefaultSubobject<UMotionWarpingComponent>("MotionWarpingComponent");
 }
 
 void AAuraCharacter::PossessedBy(AController* NewController)
@@ -76,8 +79,7 @@ void AAuraCharacter::InitialAbilityActorInfo()
 		{
 			AuraHUD->InitOverlay(AuraPlayerController, AuraPlayerState, AbilitySystemComponent, AttributeSet);
 		}
-	}
-	
+	}	
 }
 
 int32 AAuraCharacter::GetPlayerLevel()
@@ -86,3 +88,4 @@ int32 AAuraCharacter::GetPlayerLevel()
 	check(AuraPlayerState);
 	return AuraPlayerState->GetPlayerLevel();
 }
+

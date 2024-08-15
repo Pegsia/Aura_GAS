@@ -20,8 +20,10 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	void SpawnFireBolt(const FVector& ProjectileTargetLocation);
-private:
+
 	UPROPERTY(EditDefaultsOnly, Category = "Projectile")
 	TSubclassOf<AAuraProjectile> ProjectileClass;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Projectile")
+	TSubclassOf<UGameplayEffect> DamageEffectClass;
 };

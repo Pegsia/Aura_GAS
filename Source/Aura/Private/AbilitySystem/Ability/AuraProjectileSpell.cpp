@@ -5,6 +5,8 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "CombatInterface.h"
 #include "AuraProjectile.h"
+#include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystemComponent.h"
 
 void UAuraProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
@@ -21,7 +23,8 @@ void UAuraProjectileSpell::SpawnFireBolt(const FVector& ProjectileTargetLocation
 	if (CombatInterface)
 	{
 		const FVector SpawnLocation = CombatInterface->GetCombatSocketLocation();
-		const FRotator SpawnRotation = (ProjectileTargetLocation - SpawnLocation).Rotation();
+		FRotator SpawnRotation = (ProjectileTargetLocation - SpawnLocation).Rotation();
+		SpawnRotation.Pitch = 0.f;
 
 		FTransform SpawnTransform;
 		SpawnTransform.SetLocation(SpawnLocation);
@@ -35,7 +38,9 @@ void UAuraProjectileSpell::SpawnFireBolt(const FVector& ProjectileTargetLocation
 			ESpawnActorCollisionHandlingMethod::AlwaysSpawn
 			);
 
-		// TODO: Give the projectile some GE
+		const UAbilitySystemComponent* SourceASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo());
+		Projectile->DamageEffectSpecHandle = SourceASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), SourceASC->MakeEffectContext());
+
 		Projectile->FinishSpawning(SpawnTransform);
 	}
 }

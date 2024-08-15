@@ -13,7 +13,7 @@ UTargetDataUnderMouse* UTargetDataUnderMouse::CreateTargetDataUnderMouse(UGamepl
 
 void UTargetDataUnderMouse::Activate()
 {
-	const bool bLocallyControlled = Ability->IsLocallyControlled();
+	const bool bLocallyControlled = Ability->GetCurrentActorInfo()->IsLocallyControlled();
 	if (bLocallyControlled)
 	{
 		SendMouseTargetData();

@@ -117,7 +117,7 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 
 	if (GetAuraASC()) GetAuraASC()->AbilityInputReleased(InputTag);
 
-	if (!bTargeting || !bShiftDown) // Not Targeting 
+	if (!bTargeting && !bShiftDown) // Not Targeting 
 	{
 		// Auto Running
 		const APawn* ControlledPawn = GetPawn();
