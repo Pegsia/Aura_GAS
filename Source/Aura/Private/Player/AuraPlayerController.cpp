@@ -89,6 +89,8 @@ void AAuraPlayerController::SetupInputComponent()
 
 	UAuraInputComponent* AuraInputComponent = CastChecked<UAuraInputComponent>(InputComponent);
 	AuraInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AAuraPlayerController::Move);
+	AuraInputComponent->BindAction(ShiftAction, ETriggerEvent::Started, this, &AAuraPlayerController::ShiftPressed);
+	AuraInputComponent->BindAction(ShiftAction, ETriggerEvent::Completed, this, &AAuraPlayerController::ShiftReleased);
 	AuraInputComponent->BindAbilityActions(InputConfig, this, &ThisClass::AbilityInputTagPressed, &ThisClass::AbilityInputTagReleased, &ThisClass::AbilityInputTagHeld);
 }
 
@@ -113,12 +115,11 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 		return;
 	}
 
-	if (bTargeting) // Targeting 
+	if (GetAuraASC()) GetAuraASC()->AbilityInputReleased(InputTag);
+
+	if (!bTargeting || !bShiftDown) // Not Targeting 
 	{
-		if (GetAuraASC()) GetAuraASC()->AbilityInputReleased(InputTag);
-	}
-	else
-	{
+		// Auto Running
 		const APawn* ControlledPawn = GetPawn();
 		if (FollowTime <= ShortPressThreshold && ControlledPawn)
 		{
@@ -126,14 +127,14 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 			{
 				SplineComponent->ClearSplinePoints();
 				for (const FVector& PointLocation : NavPath->PathPoints)
-				{					
+				{
 					SplineComponent->AddSplinePoint(PointLocation, ESplineCoordinateSpace::World);
 					//DrawDebugSphere(GetWorld(), PointLocation, 16.f, 8, FColor::Cyan, false, 3.f);
 				}
 				if (NavPath->PathPoints.Num() > 0)
 				{
 					CachedDestination = NavPath->PathPoints.Last(); // 将终点设置为path最后的点，确保该点可达
-				}				
+				}
 				bAutoRunning = true;
 			}
 		}
@@ -151,12 +152,13 @@ void AAuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag) // tick
 		return;
 	}
 
-	if (bTargeting) // Targeting 
+	if (bTargeting || bShiftDown) // Targeting || ShiftDown
 	{
 		if (GetAuraASC()) GetAuraASC()->AbilityInputHeld(InputTag);
 	}
-	else           // Moving
+	else           
 	{
+		// Continue Moving
 		FollowTime += GetWorld()->GetDeltaSeconds();
 
 		if (CursorHit.bBlockingHit)

@@ -35,6 +35,8 @@ protected:
 	//~ End APlayerController Interface
 
 private:
+
+	// Input Context
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputMappingContext> AuraContext;
 
@@ -42,6 +44,13 @@ private:
 	TObjectPtr<UInputAction> MoveAction;
 
 	void Move(const FInputActionValue& InputActionValue);
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<UInputAction> ShiftAction;
+
+	bool bShiftDown = false;
+	void ShiftPressed() { bShiftDown = true; }
+	void ShiftReleased() { bShiftDown = false; }
 
 	// Show Enemy Outline
 	FHitResult CursorHit;

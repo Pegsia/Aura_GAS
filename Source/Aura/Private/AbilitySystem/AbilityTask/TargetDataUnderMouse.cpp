@@ -20,10 +20,24 @@ void UTargetDataUnderMouse::Activate()
 	}
 	else
 	{
-		// TODO: We are on the server, listen for target data
-	}
-
-	
+		// We are on the server, listen for target data
+		const FGameplayAbilitySpecHandle SpecHandle = GetAbilitySpecHandle();
+		const FPredictionKey ActivationPredictionKey = GetActivationPredictionKey();
+		
+		// 绑定CallBack
+		// /** Maps from an ability spec to the target data. Used to track replicated data and callbacks */
+		// AbilityTargetDataMap.FindOrAdd(FGameplayAbilitySpecHandleAndPredictionKey(AbilityHandle, AbilityOriginalPredictionKey))->TargetSetDelegate;
+		AbilitySystemComponent.Get()->AbilityTargetDataSetDelegate(SpecHandle, ActivationPredictionKey).AddUObject(this, &UTargetDataUnderMouse::OnTargetDataReplicatedCallBack);
+		
+		// 尝试收听
+		// TSharedPtr<FAbilityReplicatedDataCache> CachedData = AbilityTargetDataMap.Find(FGameplayAbilitySpecHandleAndPredictionKey(AbilityHandle, AbilityOriginalPredictionKey));
+		// CachedData->TargetSetDelegate.Broadcast(CachedData->TargetData, CachedData->ApplicationTag);
+		const bool bCalledDelegate = AbilitySystemComponent.Get()->CallReplicatedTargetDataDelegatesIfSet(SpecHandle, ActivationPredictionKey);
+		if (!bCalledDelegate)
+		{
+			SetWaitingOnRemotePlayerData(); // 等待收到广播
+		}
+	}	
 }
 
 void UTargetDataUnderMouse::SendMouseTargetData()
@@ -40,6 +54,7 @@ void UTargetDataUnderMouse::SendMouseTargetData()
 	Data->HitResult = CursorHit;
 	DataHandle.Add(Data);
 
+	// Send Target Data to the server
 	AbilitySystemComponent->ServerSetReplicatedTargetData(
 		GetAbilitySpecHandle(),
 		GetActivationPredictionKey(),
@@ -48,6 +63,17 @@ void UTargetDataUnderMouse::SendMouseTargetData()
 		AbilitySystemComponent->ScopedPredictionKey
 	);
 
+	if (ShouldBroadcastAbilityTaskDelegates())
+	{
+		ValidData.Broadcast(DataHandle);
+	}
+}
+
+void UTargetDataUnderMouse::OnTargetDataReplicatedCallBack(const FGameplayAbilityTargetDataHandle& DataHandle, FGameplayTag ActivationTag)
+{
+	// 收到了来自客户端的广播，消耗掉存储的TargetData
+	// CachedData->TargetData.Clear();
+	AbilitySystemComponent.Get()->ConsumeClientReplicatedTargetData(GetAbilitySpecHandle(), GetActivationPredictionKey());
 	if (ShouldBroadcastAbilityTaskDelegates())
 	{
 		ValidData.Broadcast(DataHandle);

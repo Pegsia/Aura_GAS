@@ -13,7 +13,7 @@ void UAuraProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Hand
 
 }
 
-void UAuraProjectileSpell::SpawnFireBolt()
+void UAuraProjectileSpell::SpawnFireBolt(const FVector& ProjectileTargetLocation)
 {
 	// Only on Server
 	if (!GetAvatarActorFromActorInfo()->HasAuthority()) return;
@@ -21,10 +21,11 @@ void UAuraProjectileSpell::SpawnFireBolt()
 	if (CombatInterface)
 	{
 		const FVector SpawnLocation = CombatInterface->GetCombatSocketLocation();
+		const FRotator SpawnRotation = (ProjectileTargetLocation - SpawnLocation).Rotation();
 
 		FTransform SpawnTransform;
 		SpawnTransform.SetLocation(SpawnLocation);
-		// TODO: Set Spawn Rotation
+		SpawnTransform.SetRotation(SpawnRotation.Quaternion());
 
 		AAuraProjectile* Projectile = GetWorld()->SpawnActorDeferred<AAuraProjectile>(
 			ProjectileClass,
