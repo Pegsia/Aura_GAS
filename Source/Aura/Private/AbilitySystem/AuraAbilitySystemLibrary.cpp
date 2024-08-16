@@ -48,23 +48,22 @@ void UAuraAbilitySystemLibrary::InitializeCharacterDefaultAttributes(const UObje
 {
 	if (AAuraGameModeBase* GameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject)))
 	{
-		AActor* Avator = ASC->GetAvatarActor();		
-		const UCharacterClassInfo* ClassInfo = GameMode->CharacterClassInfo;
+		const UCharacterClassInfo* ClassInfo = GameMode->CharacterClassInfo; // TTuple<ECharacterClass, FCharacterClassDefalutInfo>
 		const FCharacterClassDefalutInfo ClassDefaultInfo = ClassInfo->GetClassDefaultInfo(CharacterClass);
 
-		FGameplayEffectContextHandle PrimaryContext = ASC->MakeEffectContext();
-		PrimaryContext.AddSourceObject(Avator);
-		const FGameplayEffectSpecHandle PrimarySpecHandle = ASC->MakeOutgoingSpec(ClassDefaultInfo.PrimaryAttributes, Level, PrimaryContext);
-		ASC->ApplyGameplayEffectSpecToSelf(*PrimarySpecHandle.Data.Get());
-
-		FGameplayEffectContextHandle SecondaryContext = ASC->MakeEffectContext();
-		SecondaryContext.AddSourceObject(Avator);
-		const FGameplayEffectSpecHandle SecondarySpecHandle = ASC->MakeOutgoingSpec(ClassInfo->SecondaryAttributes, Level, SecondaryContext);
-		ASC->ApplyGameplayEffectSpecToSelf(*SecondarySpecHandle.Data.Get());
-
-		FGameplayEffectContextHandle VitalContext = ASC->MakeEffectContext();
-		VitalContext.AddSourceObject(Avator);
-		const FGameplayEffectSpecHandle VitalSpecHandle = ASC->MakeOutgoingSpec(ClassInfo->VitalAttributes, Level, VitalContext);
-		ASC->ApplyGameplayEffectSpecToSelf(*VitalSpecHandle.Data.Get());
+		ApplyEffectToSelf(ClassDefaultInfo.PrimaryAttributes, Level, ASC);
+		ApplyEffectToSelf(ClassDefaultInfo.SecondaryAttributes, Level, ASC);
+		ApplyEffectToSelf(ClassInfo->VitalAttributes, Level, ASC);
 	}
+}
+
+void UAuraAbilitySystemLibrary::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level, UAbilitySystemComponent* ASC)
+{
+	check(ASC);
+	check(GameplayEffectClass);
+
+	FGameplayEffectContextHandle EffectContextHandle = ASC->MakeEffectContext();
+	EffectContextHandle.AddSourceObject(ASC->GetAvatarActor());
+	const FGameplayEffectSpecHandle EffectSpecHandle = ASC->MakeOutgoingSpec(GameplayEffectClass, Level, EffectContextHandle);
+	ASC->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
 }

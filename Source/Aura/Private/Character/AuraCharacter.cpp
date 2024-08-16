@@ -42,6 +42,8 @@ void AAuraCharacter::PossessedBy(AController* NewController)
 
 	// Init Ability Actor Info for the Server
 	InitialAbilityActorInfo();
+	// Init Attribute through GameplayEffects in AuraCharacterBase
+	InitialDefaultAttributes(); // 可以只在Server端调用，因为所有变量都是Replicated的，而且ASC复制模式为Mixed
 	InitStartupAbilities();
 }
 
@@ -64,8 +66,8 @@ void AAuraCharacter::InitialAbilityActorInfo()
 	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
 	AttributeSet = AuraPlayerState->GetAttributeSet();
 
-	// Init Attribute through GameplayEffects
-	InitialDefaultAttributes(); // 可以只在Server端调用，因为所有变量都是Replicated的，而且ASC复制模式为Mixed
+	//// Init Attribute through GameplayEffects
+	//InitialDefaultAttributes(); // 可以只在Server端调用，因为所有变量都是Replicated的，而且ASC复制模式为Mixed
 
 	/**
 	 * Init AuraHUD

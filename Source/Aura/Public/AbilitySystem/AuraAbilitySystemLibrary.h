@@ -11,6 +11,7 @@
 class UOverlayWidgetController;
 class UAttributeMenuWidgetController;
 class UAbilitySystemComponent;
+class UGameplayEffect;
 /**
  * 
  */
@@ -28,4 +29,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|CharacterClassDefault")
 	static void InitializeCharacterDefaultAttributes(const UObject* WorldContextObject, ECharacterClass CharacterClass, float Level, UAbilitySystemComponent* ASC);
+
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|EffectToSelf")
+	static void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level, UAbilitySystemComponent* ASC);
 };

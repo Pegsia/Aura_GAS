@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "AbilitySystemInterface.h"
 #include "CombatInterface.h"
+#include "CharacterClassInfo.h"
 #include "AuraCharacterBase.generated.h"
 
 class UAbilitySystemComponent;
@@ -53,20 +54,15 @@ protected:
 	virtual void InitialAbilityActorInfo();
 
 	// Init Default Attributes
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attribute")
-	TSubclassOf<UGameplayEffect> DefaultVitalAttribute;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character Class Defaluts")
+	int32 Level = 1;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attribute")
-	TSubclassOf<UGameplayEffect> DefaultPrimaryAttribute;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attribute")
-	TSubclassOf<UGameplayEffect> DefaultSecondaryAttribute;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character Class Defaluts")
+	ECharacterClass CharacterClass = ECharacterClass::Warrior;
 	
 	virtual void InitialDefaultAttributes() const;
-	
-	// Apply Effect
-	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level) const;
 
+	// Init Abilities
 	void InitStartupAbilities();
 
 private:

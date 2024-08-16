@@ -11,6 +11,7 @@ class UGameplayEffect;
 UENUM(BlueprintType)
 enum class ECharacterClass : uint8
 {
+	HeroAura,
 	Elementalist,
 	Warrior,
 	Ranger
@@ -23,6 +24,9 @@ struct FCharacterClassDefalutInfo
 
 	UPROPERTY(EditDefaultsOnly, Category = "Class Defaults")
 	TSubclassOf<UGameplayEffect> PrimaryAttributes;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Class Defaults")
+	TSubclassOf<UGameplayEffect> SecondaryAttributes;
 };
 
 /**
@@ -36,9 +40,6 @@ class AURA_API UCharacterClassInfo : public UDataAsset
 public:
 	UPROPERTY(EditDefaultsOnly, Category = "Character Class Defaults")
 	TMap<ECharacterClass, FCharacterClassDefalutInfo> CharacterClassInfomation;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Common Class Defaults")
-	TSubclassOf<UGameplayEffect> SecondaryAttributes;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Common Class Defaults")
 	TSubclassOf<UGameplayEffect> VitalAttributes;

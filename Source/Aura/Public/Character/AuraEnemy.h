@@ -42,16 +42,9 @@ public:
 protected:
 	//~ Begin AuraCharacterBase Interface
 	virtual void InitialAbilityActorInfo() override;
-	virtual void InitialDefaultAttributes() const;
 	//~ End AuraCharacterBase Interface
 
 	virtual void BeginPlay() override;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character Class Defaluts")
-	int32 Level = 1;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character Class Defaluts")
-	ECharacterClass CharacterClass = ECharacterClass::Warrior;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UWidgetComponent> HealthBarComponent;

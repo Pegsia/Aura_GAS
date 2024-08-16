@@ -5,6 +5,7 @@
 #include "AuraAbilitySystemComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Aura/Aura.h"
+#include "../Public/AbilitySystem/AuraAbilitySystemLibrary.h"
 
 AAuraCharacterBase::AAuraCharacterBase()
 {
@@ -27,27 +28,14 @@ void AAuraCharacterBase::BeginPlay()
 	
 }
 
-UAbilitySystemComponent* AAuraCharacterBase::GetAbilitySystemComponent() const
+void AAuraCharacterBase::InitialAbilityActorInfo()
 {
-	return AbilitySystemComponent;
+
 }
 
 void AAuraCharacterBase::InitialDefaultAttributes() const
 {
-	ApplyEffectToSelf(DefaultPrimaryAttribute, 1.f);
-	ApplyEffectToSelf(DefaultSecondaryAttribute, 1.f);
-	ApplyEffectToSelf(DefaultVitalAttribute, 1.f); // related to secondary attribute
-}
-
-void AAuraCharacterBase::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level) const
-{
-	UAbilitySystemComponent* TargetASC = GetAbilitySystemComponent();
-	check(GameplayEffectClass);
-
-	FGameplayEffectContextHandle EffectContext = TargetASC->MakeEffectContext();
-	EffectContext.AddSourceObject(this);
-	const FGameplayEffectSpecHandle EffectSpecHandle = TargetASC->MakeOutgoingSpec(GameplayEffectClass, Level, EffectContext);
-	TargetASC->ApplyGameplayEffectSpecToTarget(*EffectSpecHandle.Data.Get(), TargetASC);
+	UAuraAbilitySystemLibrary::InitializeCharacterDefaultAttributes(this, CharacterClass, Level, AbilitySystemComponent);
 }
 
 void AAuraCharacterBase::InitStartupAbilities()
@@ -62,7 +50,7 @@ FVector AAuraCharacterBase::GetCombatSocketLocation()
 	return Weapon->GetSocketLocation(WeaponTipSocketName);
 }
 
-void AAuraCharacterBase::InitialAbilityActorInfo()
+UAbilitySystemComponent* AAuraCharacterBase::GetAbilitySystemComponent() const
 {
-
+	return AbilitySystemComponent;
 }
