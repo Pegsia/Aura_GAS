@@ -6,6 +6,7 @@
 #include "Character/AuraCharacterBase.h"
 #include "EnemyInterface.h"
 #include "UI/WidgetController/OverlayWidgetController.h"
+#include "CharacterClassInfo.h"
 #include "AuraEnemy.generated.h"
 
 class UWidgetComponent;
@@ -31,23 +32,26 @@ public:
 	virtual int32 GetPlayerLevel() override { return Level; }
 	//~ End ICombatInterface
 
+	// OverlayWidgetController Signature
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Attributes")
 	FOnAttributeChangedSignature OnHealthChanged;
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Attributes")
 	FOnAttributeChangedSignature OnMaxHealthChanged;
-
 	void InitHealthBar();
-	void BindCallBacksToDependencies();
 
 protected:
 	//~ Begin AuraCharacterBase Interface
 	virtual void InitialAbilityActorInfo() override;
+	virtual void InitialDefaultAttributes() const;
 	//~ End AuraCharacterBase Interface
 
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character Class Defaluts")
 	int32 Level = 1;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character Class Defaluts")
+	ECharacterClass CharacterClass = ECharacterClass::Warrior;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UWidgetComponent> HealthBarComponent;

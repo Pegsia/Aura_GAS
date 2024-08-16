@@ -6,8 +6,9 @@
 #include "AuraAbilitySystemComponent.h"
 #include "AuraAttributeSet.h"
 #include "UMG/Public/Components/WidgetComponent.h"
-#include "../Public/UI/Widget/AuraUserWidget.h"
-#include "../Public/UI/WidgetController/AuraWidgetController.h"
+#include "AuraUserWidget.h"
+#include "AuraWidgetController.h"
+#include "AuraAbilitySystemLibrary.h"
 
 AAuraEnemy::AAuraEnemy()
 {
@@ -28,17 +29,20 @@ void AAuraEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 
-	InitialAbilityActorInfo();
-
-	InitHealthBar();
+	InitialAbilityActorInfo(); // Init ASC
+	InitialDefaultAttributes();// Init Default Attributes
+	InitHealthBar();		   // Init Attributes CallBacks
 }
 
 void AAuraEnemy::InitialAbilityActorInfo()
 {
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
-	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
-	
-	InitialDefaultAttributes();
+	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();	
+}
+
+void AAuraEnemy::InitialDefaultAttributes() const
+{
+	UAuraAbilitySystemLibrary::InitializeCharacterDefaultAttributes(this, CharacterClass, Level, AbilitySystemComponent);
 }
 
 void AAuraEnemy::InitHealthBar()
