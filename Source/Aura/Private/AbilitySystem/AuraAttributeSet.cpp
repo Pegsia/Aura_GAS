@@ -65,7 +65,7 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 	// Change Base Value
 	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("%f Health Changed on %s, Health: %f"), Data.EvaluatedData.Magnitude, *Props.TargetAvatarActor->GetName(), GetHealth()));
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("%f Health Changed on %s, Health: %f"), Data.EvaluatedData.Magnitude, *Props.TargetAvatarActor->GetName(), GetHealth()));
 		/*float MutableBaseHealth = Health.GetBaseValue();
 		float MutableCurrentHealth = Health.GetCurrentValue();*/
 		SetHealth(FMath::Clamp(GetHealth(), 0.f, GetMaxHealth()));

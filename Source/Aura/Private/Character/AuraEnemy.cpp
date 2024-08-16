@@ -5,6 +5,9 @@
 #include "Aura/Aura.h"
 #include "AuraAbilitySystemComponent.h"
 #include "AuraAttributeSet.h"
+#include "UMG/Public/Components/WidgetComponent.h"
+#include "../Public/UI/Widget/AuraUserWidget.h"
+#include "../Public/UI/WidgetController/AuraWidgetController.h"
 
 AAuraEnemy::AAuraEnemy()
 {
@@ -16,6 +19,9 @@ AAuraEnemy::AAuraEnemy()
 
 	// For CursorTrace() in AuraPlayerController 
 	GetMesh()->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+
+	HealthBarComponent = CreateDefaultSubobject<UWidgetComponent>("HealthBar");
+	HealthBarComponent->SetupAttachment(GetRootComponent());
 }
 
 void AAuraEnemy::BeginPlay()
@@ -23,14 +29,38 @@ void AAuraEnemy::BeginPlay()
 	Super::BeginPlay();
 
 	InitialAbilityActorInfo();
+
+	InitHealthBar();
 }
 
 void AAuraEnemy::InitialAbilityActorInfo()
 {
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
-
+	
 	InitialDefaultAttributes();
+}
+
+void AAuraEnemy::InitHealthBar()
+{
+	if (UAuraUserWidget* HealthBar = Cast<UAuraUserWidget>(HealthBarComponent->GetUserWidgetObject()))
+	{
+		HealthBar->SetWidgetController(this);
+	}
+
+	if (const UAuraAttributeSet* AuraAttributeSet = Cast<UAuraAttributeSet>(AttributeSet))
+	{
+		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetHealthAttribute()).AddLambda(
+			[this](const FOnAttributeChangeData& Data) { OnHealthChanged.Broadcast(Data.NewValue); }
+		);
+
+		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetMaxHealthAttribute()).AddLambda(
+			[this](const FOnAttributeChangeData& Data) { OnMaxHealthChanged.Broadcast(Data.NewValue); }
+		);
+
+		OnHealthChanged.Broadcast(AuraAttributeSet->GetHealth());
+		OnMaxHealthChanged.Broadcast(AuraAttributeSet->GetMaxHealth());
+	}
 }
 
 void AAuraEnemy::HighLightActor()
@@ -47,6 +77,3 @@ void AAuraEnemy::UnHighLightActor()
 	GetMesh()->SetRenderCustomDepth(false);
 	Weapon->SetRenderCustomDepth(false);
 }
-
-
-
