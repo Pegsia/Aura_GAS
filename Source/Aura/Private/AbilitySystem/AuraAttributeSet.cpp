@@ -74,39 +74,50 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 	{
 		SetMana(FMath::Clamp(GetMana(), 0.f, GetMaxMana()));
 	}
+	if (Data.EvaluatedData.Attribute == GetIncomingDamageAttribute())
+	{
+		const float LocalIncomingDamage = GetIncomingDamage();
+		SetIncomingDamage(0.f);
+		if (LocalIncomingDamage > 0.f)
+		{
+			const float NewHealth = GetHealth() - LocalIncomingDamage;
+			SetHealth(FMath::Clamp(NewHealth, 0, GetMaxHealth()));
+			const bool bFatal = (NewHealth <= 0.f);
+		}
+	}
 }
 
-void UAuraAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props) const
+void UAuraAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& OutProps) const
 {
-	Props.EffectContextHandle = Data.EffectSpec.GetEffectContext();
+	OutProps.EffectContextHandle = Data.EffectSpec.GetEffectContext();
 
 	// Source: Causer of the effect, Target = Target of the effect(Owner of this AttributeSet)
 	// Source
-	Props.SourceASC = Props.EffectContextHandle.GetOriginalInstigatorAbilitySystemComponent();
-	if (IsValid(Props.SourceASC) && Props.SourceASC->AbilityActorInfo.IsValid())
+	OutProps.SourceASC = OutProps.EffectContextHandle.GetOriginalInstigatorAbilitySystemComponent();
+	if (IsValid(OutProps.SourceASC) && OutProps.SourceASC->AbilityActorInfo.IsValid())
 	{
-		Props.SourceAvatarActor = Props.SourceASC->GetAvatarActor();
-		Props.SourceController = Props.SourceASC->AbilityActorInfo->PlayerController.Get();
-		if (Props.SourceController == nullptr && Props.SourceAvatarActor != nullptr)
+		OutProps.SourceAvatarActor = OutProps.SourceASC->GetAvatarActor();
+		OutProps.SourceController = OutProps.SourceASC->AbilityActorInfo->PlayerController.Get();
+		if (OutProps.SourceController == nullptr && OutProps.SourceAvatarActor != nullptr)
 		{
-			if (APawn* Pawn = Cast<APawn>(Props.SourceAvatarActor))
+			if (APawn* Pawn = Cast<APawn>(OutProps.SourceAvatarActor))
 			{
-				Props.SourceController = Pawn->GetController();
+				OutProps.SourceController = Pawn->GetController();
 			}
 		}
-		if (Props.SourceController)
+		if (OutProps.SourceController)
 		{
-			Props.SourceCharacter = Cast<ACharacter>(Props.SourceController->GetPawn());
+			OutProps.SourceCharacter = Cast<ACharacter>(OutProps.SourceController->GetPawn());
 		}
 	}
 
 	// Target
 	if (Data.Target.AbilityActorInfo.IsValid() && Data.Target.AbilityActorInfo->AvatarActor.IsValid())
 	{
-		Props.TargetASC = &Data.Target;
-		Props.TargetAvatarActor = Data.Target.AbilityActorInfo->AvatarActor.Get();
-		Props.TargetController = Data.Target.AbilityActorInfo->PlayerController.Get();
-		Props.TargetCharacter = Cast<ACharacter>(Props.TargetAvatarActor);
+		OutProps.TargetASC = &Data.Target;
+		OutProps.TargetAvatarActor = Data.Target.AbilityActorInfo->AvatarActor.Get();
+		OutProps.TargetController = Data.Target.AbilityActorInfo->PlayerController.Get();
+		OutProps.TargetCharacter = Cast<ACharacter>(OutProps.TargetAvatarActor);
 	}
 }
 

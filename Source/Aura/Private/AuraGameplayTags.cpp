@@ -41,6 +41,9 @@ void FAuraGameplayTags::AddAllTags(UGameplayTagsManager& Manager)
 	AddTag(InputTag_2, "InputTag.2", "Input Tag for Num 2 Key");
 	AddTag(InputTag_3, "InputTag.3", "Input Tag for Num 3 Key");
 	AddTag(InputTag_4, "InputTag.4", "Input Tag for Num 4 Key");
+
+	// Damage
+	AddTag(Damage, "Damage", "Assign Tag Set By Caller Damage Magnitude");
 }
 
 void FAuraGameplayTags::AddTag(FGameplayTag& OutTag, const ANSICHAR* TagName, const ANSICHAR* TagComment)

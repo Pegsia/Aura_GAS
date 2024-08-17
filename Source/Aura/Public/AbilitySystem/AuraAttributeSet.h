@@ -67,7 +67,7 @@ public:
 	
 private:
 	// Store Effect Properties when a GameplayEffect is applied
-	void SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props) const;
+	void SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& OutProps) const;
 
 
 
@@ -79,6 +79,12 @@ public:
 
 	/**
 	 * FGameplayAttributeData
+	 * Meat  Attributes
+	 */
+	UPROPERTY(BlueprintReadOnly, Category = "Meta Attributes")
+	FGameplayAttributeData IncomingDamage;
+
+	/**
 	 * Vital  Attributes
 	 */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = "OnRep_Health", Category = "Vital Attributes")
@@ -182,6 +188,12 @@ public:
 
 	/**
 	 * Helper Accessors
+	 * Meta  Attributes
+	 */
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, IncomingDamage);
+
+
+	/**
 	 * Vital  Attributes
 	 */
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, Health);
