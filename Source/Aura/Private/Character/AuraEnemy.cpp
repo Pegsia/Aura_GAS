@@ -4,6 +4,7 @@
 #include "Character/AuraEnemy.h"
 #include "Aura/Aura.h"
 #include "AuraAbilitySystemComponent.h"
+#include "AuraAbilitySystemLibrary.h"
 #include "AuraAttributeSet.h"
 #include "AuraGameplayTags.h"
 #include "UMG/Public/Components/WidgetComponent.h"
@@ -33,6 +34,7 @@ void AAuraEnemy::BeginPlay()
 	InitialAbilityActorInfo(); // Init ASC
 	InitEffects();			   // Init Hit Effect
 	InitialDefaultAttributes();// Init Default Attributes in AuraCharacterBase
+	UAuraAbilitySystemLibrary::InitializeStartAbilities(this, AbilitySystemComponent);
 	InitHealthBar();		   // Init Attributes CallBacks
 }
 

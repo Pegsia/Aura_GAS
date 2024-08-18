@@ -49,7 +49,7 @@ void UAuraAbilitySystemLibrary::InitializeCharacterDefaultAttributes(const UObje
 	if (AAuraGameModeBase* GameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject)))
 	{
 		const UCharacterClassInfo* ClassInfo = GameMode->CharacterClassInfo; // TTuple<ECharacterClass, FCharacterClassDefalutInfo>
-		const FCharacterClassDefalutInfo ClassDefaultInfo = ClassInfo->GetClassDefaultInfo(CharacterClass);
+		const FCharacterClassDefaultInfo ClassDefaultInfo = ClassInfo->GetClassDefaultInfo(CharacterClass);
 
 		ApplyEffectToSelf(ClassDefaultInfo.PrimaryAttributes, Level, ASC);
 		ApplyEffectToSelf(ClassDefaultInfo.SecondaryAttributes, Level, ASC);
@@ -67,4 +67,17 @@ FActiveGameplayEffectHandle UAuraAbilitySystemLibrary::ApplyEffectToSelf(TSubcla
 	const FGameplayEffectSpecHandle EffectSpecHandle = ASC->MakeOutgoingSpec(GameplayEffectClass, Level, EffectContextHandle);
 	FActiveGameplayEffectHandle ActiveEffectHandle = ASC->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
 	return ActiveEffectHandle;
+}
+
+void UAuraAbilitySystemLibrary::InitializeStartAbilities(const UObject* WorldContextObject,	UAbilitySystemComponent* ASC)
+{
+	if (AAuraGameModeBase* GameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject)))
+	{
+		const UCharacterClassInfo* ClassInfo = GameMode->CharacterClassInfo; // TTuple<ECharacterClass, FCharacterClassDefalutInfo>
+		for(TSubclassOf<UGameplayAbility> AbilityClass : ClassInfo->CommonAbilities)
+		{
+			FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1.f);
+			ASC->GiveAbility(AbilitySpec);
+		}
+	}
 }
