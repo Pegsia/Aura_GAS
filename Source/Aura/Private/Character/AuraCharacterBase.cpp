@@ -45,6 +45,11 @@ void AAuraCharacterBase::InitStartupAbilities()
 	AuraASC->AddCharacterStatrupAbilities(StartupAbilities);
 }
 
+UAnimMontage* AAuraCharacterBase::GetHitReactMontage_Implementation()
+{
+	return HitReactMontage;
+}
+
 FVector AAuraCharacterBase::GetCombatSocketLocation()
 {
 	return Weapon->GetSocketLocation(WeaponTipSocketName);

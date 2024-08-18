@@ -24,14 +24,10 @@ void UTargetDataUnderMouse::Activate()
 		const FGameplayAbilitySpecHandle SpecHandle = GetAbilitySpecHandle();
 		const FPredictionKey ActivationPredictionKey = GetActivationPredictionKey();
 		
-		// 绑定CallBack
-		// /** Maps from an ability spec to the target data. Used to track replicated data and callbacks */
-		// AbilityTargetDataMap.FindOrAdd(FGameplayAbilitySpecHandleAndPredictionKey(AbilityHandle, AbilityOriginalPredictionKey))->TargetSetDelegate;
+		// Bind FAbilityTargetDataSetDelegate CallBack
 		AbilitySystemComponent.Get()->AbilityTargetDataSetDelegate(SpecHandle, ActivationPredictionKey).AddUObject(this, &UTargetDataUnderMouse::OnTargetDataReplicatedCallBack);
 		
-		// 尝试收听
-		// TSharedPtr<FAbilityReplicatedDataCache> CachedData = AbilityTargetDataMap.Find(FGameplayAbilitySpecHandleAndPredictionKey(AbilityHandle, AbilityOriginalPredictionKey));
-		// CachedData->TargetSetDelegate.Broadcast(CachedData->TargetData, CachedData->ApplicationTag);
+		// Listed FAbilityTargetDataSetDelegate
 		const bool bCalledDelegate = AbilitySystemComponent.Get()->CallReplicatedTargetDataDelegatesIfSet(SpecHandle, ActivationPredictionKey);
 		if (!bCalledDelegate)
 		{
@@ -54,7 +50,7 @@ void UTargetDataUnderMouse::SendMouseTargetData()
 	Data->HitResult = CursorHit;
 	DataHandle.Add(Data);
 
-	// Send Target Data to the server
+	// Send Target Data to the server, when server received the data FAbilityTargetDataSetDelegate would BroadCast it
 	AbilitySystemComponent->ServerSetReplicatedTargetData(
 		GetAbilitySpecHandle(),
 		GetActivationPredictionKey(),

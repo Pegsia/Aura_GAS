@@ -12,7 +12,7 @@ UAuraAttributeSet::UAuraAttributeSet()
 {
 	const FAuraGameplayTags& GameplayTags = FAuraGameplayTags::Get();
 
-	// Used in AttributeMensuWidgetController to Broadcast Attributes
+	// Used in AttributeMenuWidgetController to Broadcast Attributes
 	// Primary Attributes
 	TagsToAttributesFuncPtr.Add(GameplayTags.Attributes_Primary_Strength, GetStrengthAttribute);
 	TagsToAttributesFuncPtr.Add(GameplayTags.Attributes_Primary_Intelligence, GetIntelligenceAttribute);
@@ -21,7 +21,7 @@ UAuraAttributeSet::UAuraAttributeSet()
 
 	// Secondary Attributes
 	TagsToAttributesFuncPtr.Add(GameplayTags.Attributes_Secondary_Armor, GetArmorAttribute);
-	TagsToAttributesFuncPtr.Add(GameplayTags.Attributes_Secondary_ArmorPenetraion, GetArmorPenetraionAttribute);
+	TagsToAttributesFuncPtr.Add(GameplayTags.Attributes_Secondary_ArmorPenetration, GetArmorPenetrationAttribute);
 	TagsToAttributesFuncPtr.Add(GameplayTags.Attributes_Secondary_BlockChance, GetBlockChanceAttribute);
 	TagsToAttributesFuncPtr.Add(GameplayTags.Attributes_Secondary_CriticalHitChance, GetCriticalHitChanceAttribute);
 	TagsToAttributesFuncPtr.Add(GameplayTags.Attributes_Secondary_CriticalHitDamage, GetCriticalHitDamageAttribute);
@@ -168,9 +168,9 @@ void UAuraAttributeSet::OnRep_Armor(const FGameplayAttributeData& OldArmor) cons
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, Armor, OldArmor);
 }
 
-void UAuraAttributeSet::OnRep_ArmorPenetraion(const FGameplayAttributeData& OldArmorPenetraion) const
+void UAuraAttributeSet::OnRep_ArmorPenetration(const FGameplayAttributeData& OldArmorPenetration) const
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, ArmorPenetraion, OldArmorPenetraion);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, ArmorPenetration, OldArmorPenetration);
 }
 
 void UAuraAttributeSet::OnRep_BlockChance(const FGameplayAttributeData& OldBlockChance) const
@@ -193,14 +193,14 @@ void UAuraAttributeSet::OnRep_CriticalHitResistance(const FGameplayAttributeData
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, CriticalHitResistance, OldCriticalHitResistance);
 }
 
-void UAuraAttributeSet::OnRep_HealthReneration(const FGameplayAttributeData& OldHealthReneration) const
+void UAuraAttributeSet::OnRep_HealthRegeneration(const FGameplayAttributeData& OldHealthRegeneration) const
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, HealthRegeneration, OldHealthReneration);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, HealthRegeneration, OldHealthRegeneration);
 }
 
-void UAuraAttributeSet::OnRep_ManaRegenration(const FGameplayAttributeData& OldManaRegenration) const
+void UAuraAttributeSet::OnRep_ManaRegeneration(const FGameplayAttributeData& OldManaRegeneration) const
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, ManaRegeneration, OldManaRegenration);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, ManaRegeneration, OldManaRegeneration);
 }
 
 void UAuraAttributeSet::OnRep_MaxHealth(const FGameplayAttributeData& OldMaxHealth) const
@@ -234,7 +234,7 @@ void UAuraAttributeSet::GetLifetimeReplicatedProps(TArray<class FLifetimePropert
 	 * Secondary Attributes
 	 */
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Armor, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, ArmorPenetraion, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, ArmorPenetration, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, BlockChance, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, CriticalHitChance, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, CriticalHitDamage, COND_None, REPNOTIFY_Always);

@@ -27,6 +27,10 @@ public:
 	//~ End IAbilitySystemInterface
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 
+	//~ Begin ICombatInterface
+	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
+	//~ End ICombatInterface
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -68,4 +72,7 @@ protected:
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Ability")
 	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	TObjectPtr<UAnimMontage> HitReactMontage;
 };

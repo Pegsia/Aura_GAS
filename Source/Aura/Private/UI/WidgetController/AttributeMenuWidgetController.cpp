@@ -19,10 +19,11 @@ void UAttributeMenuWidgetController::BroadcastInitialValue()
 
 void UAttributeMenuWidgetController::BindCallBacksToDependencies()
 {
+	// GetAttributeMenuWidgetController 时绑定
 	check(AttributeInfo);
 	UAuraAttributeSet* AS = CastChecked<UAuraAttributeSet>(AttributeSet);
 
-	for (auto& Pair : AS->TagsToAttributesFuncPtr)
+	for (TTuple<FGameplayTag, FGameplayAttribute(*)()>& Pair : AS->TagsToAttributesFuncPtr)
 	{
 		AbilityStstemComponent->GetGameplayAttributeValueChangeDelegate(Pair.Value()).AddLambda(
 			[this, Pair](const FOnAttributeChangeData& Data)

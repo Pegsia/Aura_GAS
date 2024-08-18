@@ -114,8 +114,8 @@ public:
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = "OnRep_Armor", Category = "Secondary Attributes")
 	FGameplayAttributeData Armor;
 
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = "OnRep_ArmorPenetraion", Category = "Secondary Attributes")
-	FGameplayAttributeData ArmorPenetraion;
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = "OnRep_ArmorPenetration", Category = "Secondary Attributes")
+	FGameplayAttributeData ArmorPenetration;
 
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = "OnRep_BlockChance", Category = "Secondary Attributes")
 	FGameplayAttributeData BlockChance;
@@ -129,10 +129,10 @@ public:
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = "OnRep_CriticalHitResistance", Category = "Secondary Attributes")
 	FGameplayAttributeData CriticalHitResistance;
 
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = "OnRep_HealthReneration", Category = "Secondary Attributes")
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = "OnRep_HealthRegeneration", Category = "Secondary Attributes")
 	FGameplayAttributeData HealthRegeneration;
 
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = "OnRep_ManaRegenration", Category = "Secondary Attributes")
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = "OnRep_ManaRegeneration", Category = "Secondary Attributes")
 	FGameplayAttributeData ManaRegeneration;
 
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = "OnRep_MaxHealth", Category = "Secondary Attributes")
@@ -168,7 +168,7 @@ public:
 	UFUNCTION()
 	void OnRep_Armor(const FGameplayAttributeData& OldArmor) const;
 	UFUNCTION()
-	void OnRep_ArmorPenetraion(const FGameplayAttributeData& OldArmorPenetraion) const;
+	void OnRep_ArmorPenetration(const FGameplayAttributeData& OldArmorPenetration) const;
 	UFUNCTION()
 	void OnRep_BlockChance(const FGameplayAttributeData& OldBlockChance) const;
 	UFUNCTION()
@@ -178,9 +178,9 @@ public:
 	UFUNCTION()
 	void OnRep_CriticalHitResistance(const FGameplayAttributeData& OldCriticalHitResistance) const;
 	UFUNCTION()
-	void OnRep_HealthReneration(const FGameplayAttributeData& OldHealthReneration) const;
+	void OnRep_HealthRegeneration(const FGameplayAttributeData& OldHealthRegeneration) const;
 	UFUNCTION()
-	void OnRep_ManaRegenration(const FGameplayAttributeData& OldManaRegenration) const;
+	void OnRep_ManaRegeneration(const FGameplayAttributeData& OldManaRegeneration) const;
 	UFUNCTION()
 	void OnRep_MaxHealth(const FGameplayAttributeData& OldMaxHealth) const;
 	UFUNCTION()
@@ -211,7 +211,7 @@ public:
 	 * Secondary Attributes
 	 */
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, Armor);
-	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, ArmorPenetraion);
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, ArmorPenetration);
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, BlockChance);
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, CriticalHitChance);
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, CriticalHitDamage);

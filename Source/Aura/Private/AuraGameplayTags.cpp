@@ -24,7 +24,7 @@ void FAuraGameplayTags::AddAllTags(UGameplayTagsManager& Manager)
 	AddTag(Attributes_Primary_Vigor, "Attributes.Primary.Vigor", "Increases health");
 
 	AddTag(Attributes_Secondary_Armor, "Attributes.Secondary.Armor", "Reduces damage taken, improves Block Chance");
-	AddTag(Attributes_Secondary_ArmorPenetraion, "Attributes.Secondary.ArmorPenetraion", "Ignores Percentage of enemy Armor, increases Critical Hit Chance");
+	AddTag(Attributes_Secondary_ArmorPenetration, "Attributes.Secondary.ArmorPenetration", "Ignores Percentage of enemy Armor, increases Critical Hit Chance");
 	AddTag(Attributes_Secondary_BlockChance, "Attributes.Secondary.BlockChance", "Chance to cut incoming damage in half");
 	AddTag(Attributes_Secondary_CriticalHitChance, "Attributes.Secondary.CriticalHitChance", "Chance to double damage plus critical hit bonus");
 	AddTag(Attributes_Secondary_CriticalHitDamage, "Attributes.Secondary.CriticalHitDamage", "Bonus damage added when a critical hit is scored");
@@ -44,6 +44,9 @@ void FAuraGameplayTags::AddAllTags(UGameplayTagsManager& Manager)
 
 	// Damage
 	AddTag(Damage, "Damage", "Assign Tag Set By Caller Damage Magnitude");
+
+	// Effects
+	AddTag(Effects_HitReact, "Effects.HitReact", "Enemies React to Hit");
 }
 
 void FAuraGameplayTags::AddTag(FGameplayTag& OutTag, const ANSICHAR* TagName, const ANSICHAR* TagComment)

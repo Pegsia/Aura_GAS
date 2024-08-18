@@ -2,7 +2,6 @@
 
 
 #include "AbilitySystem/Ability/AuraProjectileSpell.h"
-#include "Kismet/KismetSystemLibrary.h"
 #include "CombatInterface.h"
 #include "AuraProjectile.h"
 #include "AbilitySystemBlueprintLibrary.h"
@@ -48,8 +47,7 @@ void UAuraProjectileSpell::SpawnFireBolt(const FVector& ProjectileTargetLocation
 
 		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTag.Damage, Damage);
 		Projectile->DamageEffectSpecHandle = SpecHandle;
-			
-
+		
 		Projectile->FinishSpawning(SpawnTransform);
 	}
 }

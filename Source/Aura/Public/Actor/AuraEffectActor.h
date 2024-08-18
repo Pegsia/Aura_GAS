@@ -32,7 +32,7 @@ class AURA_API AAuraEffectActor : public AActor
 	
 public:	
 	AAuraEffectActor();
-
+	
 protected:
 	virtual void BeginPlay() override;
 
