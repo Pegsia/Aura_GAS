@@ -57,7 +57,14 @@ void AAuraProjectile::Destroyed()
 
 void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (OtherActor == GetInstigator()) return;
+	if(OtherActor == GetInstigator())
+	{
+		// 否则点击自己会生成奇怪的发射方向
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
+		bHit = true;
+		Destroy();
+		return;
+	}
 	UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation());
 	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
 	LoopingSoundComponent->Stop();

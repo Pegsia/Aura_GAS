@@ -30,6 +30,7 @@ public:
 
 	//~ Begin ICombatInterface
 	virtual int32 GetPlayerLevel() override { return Level; }
+	virtual void CharacterDeath() override;
 	//~ End ICombatInterface
 
 	// OverlayWidgetController Signature
@@ -47,7 +48,10 @@ public:
 	float BaseWalkSpeed = 250.f;
 	
 	void HitReactTagChanged(const FGameplayTag CallBackTag, int32 TagCount);
-	
+
+	// Death
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Death")
+	float EnemyLifeSpan = 5.f;
 protected:
 	//~ Begin AuraCharacterBase Interface
 	virtual void InitialAbilityActorInfo() override;

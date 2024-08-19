@@ -45,9 +45,49 @@ void AAuraCharacterBase::InitStartupAbilities()
 	AuraASC->AddCharacterStatrupAbilities(StartupAbilities);
 }
 
+
 UAnimMontage* AAuraCharacterBase::GetHitReactMontage_Implementation()
 {
 	return HitReactMontage;
+}
+
+void AAuraCharacterBase::CharacterDeath()
+{
+	// Server
+	Weapon->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld, true));
+	MulticastHandleCharacterDeath();
+}
+
+void AAuraCharacterBase::MulticastHandleCharacterDeath_Implementation()
+{
+	Weapon->SetSimulatePhysics(true);
+	Weapon->SetEnableGravity(true);
+	Weapon->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+	
+	GetMesh()->SetSimulatePhysics(true);
+	GetMesh()->SetEnableGravity(true);
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+	GetMesh()->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
+	
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	Dissolve();
+}
+
+void AAuraCharacterBase::Dissolve()
+{
+	if(MeshDissolveMaterialInstance)
+	{
+		UMaterialInstanceDynamic* MeshMaterialInstanceDynamic = UMaterialInstanceDynamic::Create(MeshDissolveMaterialInstance, this);
+		GetMesh()->SetMaterial(0, MeshMaterialInstanceDynamic);
+		StartMeshDissolveTimeLine(MeshMaterialInstanceDynamic);
+	}
+	if(WeaponDissolveMaterialInstance)
+	{
+		UMaterialInstanceDynamic* WeaponMaterialInstanceDynamic = UMaterialInstanceDynamic::Create(WeaponDissolveMaterialInstance, this);
+		Weapon->SetMaterial(0, WeaponMaterialInstanceDynamic);
+		StartWeaponDissolveTimeLine(WeaponMaterialInstanceDynamic);
+	}
 }
 
 FVector AAuraCharacterBase::GetCombatSocketLocation()

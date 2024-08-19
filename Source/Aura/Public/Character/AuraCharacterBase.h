@@ -29,8 +29,11 @@ public:
 
 	//~ Begin ICombatInterface
 	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
+	virtual void CharacterDeath() override;
 	//~ End ICombatInterface
 
+	UFUNCTION(NetMulticast, Reliable)
+	virtual void MulticastHandleCharacterDeath();
 protected:
 	virtual void BeginPlay() override;
 
@@ -68,6 +71,21 @@ protected:
 
 	// Init Abilities
 	void InitStartupAbilities();
+
+	// Dissolve Effects
+	void Dissolve();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void StartMeshDissolveTimeLine(UMaterialInstanceDynamic* MaterialInstanceDynamic);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void StartWeaponDissolveTimeLine(UMaterialInstanceDynamic* MaterialInstanceDynamic);
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TObjectPtr<UMaterialInstance> MeshDissolveMaterialInstance;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TObjectPtr<UMaterialInstance> WeaponDissolveMaterialInstance;
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Ability")

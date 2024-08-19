@@ -93,3 +93,9 @@ void AAuraEnemy::UnHighLightActor()
 	GetMesh()->SetRenderCustomDepth(false);
 	Weapon->SetRenderCustomDepth(false);
 }
+
+void AAuraEnemy::CharacterDeath()
+{
+	SetLifeSpan(EnemyLifeSpan);
+	Super::CharacterDeath();
+}

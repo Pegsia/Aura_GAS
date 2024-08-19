@@ -7,6 +7,7 @@
 #include "GameFramework/Character.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AuraGameplayTags.h"
+#include "CombatInterface.h"
 
 UAuraAttributeSet::UAuraAttributeSet()
 {
@@ -85,9 +86,17 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 			const bool bFatal = (NewHealth <= 0.f);
 			if(!bFatal)
 			{
+				// HitReact
 				FGameplayTagContainer TagContainer;
 				TagContainer.AddTag(FAuraGameplayTags::Get().Effects_HitReact);
 				Props.TargetASC->TryActivateAbilitiesByTag(TagContainer);
+			}
+			else // Death
+			{
+				if(TScriptInterface<ICombatInterface> CombatInterface = Props.TargetAvatarActor)
+				{
+					CombatInterface->CharacterDeath();
+				}				
 			}
 		}
 	}

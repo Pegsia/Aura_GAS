@@ -19,6 +19,7 @@ void UAuraProjectileSpell::SpawnFireBolt(const FVector& ProjectileTargetLocation
 {
 	// Only on Server
 	if (!GetAvatarActorFromActorInfo()->HasAuthority()) return;
+	
 	TScriptInterface<ICombatInterface> CombatInterface = GetAvatarActorFromActorInfo();
 	if (CombatInterface)
 	{
