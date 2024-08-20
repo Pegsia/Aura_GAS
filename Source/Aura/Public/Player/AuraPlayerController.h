@@ -25,7 +25,7 @@ public:
 	AAuraPlayerController();
 
 	//~ Begin APlayerController Interface
-	virtual void PlayerTick(float DeltaTime);
+	virtual void PlayerTick(float DeltaTime) override;
 	//~ End APlayerController Interface
 
 	UFUNCTION(Client, Reliable)

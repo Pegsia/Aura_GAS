@@ -33,6 +33,7 @@ public class Aura : ModuleRules
 			"Aura/Public/AbilitySystem/Ability",
 			"Aura/Public/AbilitySystem/AbilityTask",
 			"Aura/Public/AbilitySystem/Data",
+			"Aura/Public/AbilitySystem/ExecCalc",
 			"Aura/Public/AbilitySystem/ModMagCalc",
 			"Aura/Public/Actor",
 			"Aura/Public/Character",

@@ -86,7 +86,7 @@ void AAuraPlayerController::CursorTrace()
 {
 	if (!GetHitResultUnderCursor(ECC_Visibility, false, CursorHit)) return;
 
-	// IEnmyInterface
+	// IEnemyInterface
 	LastEnemyActor = ThisEnemyActor;
 	ThisEnemyActor = CursorHit.GetActor();
 

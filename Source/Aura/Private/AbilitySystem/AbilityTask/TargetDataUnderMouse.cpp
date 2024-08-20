@@ -69,9 +69,9 @@ void UTargetDataUnderMouse::OnTargetDataReplicatedCallBack(const FGameplayAbilit
 {
 	// 收到了来自客户端的广播，消耗掉存储的TargetData
 	// CachedData->TargetData.Clear();
-	AbilitySystemComponent.Get()->ConsumeClientReplicatedTargetData(GetAbilitySpecHandle(), GetActivationPredictionKey());
 	if (ShouldBroadcastAbilityTaskDelegates())
 	{
 		ValidData.Broadcast(DataHandle);
 	}
+	AbilitySystemComponent.Get()->ConsumeClientReplicatedTargetData(GetAbilitySpecHandle(), GetActivationPredictionKey());	
 }
