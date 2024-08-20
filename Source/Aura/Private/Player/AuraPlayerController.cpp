@@ -11,6 +11,8 @@
 #include "NavigationSystem.h"
 #include "NavigationPath.h"
 #include "Components/SplineComponent.h"
+#include "GameFramework/Character.h"
+#include "DamageTextComponent.h"
 
 AAuraPlayerController::AAuraPlayerController()
 {
@@ -48,6 +50,18 @@ void AAuraPlayerController::PlayerTick(float DeltaTime)
 	
 	AutoRun();
 	CursorTrace();
+}
+
+void AAuraPlayerController::ShowDamageNumber_Implementation(float DamageAmount, ACharacter* TargetCharacter)
+{
+	if(IsValid(TargetCharacter) && DamageTextComponentClass)
+	{
+		UDamageTextComponent* DamageTextComponent = NewObject<UDamageTextComponent>(TargetCharacter, DamageTextComponentClass);
+		DamageTextComponent->RegisterComponent();
+		DamageTextComponent->AttachToComponent(TargetCharacter->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
+		DamageTextComponent->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+		DamageTextComponent->SetDamageText(DamageAmount);
+	}
 }
 
 void AAuraPlayerController::AutoRun()
