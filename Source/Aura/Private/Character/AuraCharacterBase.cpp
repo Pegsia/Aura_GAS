@@ -42,7 +42,7 @@ void AAuraCharacterBase::InitStartupAbilities()
 {
 	if (!HasAuthority()) return;
 	UAuraAbilitySystemComponent* AuraASC = CastChecked<UAuraAbilitySystemComponent>(GetAbilitySystemComponent());
-	AuraASC->AddCharacterStatrupAbilities(StartupAbilities);
+	AuraASC->AddCharacterStartupAbilities(StartupAbilities);
 }
 
 

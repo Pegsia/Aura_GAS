@@ -19,7 +19,7 @@ public:
 	void AbilityActorInfoSet();
 	
 	// Init Ability
-	void AddCharacterStatrupAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupAbilities);
+	void AddCharacterStartupAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupAbilities);
 
 	// Input Ability
 	void AbilityInputHeld(const FGameplayTag& InputTag);
