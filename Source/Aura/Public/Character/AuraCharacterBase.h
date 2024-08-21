@@ -61,7 +61,7 @@ protected:
 	virtual void InitialAbilityActorInfo();
 
 	// Init Default Attributes
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character Class Defaluts")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character Class Defaluts")
 	int32 Level = 1;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character Class Defaluts")

@@ -46,15 +46,13 @@ UAttributeMenuWidgetController* UAuraAbilitySystemLibrary::GetAttributeMenuWidge
 
 void UAuraAbilitySystemLibrary::InitializeCharacterDefaultAttributes(const UObject* WorldContextObject, ECharacterClass CharacterClass, float Level, UAbilitySystemComponent* ASC)
 {
-	if (AAuraGameModeBase* GameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject)))
+	if(const UCharacterClassInfo* ClassInfo = GetCharacterClassInfo(WorldContextObject))  // TTuple<ECharacterClass, FCharacterClassDefalutInfo>
 	{
-		const UCharacterClassInfo* ClassInfo = GameMode->CharacterClassInfo; // TTuple<ECharacterClass, FCharacterClassDefalutInfo>
 		const FCharacterClassDefaultInfo ClassDefaultInfo = ClassInfo->GetClassDefaultInfo(CharacterClass);
-
 		ApplyEffectToSelf(ClassDefaultInfo.PrimaryAttributes, Level, ASC);
 		ApplyEffectToSelf(ClassDefaultInfo.SecondaryAttributes, Level, ASC);
 		ApplyEffectToSelf(ClassInfo->VitalAttributes, Level, ASC);
-	}
+	}	
 }
 
 FActiveGameplayEffectHandle UAuraAbilitySystemLibrary::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level, UAbilitySystemComponent* ASC)
@@ -71,13 +69,19 @@ FActiveGameplayEffectHandle UAuraAbilitySystemLibrary::ApplyEffectToSelf(TSubcla
 
 void UAuraAbilitySystemLibrary::InitializeStartAbilities(const UObject* WorldContextObject,	UAbilitySystemComponent* ASC)
 {
-	if (AAuraGameModeBase* GameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject)))
+	if(const UCharacterClassInfo* ClassInfo = GetCharacterClassInfo(WorldContextObject)) // TTuple<ECharacterClass, FCharacterClassDefalutInfo>
 	{
-		const UCharacterClassInfo* ClassInfo = GameMode->CharacterClassInfo; // TTuple<ECharacterClass, FCharacterClassDefalutInfo>
 		for(TSubclassOf<UGameplayAbility> AbilityClass : ClassInfo->CommonAbilities)
 		{
 			FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1.f);
 			ASC->GiveAbility(AbilitySpec);
 		}
-	}
+	}	
+}
+
+UCharacterClassInfo* UAuraAbilitySystemLibrary::GetCharacterClassInfo(const UObject* WorldContextObject)
+{
+	AAuraGameModeBase* GameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
+	if (GameMode == nullptr)	return nullptr;
+	return GameMode->CharacterClassInfo;  // TTuple<ECharacterClass, FCharacterClassDefalutInfo>
 }
