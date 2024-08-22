@@ -62,13 +62,14 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	TScriptInterface<ICombatInterface> TargetCombatInterface = TargetAvatar;
 	
 	const FGameplayEffectSpec& Spec = ExecutionParams.GetOwningSpec();
-
+	FGameplayEffectContextHandle EffectContextHandle = Spec.GetContext();
+	
 	const FGameplayTagContainer* SourceTags = Spec.CapturedSourceTags.GetAggregatedTags();
 	const FGameplayTagContainer* TargetTags = Spec.CapturedTargetTags.GetAggregatedTags();	
 	FAggregatorEvaluateParameters EvaluateParameters;
 	EvaluateParameters.SourceTags = SourceTags;
 	EvaluateParameters.TargetTags = TargetTags;
-
+	
 	// Get Damage Set by caller Magnitude
 	float Damage = Spec.GetSetByCallerMagnitude(FAuraGameplayTags::Get().Damage);
 	
@@ -108,8 +109,9 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	
 	// if block half the damage
 	const bool bTargetBlocked = FMath::RandRange(1, 100) < TargetBlockChance;
-	Damage = bTargetBlocked ? Damage / 2.f : Damage;	
-
+	UAuraAbilitySystemLibrary::SetIsBlockedHit(EffectContextHandle, bTargetBlocked);
+	Damage = bTargetBlocked ? Damage / 2.f : Damage;		
+	
 	// ArmorPenetration ignores a percentage of Target's Armor
 	const float EffectiveArmor = TargetArmor * (100.f - SourceArmorPenetration * ArmorPenetrationCoefficients) / 100.f;
 	
@@ -118,8 +120,9 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 
 	// CriticalHit Double the damage plus SourceCriticalHitDamage
 	const float EffectiveCriticalHitChance = SourceCriticalHitChance  - TargetCriticalHitResistance * CriticalHitResistanceCoefficients;
-	const bool bCriticalHit = FMath::RandRange(1, 100) < EffectiveCriticalHitChance;
-	Damage = bCriticalHit ? Damage * 2 + SourceCriticalHitDamage : Damage;
+	const bool bSourceCriticalHit = FMath::RandRange(1, 100) < EffectiveCriticalHitChance;
+	UAuraAbilitySystemLibrary::SetIsCriticalHit(EffectContextHandle, bSourceCriticalHit);
+	Damage = bSourceCriticalHit ? Damage * 2 + SourceCriticalHitDamage : Damage;
 	
 	FGameplayModifierEvaluatedData EvaluatedData(UAuraAttributeSet::GetIncomingDamageAttribute(), EGameplayModOp::Additive, Damage); //FGameplayAttribute(FProperty *NewProperty);
 	OutExecutionOutput.AddOutputModifier(EvaluatedData);

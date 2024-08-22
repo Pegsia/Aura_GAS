@@ -6,6 +6,7 @@
 #include "GameplayEffectExtension.h"
 #include "GameFramework/Character.h"
 #include "AbilitySystemBlueprintLibrary.h"
+#include "AuraAbilitySystemLibrary.h"
 #include "AuraGameplayTags.h"
 #include "AuraPlayerController.h"
 #include "CombatInterface.h"
@@ -100,29 +101,30 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 					CombatInterface->CharacterDeath();
 				}				
 			}
-			
-			ShowFloatingDamage(Props, LocalIncomingDamage);			
+
+			const bool bBlockedHit = UAuraAbilitySystemLibrary::IsBlockedHit(Props.EffectContextHandle);
+			const bool bCriticalHit = UAuraAbilitySystemLibrary::IsCriticalHit(Props.EffectContextHandle);
+			ShowFloatingDamage(Props, LocalIncomingDamage, bBlockedHit, bCriticalHit);			
 		}
 	}
 }
 
-void UAuraAttributeSet::ShowFloatingDamage(const FEffectProperties& Props, float Damage)
+void UAuraAttributeSet::ShowFloatingDamage(const FEffectProperties& Props, float Damage, bool bBlockedHit, bool bCriticalHit)
 {
 	if(Props.SourceCharacter != Props.TargetCharacter)
 	{
 		if(AAuraPlayerController* PC = Cast<AAuraPlayerController>(Props.SourceController))
 		{
-			PC->ShowDamageNumber(Damage, Props.TargetCharacter);
+			PC->ShowDamageNumber(Damage, Props.TargetCharacter, bBlockedHit, bCriticalHit);
 		}
 	}
 }
 
 void UAuraAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& OutProps) const
 {
-	OutProps.EffectContextHandle = Data.EffectSpec.GetEffectContext();
-
 	// Source: Causer of the effect, Target = Target of the effect(Owner of this AttributeSet)
 	// Source
+	OutProps.EffectContextHandle = Data.EffectSpec.GetEffectContext();	
 	OutProps.SourceASC = OutProps.EffectContextHandle.GetOriginalInstigatorAbilitySystemComponent();
 	if (IsValid(OutProps.SourceASC) && OutProps.SourceASC->AbilityActorInfo.IsValid())
 	{

@@ -60,6 +60,7 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 	if(OtherActor == GetInstigator())
 	{
 		// 否则点击自己会生成奇怪的发射方向
+		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation());
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
 		bHit = true;
 		Destroy();
