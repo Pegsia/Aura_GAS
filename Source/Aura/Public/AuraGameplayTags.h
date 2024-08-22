@@ -33,7 +33,7 @@ public:
 	FGameplayTag Attributes_Secondary_ManaRegeneration;
 	FGameplayTag Attributes_Secondary_MaxHealth;
 	FGameplayTag Attributes_Secondary_MaxMana;
-
+	
 	// Inputs
 	FGameplayTag InputTag_LMB; // Left Mouse Button
 	FGameplayTag InputTag_RMB;
@@ -44,7 +44,19 @@ public:
 
 	// Damage
 	FGameplayTag Damage;
+	FGameplayTag Damage_Fire;
+	FGameplayTag Damage_Lightning;
+	FGameplayTag Damage_Arcane;
+	FGameplayTag Damage_Physical;
 
+	// Damage Resistance
+	FGameplayTag Attributes_Resistance_Fire;
+	FGameplayTag Attributes_Resistance_Lightning;
+	FGameplayTag Attributes_Resistance_Arcane;
+	FGameplayTag Attributes_Resistance_Physical;
+	
+	TMap<FGameplayTag, FGameplayTag> DamageTypesToResistance;
+	
 	// Effect
 	FGameplayTag Effects_HitReact;
 protected:

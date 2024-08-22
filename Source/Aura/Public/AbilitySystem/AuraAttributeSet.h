@@ -142,6 +142,21 @@ public:
 	FGameplayAttributeData MaxMana;
 
 	/**
+	 * Damage Resistance
+	 */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = "OnRep_FireResistance", Category = "Rsistance Attributes")
+	FGameplayAttributeData FireResistance;
+	
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = "OnRep_LightningResistance", Category = "Rsistance Attributes")
+	FGameplayAttributeData LightningResistance;
+	
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = "OnRep_ArcaneResistance", Category = "Rsistance Attributes")
+	FGameplayAttributeData ArcaneResistance;
+	
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = "OnRep_PhysicalResistance", Category = "Rsistance Attributes")
+	FGameplayAttributeData PhysicalResistance;
+	
+	/**
 	 * ReplicatedUsing
 	 * Vital  Attributes
 	 */
@@ -187,11 +202,22 @@ public:
 	void OnRep_MaxMana(const FGameplayAttributeData& OldMaxMana) const;
 
 	/**
+	 * Damage Resistance
+	 */
+	UFUNCTION()
+	void OnRep_FireResistance(const FGameplayAttributeData& OldFireResistance) const;
+	UFUNCTION()
+	void OnRep_LightningResistance(const FGameplayAttributeData& OldLightningResistance) const;
+	UFUNCTION()
+	void OnRep_ArcaneResistance(const FGameplayAttributeData& OldArcaneResistance) const;
+	UFUNCTION()
+	void OnRep_PhysicalResistance(const FGameplayAttributeData& OldPhysicalResistance) const;
+	
+	/**
 	 * Helper Accessors
 	 * Meta  Attributes
 	 */
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, IncomingDamage);
-
 
 	/**
 	 * Vital  Attributes
@@ -220,6 +246,14 @@ public:
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, ManaRegeneration);
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, MaxHealth);
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, MaxMana);
+
+	/**
+	 * Damage Resistance
+	 */
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, FireResistance);
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, LightningResistance);
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, ArcaneResistance);
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, PhysicalResistance);
 };
 
 /**
