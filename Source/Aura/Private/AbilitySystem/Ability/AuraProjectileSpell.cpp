@@ -25,7 +25,6 @@ void UAuraProjectileSpell::SpawnFireBolt(const FVector& ProjectileTargetLocation
 	{
 		const FVector SpawnLocation = CombatInterface->GetCombatSocketLocation();
 		FRotator SpawnRotation = (ProjectileTargetLocation - SpawnLocation).Rotation();
-		SpawnRotation.Pitch = 0.f;
 
 		FTransform SpawnTransform;
 		SpawnTransform.SetLocation(SpawnLocation);

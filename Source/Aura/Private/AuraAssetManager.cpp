@@ -4,6 +4,7 @@
 #include "AuraAssetManager.h"
 #include "AuraGameplayTags.h"
 #include "AbilitySystemGlobals.h"
+#include "ExecCalc_Damage.h"
 
 UAuraAssetManager& UAuraAssetManager::Get()
 {
@@ -19,6 +20,7 @@ void UAuraAssetManager::StartInitialLoading()
 
 	FAuraGameplayTags::InitializeNativeGameplayTags();
 
+	UExecCalc_Damage::InitializeAuraDamageStaticMap();
 	// This is Required to use TargetData
 	UAbilitySystemGlobals::Get().InitGlobalData();
 }

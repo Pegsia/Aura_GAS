@@ -83,7 +83,7 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 	{
 		SetMana(FMath::Clamp(GetMana(), 0.f, GetMaxMana()));
 	}
-	if (Data.EvaluatedData.Attribute == GetIncomingDamageAttribute())  // SERVER
+	if (Data.EvaluatedData.Attribute == GetIncomingDamageAttribute())  // SERVER IncomingDamage is NOT REPLICATED
 	{
 		const float LocalIncomingDamage = GetIncomingDamage();
 		SetIncomingDamage(0.f);

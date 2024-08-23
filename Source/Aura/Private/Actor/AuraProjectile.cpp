@@ -40,7 +40,6 @@ void AAuraProjectile::BeginPlay()
 	SphereComponent->IgnoreActorWhenMoving(GetInstigator(), true); // ignoreInstigator
 	SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AAuraProjectile::OnSphereOverlap);
 	LoopingSoundComponent = UGameplayStatics::SpawnSoundAttached(LoopingSound, GetRootComponent());
-	LoopingSoundComponent->bStopWhenOwnerDestroyed = true;
 }
 
 void AAuraProjectile::Destroyed()
@@ -49,7 +48,7 @@ void AAuraProjectile::Destroyed()
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation());
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
-		if(GetLifeSpan() > 0.f) LoopingSoundComponent->Stop();		
+		if(LoopingSoundComponent) LoopingSoundComponent->Stop();		
 	}
 
 	Super::Destroyed();
@@ -59,16 +58,14 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 {
 	if(OtherActor == GetInstigator())
 	{
-		// 否则点击自己会生成奇怪的发射方向
-		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation());
-		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
-		bHit = true;
-		Destroy();
 		return;
 	}
-	UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation());
-	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
-	LoopingSoundComponent->Stop();
+	if(!bHit)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation());
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
+		if(LoopingSoundComponent) LoopingSoundComponent->Stop();
+	}	
 
 	if (HasAuthority())
 	{

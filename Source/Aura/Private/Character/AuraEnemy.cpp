@@ -33,8 +33,11 @@ void AAuraEnemy::BeginPlay()
 	
 	InitialAbilityActorInfo(); // Init ASC
 	InitEffects();			   // Init Hit Effect
-	InitialDefaultAttributes();// Init Default Attributes in AuraCharacterBase
-	UAuraAbilitySystemLibrary::InitializeStartAbilities(this, AbilitySystemComponent);
+	if(HasAuthority())
+	{
+		InitialDefaultAttributes();// Init Default Attributes in AuraCharacterBase
+		UAuraAbilitySystemLibrary::InitializeStartAbilities(this, AbilitySystemComponent);
+	}	
 	InitHealthBar();		   // Init Attributes CallBacks
 }
 
