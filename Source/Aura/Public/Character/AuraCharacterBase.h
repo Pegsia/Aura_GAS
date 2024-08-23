@@ -70,7 +70,7 @@ protected:
 	virtual void InitialDefaultAttributes() const;
 
 	// Init Abilities
-	void InitStartupAbilities();
+	void InitAuraStartupAbilities() const;
 
 	// Dissolve Effects
 	void Dissolve();

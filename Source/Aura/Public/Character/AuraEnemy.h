@@ -9,6 +9,8 @@
 #include "CharacterClassInfo.h"
 #include "AuraEnemy.generated.h"
 
+class AAuraAIController;
+class UBehaviorTree;
 class UWidgetComponent;
 class UAuraUserWidget;
 class UAuraWidgetController;
@@ -23,6 +25,8 @@ class AURA_API AAuraEnemy : public AAuraCharacterBase, public IEnemyInterface
 public:
 	AAuraEnemy();
 
+	virtual void PossessedBy(AController* NewController) override;
+	
 	//~ Begin IEnemyInterface
 	virtual void HighLightActor() override;
 	virtual void UnHighLightActor() override;
@@ -52,6 +56,7 @@ public:
 	// Death
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Death")
 	float EnemyLifeSpan = 5.f;
+	
 protected:
 	//~ Begin AuraCharacterBase Interface
 	virtual void InitialAbilityActorInfo() override;
@@ -63,4 +68,10 @@ protected:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UWidgetComponent> HealthBarComponent;
+
+	UPROPERTY(EditDefaultsOnly, Category="AI")
+	TObjectPtr<UBehaviorTree> BehaviorTree;
+
+	UPROPERTY()
+	TObjectPtr<AAuraAIController> AuraAIController;
 };

@@ -38,7 +38,7 @@ void AAuraCharacterBase::InitialDefaultAttributes() const
 	UAuraAbilitySystemLibrary::InitializeCharacterDefaultAttributes(this, CharacterClass, Level, AbilitySystemComponent);
 }
 
-void AAuraCharacterBase::InitStartupAbilities()
+void AAuraCharacterBase::InitAuraStartupAbilities() const
 {
 	if (!HasAuthority()) return;
 	UAuraAbilitySystemComponent* AuraASC = CastChecked<UAuraAbilitySystemComponent>(GetAbilitySystemComponent());

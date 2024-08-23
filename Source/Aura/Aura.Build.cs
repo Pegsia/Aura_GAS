@@ -25,6 +25,7 @@ public class Aura : ModuleRules
 			"NavigationSystem",
 			"MotionWarping",
 			"Niagara",
+			"AIModule",
 		});
 
         PublicIncludePaths.AddRange(new string[]
@@ -36,6 +37,7 @@ public class Aura : ModuleRules
 			"Aura/Public/AbilitySystem/ExecCalc",
 			"Aura/Public/AbilitySystem/ModMagCalc",
 			"Aura/Public/Actor",
+			"Aura/Public/AI",
 			"Aura/Public/Character",
             "Aura/Public/Game",
 			"Aura/Public/Input",

@@ -56,10 +56,10 @@ void FAuraGameplayTags::AddAllTags(UGameplayTagsManager& Manager)
 	AddTag(Attributes_Resistance_Physical, "Attributes.Resistance.Physical", "Resistance to Physical Damage");
 
 	// Map Damage Types to Resistance
-	DamageTypesToResistance.Add(Damage_Fire, Attributes_Resistance_Fire);
-	DamageTypesToResistance.Add(Damage_Lightning, Attributes_Resistance_Lightning);
-	DamageTypesToResistance.Add(Damage_Arcane, Attributes_Resistance_Arcane);
-	DamageTypesToResistance.Add(Damage_Physical, Attributes_Resistance_Physical);
+	DamageTypesToResistance.Emplace(Damage_Fire, Attributes_Resistance_Fire);
+	DamageTypesToResistance.Emplace(Damage_Lightning, Attributes_Resistance_Lightning);
+	DamageTypesToResistance.Emplace(Damage_Arcane, Attributes_Resistance_Arcane);
+	DamageTypesToResistance.Emplace(Damage_Physical, Attributes_Resistance_Physical);
 	
 	// Effects
 	AddTag(Effects_HitReact, "Effects.HitReact", "Enemies React to Hit");

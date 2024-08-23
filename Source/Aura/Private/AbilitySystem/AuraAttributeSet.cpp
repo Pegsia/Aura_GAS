@@ -17,28 +17,28 @@ UAuraAttributeSet::UAuraAttributeSet()
 
 	// Used in AttributeMenuWidgetController to Broadcast Attributes
 	// Primary Attributes
-	TagsToAttributesFuncPtr.Add(GameplayTags.Attributes_Primary_Strength, GetStrengthAttribute);
-	TagsToAttributesFuncPtr.Add(GameplayTags.Attributes_Primary_Intelligence, GetIntelligenceAttribute);
-	TagsToAttributesFuncPtr.Add(GameplayTags.Attributes_Primary_Resilience, GetResilienceAttribute);
-	TagsToAttributesFuncPtr.Add(GameplayTags.Attributes_Primary_Vigor, GetVigorAttribute);
+	TagsToAttributesFuncPtr.Emplace(GameplayTags.Attributes_Primary_Strength, GetStrengthAttribute);
+	TagsToAttributesFuncPtr.Emplace(GameplayTags.Attributes_Primary_Intelligence, GetIntelligenceAttribute);
+	TagsToAttributesFuncPtr.Emplace(GameplayTags.Attributes_Primary_Resilience, GetResilienceAttribute);
+	TagsToAttributesFuncPtr.Emplace(GameplayTags.Attributes_Primary_Vigor, GetVigorAttribute);
 
 	// Secondary Attributes
-	TagsToAttributesFuncPtr.Add(GameplayTags.Attributes_Secondary_Armor, GetArmorAttribute);
-	TagsToAttributesFuncPtr.Add(GameplayTags.Attributes_Secondary_ArmorPenetration, GetArmorPenetrationAttribute);
-	TagsToAttributesFuncPtr.Add(GameplayTags.Attributes_Secondary_BlockChance, GetBlockChanceAttribute);
-	TagsToAttributesFuncPtr.Add(GameplayTags.Attributes_Secondary_CriticalHitChance, GetCriticalHitChanceAttribute);
-	TagsToAttributesFuncPtr.Add(GameplayTags.Attributes_Secondary_CriticalHitDamage, GetCriticalHitDamageAttribute);
-	TagsToAttributesFuncPtr.Add(GameplayTags.Attributes_Secondary_CriticalHitResistance, GetCriticalHitResistanceAttribute);
-	TagsToAttributesFuncPtr.Add(GameplayTags.Attributes_Secondary_HealthRegeneration, GetHealthRegenerationAttribute);
-	TagsToAttributesFuncPtr.Add(GameplayTags.Attributes_Secondary_ManaRegeneration, GetManaRegenerationAttribute);
-	TagsToAttributesFuncPtr.Add(GameplayTags.Attributes_Secondary_MaxHealth, GetMaxHealthAttribute);
-	TagsToAttributesFuncPtr.Add(GameplayTags.Attributes_Secondary_MaxMana, GetMaxManaAttribute);
+	TagsToAttributesFuncPtr.Emplace(GameplayTags.Attributes_Secondary_Armor, GetArmorAttribute);
+	TagsToAttributesFuncPtr.Emplace(GameplayTags.Attributes_Secondary_ArmorPenetration, GetArmorPenetrationAttribute);
+	TagsToAttributesFuncPtr.Emplace(GameplayTags.Attributes_Secondary_BlockChance, GetBlockChanceAttribute);
+	TagsToAttributesFuncPtr.Emplace(GameplayTags.Attributes_Secondary_CriticalHitChance, GetCriticalHitChanceAttribute);
+	TagsToAttributesFuncPtr.Emplace(GameplayTags.Attributes_Secondary_CriticalHitDamage, GetCriticalHitDamageAttribute);
+	TagsToAttributesFuncPtr.Emplace(GameplayTags.Attributes_Secondary_CriticalHitResistance, GetCriticalHitResistanceAttribute);
+	TagsToAttributesFuncPtr.Emplace(GameplayTags.Attributes_Secondary_HealthRegeneration, GetHealthRegenerationAttribute);
+	TagsToAttributesFuncPtr.Emplace(GameplayTags.Attributes_Secondary_ManaRegeneration, GetManaRegenerationAttribute);
+	TagsToAttributesFuncPtr.Emplace(GameplayTags.Attributes_Secondary_MaxHealth, GetMaxHealthAttribute);
+	TagsToAttributesFuncPtr.Emplace(GameplayTags.Attributes_Secondary_MaxMana, GetMaxManaAttribute);
 
 	// Resistance Attributes
-	TagsToAttributesFuncPtr.Add(GameplayTags.Attributes_Resistance_Fire, GetFireResistanceAttribute);
-	TagsToAttributesFuncPtr.Add(GameplayTags.Attributes_Resistance_Lightning, GetLightningResistanceAttribute);
-	TagsToAttributesFuncPtr.Add(GameplayTags.Attributes_Resistance_Arcane, GetArcaneResistanceAttribute);
-	TagsToAttributesFuncPtr.Add(GameplayTags.Attributes_Resistance_Physical, GetPhysicalResistanceAttribute);
+	TagsToAttributesFuncPtr.Emplace(GameplayTags.Attributes_Resistance_Fire, GetFireResistanceAttribute);
+	TagsToAttributesFuncPtr.Emplace(GameplayTags.Attributes_Resistance_Lightning, GetLightningResistanceAttribute);
+	TagsToAttributesFuncPtr.Emplace(GameplayTags.Attributes_Resistance_Arcane, GetArcaneResistanceAttribute);
+	TagsToAttributesFuncPtr.Emplace(GameplayTags.Attributes_Resistance_Physical, GetPhysicalResistanceAttribute);
 }
 
 void UAuraAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)

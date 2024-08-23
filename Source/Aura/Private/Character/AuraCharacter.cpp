@@ -10,8 +10,8 @@
 #include "AuraAttributeSet.h"
 #include "AuraHUD.h"
 #include "AuraPlayerController.h"
-#include "AuraAbilitySystemComponent.h"
 #include "MotionWarpingComponent.h"
+#include "Aura/Aura.h"
 
 AAuraCharacter::AAuraCharacter()
 {
@@ -34,6 +34,8 @@ AAuraCharacter::AAuraCharacter()
 	SpringArmComponent->bInheritYaw = false;
 
 	MotionWarpingComponent = CreateDefaultSubobject<UMotionWarpingComponent>("MotionWarpingComponent");
+
+	Tags.Emplace(ACTOR_TAG_PLAYER);
 }
 
 void AAuraCharacter::PossessedBy(AController* NewController)
@@ -44,7 +46,7 @@ void AAuraCharacter::PossessedBy(AController* NewController)
 	InitialAbilityActorInfo();
 	// Init Attribute through GameplayEffects in AuraCharacterBase
 	InitialDefaultAttributes(); // 可以只在Server端调用，因为所有变量都是Replicated的，而且ASC复制模式为Mixed
-	InitStartupAbilities();
+	InitAuraStartupAbilities();
 }
 
 void AAuraCharacter::OnRep_PlayerState()
@@ -65,9 +67,6 @@ void AAuraCharacter::InitialAbilityActorInfo()
 	AbilitySystemComponent->InitAbilityActorInfo(AuraPlayerState, this);
 	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
 	AttributeSet = AuraPlayerState->GetAttributeSet();
-
-	//// Init Attribute through GameplayEffects
-	//InitialDefaultAttributes(); // 可以只在Server端调用，因为所有变量都是Replicated的，而且ASC复制模式为Mixed
 
 	/**
 	 * Init AuraHUD

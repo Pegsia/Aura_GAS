@@ -5,10 +5,13 @@
 #include "Aura/Aura.h"
 #include "AuraAbilitySystemComponent.h"
 #include "AuraAbilitySystemLibrary.h"
+#include "AuraAIController.h"
 #include "AuraAttributeSet.h"
 #include "AuraGameplayTags.h"
 #include "UMG/Public/Components/WidgetComponent.h"
 #include "AuraUserWidget.h"
+#include "BehaviorTree/BehaviorTree.h"
+#include "BehaviorTree/BlackboardComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 AAuraEnemy::AAuraEnemy()
@@ -24,6 +27,18 @@ AAuraEnemy::AAuraEnemy()
 
 	HealthBarComponent = CreateDefaultSubobject<UWidgetComponent>("HealthBar");
 	HealthBarComponent->SetupAttachment(GetRootComponent());
+
+	Tags.Emplace(ACTOR_TAG_ENEMY); // Add Actor Tag for BTS_FindNearestPlayer
+}
+
+void AAuraEnemy::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	if(!HasAuthority()) return;
+	AuraAIController = Cast<AAuraAIController>(NewController);
+	AuraAIController->GetBlackboardComponent()->InitializeBlackboard(*BehaviorTree->BlackboardAsset);
+	AuraAIController->RunBehaviorTree(BehaviorTree);
 }
 
 void AAuraEnemy::BeginPlay()
@@ -31,14 +46,14 @@ void AAuraEnemy::BeginPlay()
 	Super::BeginPlay();
 	GetCharacterMovement()->MaxWalkSpeed = BaseWalkSpeed;
 	
-	InitialAbilityActorInfo(); // Init ASC
-	InitEffects();			   // Init Hit Effect
-	if(HasAuthority())
+	InitialAbilityActorInfo();		// Init ASC
+	InitEffects();					// Init Hit Effect
+	if(HasAuthority())				// Both Need GameMode which only exist on the Server
 	{
-		InitialDefaultAttributes();// Init Default Attributes in AuraCharacterBase
+		InitialDefaultAttributes(); // Init Default Attributes in AuraCharacterBase
 		UAuraAbilitySystemLibrary::InitializeStartAbilities(this, AbilitySystemComponent);
 	}	
-	InitHealthBar();		   // Init Attributes CallBacks
+	InitHealthBar();		        // Init Attributes CallBacks
 }
 
 void AAuraEnemy::InitialAbilityActorInfo()
