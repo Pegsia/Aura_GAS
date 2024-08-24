@@ -16,11 +16,10 @@ void UAuraBTService_FindNearestPlayer::TickNode(UBehaviorTreeComponent& OwnerCom
 	AAuraAIController* AuraAIController = Cast<AAuraAIController>(OwnerComp.GetAIOwner());
 	APawn* AIPawn = AuraAIController->GetPawn();
 	
-	const FName TargetTag = AIPawn->ActorHasTag(ACTOR_TAG_PLAYER) ? ACTOR_TAG_ENEMY : ACTOR_TAG_PLAYER;
-	TArray<AActor*> ActorWithTags;	
+	const FName TargetTag = AIPawn->ActorHasTag(ACTOR_TAG_ENEMY) ? ACTOR_TAG_PLAYER : ACTOR_TAG_ENEMY;
+	TArray<AActor*> ActorWithTags;
 	UGameplayStatics::GetAllActorsWithTag(AIPawn, TargetTag, ActorWithTags);
 	
-	// AActor* SelfActor = Cast<AActor>(BBComp->GetValueAsObject(TargetActor_KS.SelectedKeyName));
 	AActor* ClosestActor = nullptr;
 	float ClosestDistance = MAX_FLT;
 	for(AActor* Actor : ActorWithTags)
@@ -32,7 +31,7 @@ void UAuraBTService_FindNearestPlayer::TickNode(UBehaviorTreeComponent& OwnerCom
 			{
 				ClosestDistance = Distance;
 				ClosestActor = Actor;
-				// GEngine->AddOnScreenDebugMessage(-1, 4.f, FColor::Cyan, FString::Printf(TEXT("Name %s"), *Actor->GetName()));
+				// GEngine->AddOnScreenDebugMessage(-1, 4.f, FColor::Cyan, FString::Printf(TEXT("Name %s"), *ClosestActor->GetName()));
 			}
 		}		
 	}

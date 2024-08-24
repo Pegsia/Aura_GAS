@@ -6,7 +6,6 @@
 #include "Character/AuraCharacterBase.h"
 #include "EnemyInterface.h"
 #include "UI/WidgetController/OverlayWidgetController.h"
-#include "CharacterClassInfo.h"
 #include "AuraEnemy.generated.h"
 
 class AAuraAIController;
@@ -56,7 +55,13 @@ public:
 	// Death
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Death")
 	float EnemyLifeSpan = 5.f;
-	
+
+	// Behavior
+	UPROPERTY(VisibleAnywhere)
+	FName HitReactingKey = "HitReacting";
+
+	UPROPERTY(VisibleAnywhere)
+	FName RangedAttackerKey = "RangedAttacker";
 protected:
 	//~ Begin AuraCharacterBase Interface
 	virtual void InitialAbilityActorInfo() override;

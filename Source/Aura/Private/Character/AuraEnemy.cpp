@@ -28,7 +28,14 @@ AAuraEnemy::AAuraEnemy()
 	HealthBarComponent = CreateDefaultSubobject<UWidgetComponent>("HealthBar");
 	HealthBarComponent->SetupAttachment(GetRootComponent());
 
-	Tags.Emplace(ACTOR_TAG_ENEMY); // Add Actor Tag for BTS_FindNearestPlayer
+	// Movement
+	bUseControllerRotationYaw = false;
+	bUseControllerRotationPitch = false;
+	bUseControllerRotationRoll = false;
+	GetCharacterMovement()->bUseControllerDesiredRotation = true;
+	
+	// Add Actor Tag for BTS_FindNearestPlayer
+	Tags.Emplace(ACTOR_TAG_ENEMY); 
 }
 
 void AAuraEnemy::PossessedBy(AController* NewController)
@@ -39,6 +46,8 @@ void AAuraEnemy::PossessedBy(AController* NewController)
 	AuraAIController = Cast<AAuraAIController>(NewController);
 	AuraAIController->GetBlackboardComponent()->InitializeBlackboard(*BehaviorTree->BlackboardAsset);
 	AuraAIController->RunBehaviorTree(BehaviorTree);
+	AuraAIController->GetBlackboardComponent()->SetValueAsBool(HitReactingKey, false);
+	AuraAIController->GetBlackboardComponent()->SetValueAsBool(RangedAttackerKey, CharacterClass != ECharacterClass::Warrior);
 }
 
 void AAuraEnemy::BeginPlay()
@@ -73,6 +82,7 @@ void AAuraEnemy::HitReactTagChanged(const FGameplayTag CallBackTag, int32 TagCou
 {
 	bHitReacting = TagCount > 0;
 	GetCharacterMovement()->MaxWalkSpeed = bHitReacting ? 0.f : BaseWalkSpeed;
+	AuraAIController->GetBlackboardComponent()->SetValueAsBool(HitReactingKey, bHitReacting);
 }
 
 void AAuraEnemy::InitHealthBar()
