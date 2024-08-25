@@ -59,6 +59,9 @@ public:
 	
 	// Effect
 	FGameplayTag Effects_HitReact;
+
+	// Attack
+	FGameplayTag Abilities_Attack;
 protected:
 
 	// Copy From Lyra

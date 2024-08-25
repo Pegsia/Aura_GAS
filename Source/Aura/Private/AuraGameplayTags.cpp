@@ -63,6 +63,9 @@ void FAuraGameplayTags::AddAllTags(UGameplayTagsManager& Manager)
 	
 	// Effects
 	AddTag(Effects_HitReact, "Effects.HitReact", "Enemies React to Hit");
+
+	// Attack
+	AddTag(Abilities_Attack, "Abilities.Attack", "Attack Ability Tag");
 }
 
 void FAuraGameplayTags::AddTag(FGameplayTag& OutTag, const ANSICHAR* TagName, const ANSICHAR* TagComment)

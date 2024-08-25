@@ -9,6 +9,7 @@
 #include "AuraGameModeBase.h"
 #include "AuraAbilitySystemComponent.h"
 #include "AuraAbilityTypes.h"
+#include "CombatInterface.h"
 
 UOverlayWidgetController* UAuraAbilitySystemLibrary::GetOverlayWidgetController(const UObject* WorldContextObject)
 {
@@ -68,14 +69,23 @@ FActiveGameplayEffectHandle UAuraAbilitySystemLibrary::ApplyEffectToSelf(TSubcla
 	return ActiveEffectHandle;
 }
 
-void UAuraAbilitySystemLibrary::InitializeStartAbilities(const UObject* WorldContextObject,	UAbilitySystemComponent* ASC)
+void UAuraAbilitySystemLibrary::InitializeStartAbilities(const UObject* WorldContextObject,	UAbilitySystemComponent* ASC, ECharacterClass CharacterClass)
 {
-	if(const UCharacterClassInfo* ClassInfo = GetCharacterClassInfo(WorldContextObject)) // TTuple<ECharacterClass, FCharacterClassDefalutInfo>
+	if(const UCharacterClassInfo* ClassInfo = GetCharacterClassInfo(WorldContextObject))
 	{
 		for(TSubclassOf<UGameplayAbility> AbilityClass : ClassInfo->CommonAbilities)
 		{
 			FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1.f);
 			ASC->GiveAbility(AbilitySpec);
+		}
+		const FCharacterClassDefaultInfo& DefaultInfo = ClassInfo->GetClassDefaultInfo(CharacterClass);
+		for(TSubclassOf<UGameplayAbility> AbilityClass : DefaultInfo.StartUpAbilities)
+		{
+			if(TScriptInterface<ICombatInterface> CombatInterface = ASC->GetAvatarActor())
+			{
+				FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, CombatInterface->GetPlayerLevel());
+				ASC->GiveAbility(AbilitySpec);
+			}
 		}
 	}	
 }
@@ -84,7 +94,7 @@ UCharacterClassInfo* UAuraAbilitySystemLibrary::GetCharacterClassInfo(const UObj
 {
 	AAuraGameModeBase* GameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
 	if (GameMode == nullptr)	return nullptr;
-	return GameMode->CharacterClassInfo;  // TTuple<ECharacterClass, FCharacterClassDefaultInfo>
+	return GameMode->CharacterClassInfo;  // UCharacterClassInfo
 }
 
 bool UAuraAbilitySystemLibrary::IsBlockedHit(const FGameplayEffectContextHandle& EffectContextHandle)

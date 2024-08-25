@@ -60,7 +60,7 @@ void AAuraEnemy::BeginPlay()
 	if(HasAuthority())				// Both Need GameMode which only exist on the Server
 	{
 		InitialDefaultAttributes(); // Init Default Attributes in AuraCharacterBase
-		UAuraAbilitySystemLibrary::InitializeStartAbilities(this, AbilitySystemComponent);
+		UAuraAbilitySystemLibrary::InitializeStartAbilities(this, AbilitySystemComponent, CharacterClass);
 	}	
 	InitHealthBar();		        // Init Attributes CallBacks
 }
@@ -82,6 +82,7 @@ void AAuraEnemy::HitReactTagChanged(const FGameplayTag CallBackTag, int32 TagCou
 {
 	bHitReacting = TagCount > 0;
 	GetCharacterMovement()->MaxWalkSpeed = bHitReacting ? 0.f : BaseWalkSpeed;
+	if(!HasAuthority()) return;
 	AuraAIController->GetBlackboardComponent()->SetValueAsBool(HitReactingKey, bHitReacting);
 }
 

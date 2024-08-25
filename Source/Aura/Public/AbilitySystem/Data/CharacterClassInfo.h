@@ -28,6 +28,9 @@ struct FCharacterClassDefaultInfo
 
 	UPROPERTY(EditDefaultsOnly, Category = "Class Defaults")
 	TSubclassOf<UGameplayEffect> SecondaryAttributes;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Class Defaults")
+	TArray<TSubclassOf<UGameplayAbility>> StartUpAbilities;
 };
 
 /**
@@ -40,11 +43,12 @@ class AURA_API UCharacterClassInfo : public UDataAsset
 
 public:
 	UPROPERTY(EditDefaultsOnly, Category = "Character Class Defaults")
-	TMap<ECharacterClass, FCharacterClassDefaultInfo> CharacterClassInformation;
+	TMap<ECharacterClass, FCharacterClassDefaultInfo> CharacterClassInfoMap;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Common Class Defaults")
 	TSubclassOf<UGameplayEffect> VitalAttributes;
 
+	// Abilities like HitReact, 
 	UPROPERTY(EditDefaultsOnly, Category = "Common Class Defaults")
 	TArray<TSubclassOf<UGameplayAbility>> CommonAbilities;
 	
