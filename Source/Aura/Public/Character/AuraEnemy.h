@@ -29,6 +29,8 @@ public:
 	//~ Begin IEnemyInterface
 	virtual void HighLightActor() override;
 	virtual void UnHighLightActor() override;
+	virtual void SetCombatTarget_Implementation(AActor* InCombatTarget) override;
+	virtual AActor* GetCombatTarget_Implementation() const override;
 	//~ End IEnemyInterface
 
 	//~ Begin ICombatInterface
@@ -52,6 +54,9 @@ public:
 	
 	void HitReactTagChanged(const FGameplayTag CallBackTag, int32 TagCount);
 
+	UPROPERTY(BlueprintReadWrite, Category = "Combat")
+	TObjectPtr<AActor> CombatTarget;
+	
 	// Death
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Death")
 	float EnemyLifeSpan = 5.f;

@@ -15,5 +15,8 @@ class AURA_API UAuraBTTask_MeleeAttack : public UBTTaskNode
 	GENERATED_BODY()
 
 public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FBlackboardKeySelector TargetActorKS;
+	
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 };

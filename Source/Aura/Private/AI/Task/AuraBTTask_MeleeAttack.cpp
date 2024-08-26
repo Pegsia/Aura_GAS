@@ -7,14 +7,22 @@
 #include "AbilitySystemComponent.h"
 #include "AuraAIController.h"
 #include "AuraGameplayTags.h"
+#include "EnemyInterface.h"
+#include "BehaviorTree/BlackboardComponent.h"
 
+// GEngine->AddOnScreenDebugMessage(-1, 4.f, FColor::Cyan, FString::Printf(TEXT("Name %s"), *AIPawn->GetName()));
 EBTNodeResult::Type UAuraBTTask_MeleeAttack::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
-	// UBlackboardComponent* BBComp = OwnerComp.GetBlackboardComponent();
-	
+	UBlackboardComponent* BBComp = OwnerComp.GetBlackboardComponent();
+	AActor* TargetActor = Cast<AActor>(BBComp->GetValueAsObject(TargetActorKS.SelectedKeyName));
+	if(!TargetActor) return EBTNodeResult::Failed;	
+
+	// Set TargetActor To AuraEnemy, GetTargetActor In GA_MeleeAttack
 	AAuraAIController* AuraAIController = Cast<AAuraAIController>(OwnerComp.GetAIOwner());
 	APawn* AIPawn = AuraAIController->GetPawn();
-	// GEngine->AddOnScreenDebugMessage(-1, 4.f, FColor::Cyan, FString::Printf(TEXT("Name %s"), *AIPawn->GetName()));
+	TScriptInterface<IEnemyInterface> EnemyInterface = AIPawn;
+	if(!EnemyInterface) return EBTNodeResult::Failed;
+	IEnemyInterface::Execute_SetCombatTarget(AIPawn, TargetActor);	
 
 	UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(AIPawn);
 	const FAuraGameplayTags& GameplayTags = FAuraGameplayTags::Get();
