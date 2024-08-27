@@ -27,10 +27,13 @@ public:
 	//~ End IAbilitySystemInterface
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 
-	//~ Begin ICombatInterface
+	//~ Begin ICombatInterface	
+	virtual FVector GetCombatSocketLocation_Implementation() override;
 	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
 	virtual UAnimMontage* GetAttackMontage_Implementation() override;
 	virtual void CharacterDeath() override;
+	virtual bool IsDead_Implementation() const override;
+	virtual AActor* GetAvatar_Implementation() override;
 	//~ End ICombatInterface
 
 	UFUNCTION(NetMulticast, Reliable)
@@ -48,9 +51,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	FName WeaponTipSocketName;  // Location to spawn projectiles
 
-	//~ Begin ICombatInterface
-	virtual FVector GetCombatSocketLocation() override;
-	//~ End ICombatInterface
+	bool bDead = false;
 	
 	// Initial Ability Actor Info(PC, PS, ASC, AS)
 	UPROPERTY()

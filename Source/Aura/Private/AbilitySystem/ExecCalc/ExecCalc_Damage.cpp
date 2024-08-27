@@ -50,17 +50,17 @@ struct AuraDamageStatic
 		// FAuraGameplayTag Initialize After AuraDamageStatic, Manual Initialize it in AuraAssetManager
 		TagsToCaptureDef.Empty();
 		const FAuraGameplayTags& GameplayTags = FAuraGameplayTags::Get();
-		TagsToCaptureDef.Add(GameplayTags.Attributes_Secondary_Armor, ArmorDef);
-		TagsToCaptureDef.Add(GameplayTags.Attributes_Secondary_BlockChance, BlockChanceDef);
-		TagsToCaptureDef.Add(GameplayTags.Attributes_Secondary_CriticalHitResistance, CriticalHitResistanceDef);		
-		TagsToCaptureDef.Add(GameplayTags.Attributes_Resistance_Fire, FireResistanceDef);
-		TagsToCaptureDef.Add(GameplayTags.Attributes_Resistance_Lightning, LightningResistanceDef);
-		TagsToCaptureDef.Add(GameplayTags.Attributes_Resistance_Arcane, ArcaneResistanceDef);
-		TagsToCaptureDef.Add(GameplayTags.Attributes_Resistance_Physical, PhysicalResistanceDef);
+		TagsToCaptureDef.Emplace(GameplayTags.Attributes_Secondary_Armor, ArmorDef);
+		TagsToCaptureDef.Emplace(GameplayTags.Attributes_Secondary_BlockChance, BlockChanceDef);
+		TagsToCaptureDef.Emplace(GameplayTags.Attributes_Secondary_CriticalHitResistance, CriticalHitResistanceDef);		
+		TagsToCaptureDef.Emplace(GameplayTags.Attributes_Resistance_Fire, FireResistanceDef);
+		TagsToCaptureDef.Emplace(GameplayTags.Attributes_Resistance_Lightning, LightningResistanceDef);
+		TagsToCaptureDef.Emplace(GameplayTags.Attributes_Resistance_Arcane, ArcaneResistanceDef);
+		TagsToCaptureDef.Emplace(GameplayTags.Attributes_Resistance_Physical, PhysicalResistanceDef);
 
-		TagsToCaptureDef.Add(GameplayTags.Attributes_Secondary_ArmorPenetration, ArmorPenetrationDef);
-		TagsToCaptureDef.Add(GameplayTags.Attributes_Secondary_CriticalHitChance, CriticalHitChanceDef);
-		TagsToCaptureDef.Add(GameplayTags.Attributes_Secondary_CriticalHitDamage, CriticalHitDamageDef);
+		TagsToCaptureDef.Emplace(GameplayTags.Attributes_Secondary_ArmorPenetration, ArmorPenetrationDef);
+		TagsToCaptureDef.Emplace(GameplayTags.Attributes_Secondary_CriticalHitChance, CriticalHitChanceDef);
+		TagsToCaptureDef.Emplace(GameplayTags.Attributes_Secondary_CriticalHitDamage, CriticalHitDamageDef);
 	}
 };
 
@@ -78,17 +78,17 @@ void UExecCalc_Damage::InitializeAuraDamageStaticMap()
 
 UExecCalc_Damage::UExecCalc_Damage()
 {
-	RelevantAttributesToCapture.Add(GetDamageStatic().ArmorDef);
-	RelevantAttributesToCapture.Add(GetDamageStatic().BlockChanceDef);
-	RelevantAttributesToCapture.Add(GetDamageStatic().CriticalHitResistanceDef);
-	RelevantAttributesToCapture.Add(GetDamageStatic().FireResistanceDef);
-	RelevantAttributesToCapture.Add(GetDamageStatic().LightningResistanceDef);
-	RelevantAttributesToCapture.Add(GetDamageStatic().ArcaneResistanceDef);
-	RelevantAttributesToCapture.Add(GetDamageStatic().PhysicalResistanceDef);
+	RelevantAttributesToCapture.Emplace(GetDamageStatic().ArmorDef);
+	RelevantAttributesToCapture.Emplace(GetDamageStatic().BlockChanceDef);
+	RelevantAttributesToCapture.Emplace(GetDamageStatic().CriticalHitResistanceDef);
+	RelevantAttributesToCapture.Emplace(GetDamageStatic().FireResistanceDef);
+	RelevantAttributesToCapture.Emplace(GetDamageStatic().LightningResistanceDef);
+	RelevantAttributesToCapture.Emplace(GetDamageStatic().ArcaneResistanceDef);
+	RelevantAttributesToCapture.Emplace(GetDamageStatic().PhysicalResistanceDef);
 	
-	RelevantAttributesToCapture.Add(GetDamageStatic().ArmorPenetrationDef);
-	RelevantAttributesToCapture.Add(GetDamageStatic().CriticalHitChanceDef);
-	RelevantAttributesToCapture.Add(GetDamageStatic().CriticalHitDamageDef);
+	RelevantAttributesToCapture.Emplace(GetDamageStatic().ArmorPenetrationDef);
+	RelevantAttributesToCapture.Emplace(GetDamageStatic().CriticalHitChanceDef);
+	RelevantAttributesToCapture.Emplace(GetDamageStatic().CriticalHitDamageDef);
 }
 
 void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecutionParams, FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const

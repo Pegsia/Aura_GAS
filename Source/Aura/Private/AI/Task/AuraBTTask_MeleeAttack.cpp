@@ -14,12 +14,13 @@
 EBTNodeResult::Type UAuraBTTask_MeleeAttack::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
 	UBlackboardComponent* BBComp = OwnerComp.GetBlackboardComponent();
+	AAuraAIController* AuraAIController = Cast<AAuraAIController>(OwnerComp.GetAIOwner());
+	APawn* AIPawn = AuraAIController->GetPawn();
+	
 	AActor* TargetActor = Cast<AActor>(BBComp->GetValueAsObject(TargetActorKS.SelectedKeyName));
 	if(!TargetActor) return EBTNodeResult::Failed;	
 
-	// Set TargetActor To AuraEnemy, GetTargetActor In GA_MeleeAttack
-	AAuraAIController* AuraAIController = Cast<AAuraAIController>(OwnerComp.GetAIOwner());
-	APawn* AIPawn = AuraAIController->GetPawn();
+	// Set TargetActor To AuraEnemy In order to MotionWarping, GetTargetActor In GA_MeleeAttack	
 	TScriptInterface<IEnemyInterface> EnemyInterface = AIPawn;
 	if(!EnemyInterface) return EBTNodeResult::Failed;
 	IEnemyInterface::Execute_SetCombatTarget(AIPawn, TargetActor);	

@@ -19,16 +19,16 @@ void UAuraGameplayAbility_ProjectileSpell::SpawnFireBolt(const FVector& Projecti
 	// Only on Server
 	if (!GetAvatarActorFromActorInfo()->HasAuthority()) return;
 	
-	TScriptInterface<ICombatInterface> CombatInterface = GetAvatarActorFromActorInfo();
-	if (CombatInterface)
+	if (GetAvatarActorFromActorInfo()->Implements<UCombatInterface>())
 	{
-		const FVector SpawnLocation = CombatInterface->GetCombatSocketLocation();
+		const FVector SpawnLocation = ICombatInterface::Execute_GetCombatSocketLocation(GetAvatarActorFromActorInfo());
 		FRotator SpawnRotation = (ProjectileTargetLocation - SpawnLocation).Rotation();
 
 		FTransform SpawnTransform;
 		SpawnTransform.SetLocation(SpawnLocation);
 		SpawnTransform.SetRotation(SpawnRotation.Quaternion());
 
+		// Spawn Projectile Deferred
 		AAuraProjectile* Projectile = GetWorld()->SpawnActorDeferred<AAuraProjectile>(
 			ProjectileClass,
 			SpawnTransform,
@@ -50,6 +50,7 @@ void UAuraGameplayAbility_ProjectileSpell::SpawnFireBolt(const FVector& Projecti
 		
 		const FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), EffectContextHandle);		
 
+		// Assign Damage By Damage Type
 		for(const TTuple<FGameplayTag, FScalableFloat>& Pair : DamageTypeMap)
 		{
 			const float Damage = Pair.Value.GetValueAtLevel(GetAbilityLevel());

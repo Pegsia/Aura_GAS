@@ -13,11 +13,14 @@ UCLASS()
 class AURA_API UAuraGameplayAbility_Damage : public UAuraGameplayAbility
 {
 	GENERATED_BODY()
-
+public:
+	UFUNCTION(BlueprintCallable)
+	void ApplyAllTypeOfDamage(AActor* TargetActor); 
+	
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage")
 	TMap<FGameplayTag, FScalableFloat> DamageTypeMap;
 	
-	UPROPERTY(EditDefaultsOnly, Category = "Projectile")
+	UPROPERTY(EditDefaultsOnly, Category = "Damage")
 	TSubclassOf<UGameplayEffect> DamageEffectClass;
 };

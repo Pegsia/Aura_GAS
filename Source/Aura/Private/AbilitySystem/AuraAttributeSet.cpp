@@ -119,9 +119,13 @@ void UAuraAttributeSet::ShowFloatingDamage(const FEffectProperties& Props, float
 {
 	if(Props.SourceCharacter != Props.TargetCharacter)
 	{
-		if(AAuraPlayerController* PC = Cast<AAuraPlayerController>(Props.SourceController))
+		if(AAuraPlayerController* PC = Cast<AAuraPlayerController>(Props.SourceController)) // Target is Enemy
 		{
 			PC->ShowDamageNumber(Damage, Props.TargetCharacter, bBlockedHit, bCriticalHit);
+		}
+		else if(AAuraPlayerController* PlayerPC = Cast<AAuraPlayerController>(Props.TargetController)) // Target is Player
+		{
+			PlayerPC->ShowDamageNumber(Damage, Props.TargetCharacter, bBlockedHit, bCriticalHit);
 		}
 	}
 }

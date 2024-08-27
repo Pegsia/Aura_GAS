@@ -5,7 +5,7 @@
 #include "AuraAbilitySystemComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Aura/Aura.h"
-#include "../Public/AbilitySystem/AuraAbilitySystemLibrary.h"
+#include "AuraAbilitySystemLibrary.h"
 
 AAuraCharacterBase::AAuraCharacterBase()
 {
@@ -45,17 +45,6 @@ void AAuraCharacterBase::InitAuraStartupAbilities() const
 	AuraASC->AddCharacterStartupAbilities(StartupAbilities);
 }
 
-
-UAnimMontage* AAuraCharacterBase::GetHitReactMontage_Implementation()
-{
-	return HitReactMontage;
-}
-
-UAnimMontage* AAuraCharacterBase::GetAttackMontage_Implementation()
-{
-	return AttackMontage;
-}
-
 void AAuraCharacterBase::CharacterDeath()
 {
 	// Server
@@ -63,8 +52,11 @@ void AAuraCharacterBase::CharacterDeath()
 	MulticastHandleCharacterDeath();
 }
 
+
 void AAuraCharacterBase::MulticastHandleCharacterDeath_Implementation()
 {
+	bDead = true;
+	
 	Weapon->SetSimulatePhysics(true);
 	Weapon->SetEnableGravity(true);
 	Weapon->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
@@ -95,7 +87,27 @@ void AAuraCharacterBase::Dissolve()
 	}
 }
 
-FVector AAuraCharacterBase::GetCombatSocketLocation()
+bool AAuraCharacterBase::IsDead_Implementation() const
+{
+	return bDead;
+}
+
+AActor* AAuraCharacterBase::GetAvatar_Implementation()
+{
+	return this;
+}
+
+UAnimMontage* AAuraCharacterBase::GetHitReactMontage_Implementation()
+{
+	return HitReactMontage;
+}
+
+UAnimMontage* AAuraCharacterBase::GetAttackMontage_Implementation()
+{
+	return AttackMontage;
+}
+
+FVector AAuraCharacterBase::GetCombatSocketLocation_Implementation()
 {
 	return Weapon->GetSocketLocation(WeaponTipSocketName);
 }
