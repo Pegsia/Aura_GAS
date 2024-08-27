@@ -10,6 +10,7 @@
 #include "AuraAbilitySystemComponent.h"
 #include "AuraAbilityTypes.h"
 #include "CombatInterface.h"
+#include "Aura/Aura.h"
 
 UOverlayWidgetController* UAuraAbilitySystemLibrary::GetOverlayWidgetController(const UObject* WorldContextObject)
 {
@@ -149,4 +150,11 @@ void UAuraAbilitySystemLibrary::GetLivePlayersWithinRadius(const UObject* WorldC
 			}			
 		}
 	}
+}
+
+bool UAuraAbilitySystemLibrary::IsFriend(AActor* FirstActor, AActor* SecondActor)
+{
+	const bool bBothPlayers = FirstActor->ActorHasTag(ACTOR_TAG_PLAYER) && SecondActor->ActorHasTag(ACTOR_TAG_PLAYER);
+	const bool bBothEnemies  = FirstActor->ActorHasTag(ACTOR_TAG_ENEMY)  && SecondActor->ActorHasTag(ACTOR_TAG_ENEMY);
+	return bBothPlayers || bBothEnemies;
 }

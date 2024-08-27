@@ -66,6 +66,12 @@ void FAuraGameplayTags::AddAllTags(UGameplayTagsManager& Manager)
 
 	// Attack
 	AddTag(Abilities_Attack, "Abilities.Attack", "Attack Ability Tag");
+
+	// Attack
+	AddTag(Montage_Attack_Weapon, "Montage.Attack.Weapon", "Weapon");
+	AddTag(Montage_Attack_LeftHand, "Montage.Attack.LeftHand", "LeftHand");
+	AddTag(Montage_Attack_RightHand, "Montage.Attack.RightHand", "RightHand");
+	
 }
 
 void FAuraGameplayTags::AddTag(FGameplayTag& OutTag, const ANSICHAR* TagName, const ANSICHAR* TagComment)

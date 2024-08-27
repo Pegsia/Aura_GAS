@@ -28,16 +28,20 @@ public:
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 
 	//~ Begin ICombatInterface	
-	virtual FVector GetCombatSocketLocation_Implementation() override;
+	virtual FVector GetCombatSocketLocation_Implementation(const FGameplayTag& MontageTag) override;
 	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
-	virtual UAnimMontage* GetAttackMontage_Implementation() override;
+	virtual TArray<FTaggedMontage> GetAttackMontages_Implementation() override;
 	virtual void CharacterDeath() override;
 	virtual bool IsDead_Implementation() const override;
 	virtual AActor* GetAvatar_Implementation() override;
 	//~ End ICombatInterface
-
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Combat", meta = (TitleProperty = "MontageTag"))
+	TArray<FTaggedMontage> AttackMontageArray;
+	
 	UFUNCTION(NetMulticast, Reliable)
 	virtual void MulticastHandleCharacterDeath();
+	
 protected:
 	virtual void BeginPlay() override;
 
@@ -49,8 +53,14 @@ protected:
 	FName WeaponSocketName{"WeaponHandSocket"};
 
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
-	FName WeaponTipSocketName;  // Location to spawn projectiles
+	FName WeaponTipSocketName;  // Location to Attack
 
+	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	FName LeftHandSocketName;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	FName RightHandSocketName;
+	
 	bool bDead = false;
 	
 	// Initial Ability Actor Info(PC, PS, ASC, AS)
@@ -95,7 +105,5 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	TObjectPtr<UAnimMontage> HitReactMontage;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Combat")
-	TObjectPtr<UAnimMontage> AttackMontage;
+	
 };

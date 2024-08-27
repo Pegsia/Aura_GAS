@@ -6,6 +6,7 @@
 #include "AuraProjectile.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
+#include "AuraGameplayTags.h"
 
 void UAuraGameplayAbility_ProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
@@ -21,7 +22,7 @@ void UAuraGameplayAbility_ProjectileSpell::SpawnFireBolt(const FVector& Projecti
 	
 	if (GetAvatarActorFromActorInfo()->Implements<UCombatInterface>())
 	{
-		const FVector SpawnLocation = ICombatInterface::Execute_GetCombatSocketLocation(GetAvatarActorFromActorInfo());
+		const FVector SpawnLocation = ICombatInterface::Execute_GetCombatSocketLocation(GetAvatarActorFromActorInfo(), FAuraGameplayTags::Get().Montage_Attack_Weapon);
 		FRotator SpawnRotation = (ProjectileTargetLocation - SpawnLocation).Rotation();
 
 		FTransform SpawnTransform;

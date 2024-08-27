@@ -49,7 +49,7 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "Combat")
 	bool bHitReacting = false;
 
-	UPROPERTY(BlueprintReadOnly, Category = "Combat")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat")
 	float BaseWalkSpeed = 250.f;
 	
 	void HitReactTagChanged(const FGameplayTag CallBackTag, int32 TagCount);
@@ -57,7 +57,7 @@ public:
 	UPROPERTY(BlueprintReadWrite, Category = "Combat")
 	TObjectPtr<AActor> CombatTarget;
 	
-	// Death
+	// When Enemy Dead, Set it LifeSpan
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Death")
 	float EnemyLifeSpan = 5.f;
 

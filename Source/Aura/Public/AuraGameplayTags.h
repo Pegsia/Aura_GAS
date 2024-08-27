@@ -62,6 +62,12 @@ public:
 
 	// Attack
 	FGameplayTag Abilities_Attack;
+
+	// Montage
+	FGameplayTag Montage_Attack_Weapon;
+	FGameplayTag Montage_Attack_LeftHand;
+	FGameplayTag Montage_Attack_RightHand;
+	
 protected:
 
 	// Copy From Lyra
