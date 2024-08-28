@@ -1,7 +1,7 @@
 // Copyright QiuXuan
 
 
-#include "AI/Task/AuraBTTask_MeleeAttack.h"
+#include "AI/Task/AuraBTTask_EnemyAttack.h"
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
@@ -11,7 +11,7 @@
 #include "BehaviorTree/BlackboardComponent.h"
 
 // GEngine->AddOnScreenDebugMessage(-1, 4.f, FColor::Cyan, FString::Printf(TEXT("Name %s"), *AIPawn->GetName()));
-EBTNodeResult::Type UAuraBTTask_MeleeAttack::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
+EBTNodeResult::Type UAuraBTTask_EnemyAttack::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
 	UBlackboardComponent* BBComp = OwnerComp.GetBlackboardComponent();
 	AAuraAIController* AuraAIController = Cast<AAuraAIController>(OwnerComp.GetAIOwner());

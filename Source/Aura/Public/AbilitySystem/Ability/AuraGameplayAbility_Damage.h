@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CombatInterface.h"
 #include "AbilitySystem/Ability/AuraGameplayAbility.h"
 #include "AuraGameplayAbility_Damage.generated.h"
 
@@ -23,4 +24,7 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")
 	TSubclassOf<UGameplayEffect> DamageEffectClass;
+
+	UFUNCTION(BlueprintPure)
+	FTaggedMontage GetRandomTaggedMontageFromArray(const TArray<FTaggedMontage>& TaggedMontagesArray) const;
 };

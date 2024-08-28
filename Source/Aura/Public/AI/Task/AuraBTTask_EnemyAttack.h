@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTTaskNode.h"
-#include "AuraBTTask_MeleeAttack.generated.h"
+#include "AuraBTTask_EnemyAttack.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class AURA_API UAuraBTTask_MeleeAttack : public UBTTaskNode
+class AURA_API UAuraBTTask_EnemyAttack : public UBTTaskNode
 {
 	GENERATED_BODY()
 

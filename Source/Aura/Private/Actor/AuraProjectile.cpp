@@ -10,6 +10,7 @@
 #include "../Aura.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
+#include "AuraAbilitySystemLibrary.h"
 
 AAuraProjectile::AAuraProjectile()
 {
@@ -60,6 +61,10 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 	{
 		// DedicatedServer模式下Client骨骼运动会错误，导致Server上Projectile成功生成并继续运动，
 		// 但Client立刻与Aura碰撞，由于Server上Projectile没有销毁，于是碰撞后Projectile继续运动并不再产生OverlapEvent
+		return;
+	}
+	if(UAuraAbilitySystemLibrary::IsFriend(OtherActor, GetInstigator()))
+	{
 		return;
 	}
 	if(!bHit)

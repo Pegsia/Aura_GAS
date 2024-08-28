@@ -15,7 +15,7 @@ void UAuraGameplayAbility_ProjectileSpell::ActivateAbility(const FGameplayAbilit
 
 }
 
-void UAuraGameplayAbility_ProjectileSpell::SpawnFireBolt(const FVector& ProjectileTargetLocation)
+void UAuraGameplayAbility_ProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocation)
 {
 	// Only on Server
 	if (!GetAvatarActorFromActorInfo()->HasAuthority()) return;
