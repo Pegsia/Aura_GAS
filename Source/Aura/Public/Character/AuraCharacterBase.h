@@ -9,6 +9,7 @@
 #include "CharacterClassInfo.h"
 #include "AuraCharacterBase.generated.h"
 
+class UNiagaraSystem;
 class UAbilitySystemComponent;
 class UAttributeSet;
 class UGameplayEffect;
@@ -34,6 +35,7 @@ public:
 	virtual void CharacterDeath() override;
 	virtual bool IsDead_Implementation() const override;
 	virtual AActor* GetAvatar_Implementation() override;
+	virtual UNiagaraSystem* GetBloodEffect_Implementation() const override;
 	//~ End ICombatInterface
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Combat", meta = (TitleProperty = "MontageTag"))
@@ -98,6 +100,10 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TObjectPtr<UMaterialInstance> WeaponDissolveMaterialInstance;
+
+	// Blood Effect
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Blood Effect")
+	TObjectPtr<UNiagaraSystem> BloodEffect;
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Ability")

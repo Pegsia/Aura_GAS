@@ -25,13 +25,10 @@ void AAuraPlayerController::BeginPlay()
 	Super::BeginPlay();
 
 	// Set InputContext
-	if (ensureAlways(AuraContext))
+	check(AuraContext);	
+	if (UEnhancedInputLocalPlayerSubsystem* SubSystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
 	{
-		UEnhancedInputLocalPlayerSubsystem* SubSystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
-		if (SubSystem)
-		{
-			SubSystem->AddMappingContext(AuraContext, 0);
-		}		
+		SubSystem->AddMappingContext(AuraContext, 0);
 	}
 	
 	// Set Default
