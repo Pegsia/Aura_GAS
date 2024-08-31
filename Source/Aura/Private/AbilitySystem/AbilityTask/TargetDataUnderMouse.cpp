@@ -61,7 +61,7 @@ void UTargetDataUnderMouse::SendMouseTargetData()
 
 	if (ShouldBroadcastAbilityTaskDelegates())
 	{
-		ValidData.Broadcast(DataHandle);
+		OnValidDataReceived.Broadcast(DataHandle);
 	}
 }
 
@@ -71,7 +71,7 @@ void UTargetDataUnderMouse::OnTargetDataReplicatedCallBack(const FGameplayAbilit
 	// CachedData->TargetData.Clear();
 	if (ShouldBroadcastAbilityTaskDelegates())
 	{
-		ValidData.Broadcast(DataHandle);
+		OnValidDataReceived.Broadcast(DataHandle);
 	}
 	AbilitySystemComponent.Get()->ConsumeClientReplicatedTargetData(GetAbilitySpecHandle(), GetActivationPredictionKey());	
 }

@@ -5,6 +5,7 @@
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
+#include "EnemyInterface.h"
 
 void UAuraGameplayAbility_Damage::ApplyAllTypeOfDamage(AActor* TargetActor)
 {
@@ -22,4 +23,31 @@ FTaggedMontage UAuraGameplayAbility_Damage::GetRandomTaggedMontageFromArray(cons
 	if(TaggedMontagesArray.IsEmpty()) return FTaggedMontage();
 	int32 RandomIndex = FMath::RandRange(0, TaggedMontagesArray.Num() - 1);
 	return TaggedMontagesArray[RandomIndex];
+}
+
+bool UAuraGameplayAbility_Damage::SetDamageAbilityProperties(FDamageAbilityProperties& OutProps)
+{
+	OutProps.AvatarActor = CurrentActorInfo->AvatarActor.Get();
+	if(OutProps.AvatarActor->Implements<UEnemyInterface>())
+	{
+		OutProps.TargetActor = IEnemyInterface::Execute_GetCombatTarget(OutProps.AvatarActor);	
+	}
+	
+	if(OutProps.AvatarActor->Implements<UCombatInterface>())
+	{
+		// Get Attack Props
+		FTaggedMontage TaggedMontage = GetRandomTaggedMontageFromArray(ICombatInterface::Execute_GetAttackMontages(OutProps.AvatarActor));		
+		OutProps.AttackMontage = TaggedMontage.Montage;
+		OutProps.AttackTag = TaggedMontage.MontageTag;
+		OutProps.ImpactSound = TaggedMontage.ImpactSound;
+		OutProps.BloodEffect = ICombatInterface::Execute_GetBloodEffect(OutProps.AvatarActor);
+		
+		return true;
+	}
+	return false;
+}
+
+void UAuraGameplayAbility_Damage::MontageEndAbility()
+{
+	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }

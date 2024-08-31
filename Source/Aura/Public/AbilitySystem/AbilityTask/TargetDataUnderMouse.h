@@ -21,11 +21,11 @@ public:
 	static UTargetDataUnderMouse* CreateTargetDataUnderMouse(UGameplayAbility* OwningAbility);
 
 	UPROPERTY(BlueprintAssignable)
-	FMouseTargetDataSignature ValidData;
+	FMouseTargetDataSignature OnValidDataReceived;
 
-private:
 	virtual void Activate() override;
 
+private:
 	void SendMouseTargetData();
 
 	void OnTargetDataReplicatedCallBack(const FGameplayAbilityTargetDataHandle& DataHandle, FGameplayTag ActivationTag);

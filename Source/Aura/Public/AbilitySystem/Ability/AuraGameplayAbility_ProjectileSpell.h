@@ -24,5 +24,12 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Projectile")
 	TSubclassOf<AAuraProjectile> ProjectileClass;
 
+	UFUNCTION()
+	void TargetDataReceived(const FGameplayAbilityTargetDataHandle& DataHandle);
+
+	UFUNCTION()
+	void FireBoltEventReceived(FGameplayEventData Payload);
+
+	FVector FireBoltHitLocation{};
 	
 };

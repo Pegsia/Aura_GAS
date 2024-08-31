@@ -14,5 +14,14 @@ class AURA_API UAuraGameplayAbility_MeleeAttack : public UAuraGameplayAbility_Da
 {
 	GENERATED_BODY()
 
-	
+protected:
+	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
+
+	UFUNCTION()
+	void MeleeEventReceived(FGameplayEventData Payload);
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+	float Radius = 45.f;
+
+	bool bHasHitTarget = false;
 };
