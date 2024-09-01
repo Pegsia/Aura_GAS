@@ -64,13 +64,19 @@ void FAuraGameplayTags::AddAllTags(UGameplayTagsManager& Manager)
 	// Effects
 	AddTag(Effects_HitReact, "Effects.HitReact", "Enemies React to Hit");
 
-	// Attack
+	// Abilities Attack
 	AddTag(Abilities_Attack, "Abilities.Attack", "Attack Ability Tag");
 
-	// Attack
-	AddTag(Montage_Attack_Weapon, "Montage.Attack.Weapon", "Weapon");
-	AddTag(Montage_Attack_LeftHand, "Montage.Attack.LeftHand", "LeftHand");
-	AddTag(Montage_Attack_RightHand, "Montage.Attack.RightHand", "RightHand");
+	// Combat Socket
+	AddTag(CombatSocket_Weapon, "CombatSocket.Weapon", "Weapon");
+	AddTag(CombatSocket_LeftHand, "CombatSocket.LeftHand", "LeftHand");
+	AddTag(CombatSocket_RightHand, "CombatSocket.RightHand", "RightHand");
+
+	// Montage
+	AddTag(Montage_Attack_1, "Montage.Attack.1", "Attack Type 1");
+	AddTag(Montage_Attack_2, "Montage.Attack.2", "Attack Type 2");
+	AddTag(Montage_Attack_3, "Montage.Attack.3", "Attack Type 3");
+	AddTag(Montage_Attack_4, "Montage.Attack.4", "Attack Type 4");
 	
 }
 

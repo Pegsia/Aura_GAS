@@ -38,9 +38,8 @@ bool UAuraGameplayAbility_Damage::SetDamageAbilityProperties(FDamageAbilityPrope
 		// Get Attack Props
 		FTaggedMontage TaggedMontage = GetRandomTaggedMontageFromArray(ICombatInterface::Execute_GetAttackMontages(OutProps.AvatarActor));		
 		OutProps.AttackMontage = TaggedMontage.Montage;
-		OutProps.AttackTag = TaggedMontage.MontageTag;
-		OutProps.ImpactSound = TaggedMontage.ImpactSound;
-		OutProps.BloodEffect = ICombatInterface::Execute_GetBloodEffect(OutProps.AvatarActor);
+		OutProps.AttackMontageTag = TaggedMontage.MontageTag;
+		OutProps.AttackSocketTag = TaggedMontage.SocketTag;
 		
 		return true;
 	}

@@ -22,6 +22,9 @@ struct FTaggedMontage
 	FGameplayTag MontageTag;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FGameplayTag SocketTag;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	USoundBase* ImpactSound;
 };
 
@@ -43,7 +46,7 @@ public:
 
 	// 根据敌人使用武器或者手部发动攻击，返回相应的Socket
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	FVector GetCombatSocketLocation(const FGameplayTag& MontageTag);
+	FVector GetCombatSocketLocation(const FGameplayTag& SocketTag);
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void SetFacingWarpTarget(const FVector& FacingTarget);
@@ -54,6 +57,9 @@ public:
 	// 攻击蒙太奇和攻击使用的Socket标签
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	TArray<FTaggedMontage> GetAttackMontages();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	FTaggedMontage GetTaggedMontageByMontageTag(const FGameplayTag& Tag);
 	
 	virtual void CharacterDeath() = 0;
 

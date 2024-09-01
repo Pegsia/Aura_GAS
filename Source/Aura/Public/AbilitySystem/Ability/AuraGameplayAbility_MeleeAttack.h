@@ -23,5 +23,8 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
 	float Radius = 45.f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+	FGameplayTag MeleeImpactCueTag;
+	
 	bool bHasHitTarget = false;
 };

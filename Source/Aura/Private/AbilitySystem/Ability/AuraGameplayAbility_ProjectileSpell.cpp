@@ -34,7 +34,7 @@ void UAuraGameplayAbility_ProjectileSpell::TargetDataReceived(const FGameplayAbi
 	ICombatInterface::Execute_SetFacingWarpTarget(DamageAbilityProperties.AvatarActor, FireBoltHitLocation);
 	
 	UAbilityTask_PlayMontageAndWait* PlayMontageAndWaitTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, FName(), DamageAbilityProperties.AttackMontage);
-	UAbilityTask_WaitGameplayEvent* GameplayEventTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, DamageAbilityProperties.AttackTag);
+	UAbilityTask_WaitGameplayEvent* GameplayEventTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, DamageAbilityProperties.AttackMontageTag);
 		
 	GameplayEventTask->EventReceived.AddDynamic(this, &ThisClass::FireBoltEventReceived);
 	PlayMontageAndWaitTask->OnCancelled.AddDynamic(this, &ThisClass::MontageEndAbility);
@@ -47,6 +47,7 @@ void UAuraGameplayAbility_ProjectileSpell::TargetDataReceived(const FGameplayAbi
 
 void UAuraGameplayAbility_ProjectileSpell::FireBoltEventReceived(FGameplayEventData Payload)
 {
+	// Montage AttackTag Received
 	SpawnProjectile(FireBoltHitLocation);
 }
 
@@ -57,7 +58,7 @@ void UAuraGameplayAbility_ProjectileSpell::SpawnProjectile(const FVector& Projec
 	
 	if (GetAvatarActorFromActorInfo()->Implements<UCombatInterface>())
 	{
-		const FVector SpawnLocation = ICombatInterface::Execute_GetCombatSocketLocation(GetAvatarActorFromActorInfo(), FAuraGameplayTags::Get().Montage_Attack_Weapon);
+		const FVector SpawnLocation = ICombatInterface::Execute_GetCombatSocketLocation(GetAvatarActorFromActorInfo(), DamageAbilityProperties.AttackSocketTag);
 		FRotator SpawnRotation = (ProjectileTargetLocation - SpawnLocation).Rotation();
 
 		FTransform SpawnTransform;

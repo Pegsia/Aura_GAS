@@ -113,18 +113,30 @@ TArray<FTaggedMontage> AAuraCharacterBase::GetAttackMontages_Implementation()
 	return AttackMontageArray;
 }
 
-FVector AAuraCharacterBase::GetCombatSocketLocation_Implementation(const FGameplayTag& MontageTag)
+FTaggedMontage AAuraCharacterBase::GetTaggedMontageByMontageTag_Implementation(const FGameplayTag& Tag)
+{
+	for(FTaggedMontage& TaggedMontage : AttackMontageArray)
+	{
+		if(TaggedMontage.MontageTag.MatchesTagExact(Tag))
+		{
+			return TaggedMontage;
+		}
+	}
+	return FTaggedMontage();
+}
+
+FVector AAuraCharacterBase::GetCombatSocketLocation_Implementation(const FGameplayTag& SocketTag)
 {
 	const FAuraGameplayTags& GameplayTags = FAuraGameplayTags::Get();
-	if(MontageTag.MatchesTagExact(GameplayTags.Montage_Attack_Weapon) && IsValid(Weapon))
+	if(SocketTag.MatchesTagExact(GameplayTags.CombatSocket_Weapon) && IsValid(Weapon))
 	{
 		return Weapon->GetSocketLocation(WeaponTipSocketName);
 	}
-	if(MontageTag.MatchesTagExact(GameplayTags.Montage_Attack_LeftHand))
+	if(SocketTag.MatchesTagExact(GameplayTags.CombatSocket_LeftHand))
 	{
 		return GetMesh()->GetSocketLocation(LeftHandSocketName);
 	}
-	if(MontageTag.MatchesTagExact(GameplayTags.Montage_Attack_RightHand))
+	if(SocketTag.MatchesTagExact(GameplayTags.CombatSocket_RightHand))
 	{
 		return GetMesh()->GetSocketLocation(RightHandSocketName);
 	}

@@ -25,13 +25,10 @@ struct FDamageAbilityProperties
 	UAnimMontage* AttackMontage = nullptr;
 	
 	UPROPERTY()
-	FGameplayTag AttackTag = FGameplayTag();
+	FGameplayTag AttackMontageTag = FGameplayTag();
 	
 	UPROPERTY()
-	USoundBase* ImpactSound = nullptr;
-
-	UPROPERTY()
-	UNiagaraSystem* BloodEffect = nullptr;
+	FGameplayTag AttackSocketTag = FGameplayTag();
 };
 
 /**
