@@ -103,8 +103,12 @@ protected:
 	TObjectPtr<UMaterialInstance> WeaponDissolveMaterialInstance;
 
 	// Blood Effect
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Blood Effect")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat")
 	TObjectPtr<UNiagaraSystem> BloodEffect;
+
+	// Death
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	TObjectPtr<USoundBase> DeathSound;
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Ability")

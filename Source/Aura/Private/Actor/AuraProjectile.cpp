@@ -47,6 +47,7 @@ void AAuraProjectile::Destroyed()
 {
 	if (!bHit && !HasAuthority()) // 服务器过快发送销毁命令，客户端没有来得及进行overlap行为
 	{
+		bHit = true;
 		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation());
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
 		if(LoopingSoundComponent) LoopingSoundComponent->Stop();		
@@ -69,6 +70,7 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 	}
 	if(!bHit)
 	{
+		bHit = true;
 		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation());
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
 		if(LoopingSoundComponent) LoopingSoundComponent->Stop();

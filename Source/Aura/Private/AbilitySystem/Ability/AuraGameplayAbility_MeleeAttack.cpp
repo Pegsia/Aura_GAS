@@ -43,7 +43,7 @@ void UAuraGameplayAbility_MeleeAttack::MeleeEventReceived(FGameplayEventData Pay
 		TArray(&DamageAbilityProperties.AvatarActor, 1),
 		CombatSockedLocation,
 		Radius);
-
+	// DrawDebugSphere(DamageAbilityProperties.AvatarActor->GetWorld(),CombatSockedLocation,Radius,16, FColor::Red,false, 3.f);
 	for(AActor* OtherActor : OverlappedActors)
 	{
 		if(!UAuraAbilitySystemLibrary::IsFriend(OtherActor, DamageAbilityProperties.AvatarActor))
@@ -66,6 +66,6 @@ void UAuraGameplayAbility_MeleeAttack::MeleeEventReceived(FGameplayEventData Pay
 		CueParameters.AggregatedSourceTags.AddTag(DamageAbilityProperties.AttackMontageTag);
 		AbilitySystemComponent->ExecuteGameplayCue(MeleeImpactCueTag, CueParameters);
 	}
-	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
+	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);	
 }
 
