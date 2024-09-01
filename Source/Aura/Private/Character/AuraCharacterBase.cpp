@@ -7,6 +7,7 @@
 #include "Aura/Aura.h"
 #include "AuraAbilitySystemLibrary.h"
 #include "AuraGameplayTags.h"
+#include "Kismet/GameplayStatics.h"
 
 AAuraCharacterBase::AAuraCharacterBase()
 {
@@ -56,6 +57,8 @@ void AAuraCharacterBase::CharacterDeath()
 
 void AAuraCharacterBase::MulticastHandleCharacterDeath_Implementation()
 {
+	UGameplayStatics::PlaySoundAtLocation(this, DeathSound, GetActorLocation());
+	
 	bDead = true;
 	
 	Weapon->SetSimulatePhysics(true);
