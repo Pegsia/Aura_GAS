@@ -7,8 +7,8 @@
 #include "AuraAbilitySystemLibrary.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
-// #include "Kismet/GameplayStatics.h"
-// #include "NiagaraFunctionLibrary.h"
+
+static TAutoConsoleVariable<bool> CVarDrawDebugMeleeSphere(TEXT("aura.MeleeSphere"), false, TEXT("DrawDebugMeleeSphere for Enemy Attack"), ECVF_Cheat);
 
 void UAuraGameplayAbility_MeleeAttack::ActivateAbility(const FGameplayAbilitySpecHandle Handle,	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
@@ -43,21 +43,23 @@ void UAuraGameplayAbility_MeleeAttack::MeleeEventReceived(FGameplayEventData Pay
 		TArray(&DamageAbilityProperties.AvatarActor, 1),
 		CombatSockedLocation,
 		Radius);
-	// DrawDebugSphere(DamageAbilityProperties.AvatarActor->GetWorld(),CombatSockedLocation,Radius,16, FColor::Red,false, 3.f);
+
+	if(CVarDrawDebugMeleeSphere.GetValueOnGameThread())
+	{
+		DrawDebugSphere(DamageAbilityProperties.AvatarActor->GetWorld(),CombatSockedLocation,Radius,16, FColor::Cyan,false, 3.f);
+	}
+	
 	for(AActor* OtherActor : OverlappedActors)
 	{
 		if(!UAuraAbilitySystemLibrary::IsFriend(OtherActor, DamageAbilityProperties.AvatarActor))
 		{			
 			ApplyAllTypeOfDamage(OtherActor);
-			// Spawn Niagara Per Hit
-			// UNiagaraFunctionLibrary::SpawnSystemAtLocation(DamageAbilityProperties.AvatarActor,	DamageAbilityProperties.BloodEffect, CombatSockedLocation);
 			bHasHitTarget = true;
 		}
 	}
 
 	if(bHasHitTarget)
 	{
-		// UGameplayStatics::PlaySoundAtLocation(DamageAbilityProperties.AvatarActor, DamageAbilityProperties.ImpactSound, CombatSockedLocation);
 		UAbilitySystemComponent* const AbilitySystemComponent = GetAbilitySystemComponentFromActorInfo_Checked();
 		FGameplayCueParameters CueParameters;
 		CueParameters.Location = CombatSockedLocation;

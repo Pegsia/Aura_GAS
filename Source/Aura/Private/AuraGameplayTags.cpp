@@ -71,6 +71,7 @@ void FAuraGameplayTags::AddAllTags(UGameplayTagsManager& Manager)
 	AddTag(CombatSocket_Weapon, "CombatSocket.Weapon", "Weapon");
 	AddTag(CombatSocket_LeftHand, "CombatSocket.LeftHand", "LeftHand");
 	AddTag(CombatSocket_RightHand, "CombatSocket.RightHand", "RightHand");
+	AddTag(CombatSocket_Tail, "CombatSocket.Tail", "Tail");
 
 	// Montage
 	AddTag(Montage_Attack_1, "Montage.Attack.1", "Attack Type 1");

@@ -135,6 +135,7 @@ AActor* AAuraEnemy::GetCombatTarget_Implementation() const
 
 void AAuraEnemy::CharacterDeath()
 {
+	HealthBarComponent->DestroyComponent();
 	AuraAIController->GetBrainComponent()->StopLogic(TEXT("Died"));
 	SetLifeSpan(EnemyLifeSpan);
 	Super::CharacterDeath();
