@@ -50,7 +50,7 @@ void UAuraGameplayAbility_ProjectileSpell::FireBoltEventReceived(FGameplayEventD
 	SpawnProjectile(FireBoltHitLocation);
 }
 
-void UAuraGameplayAbility_ProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocation)
+void UAuraGameplayAbility_ProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocation, bool bOverridePitch, float PitchOverride)
 {
 	// Only on Server
 	if (!GetAvatarActorFromActorInfo()->HasAuthority()) return;
@@ -59,10 +59,14 @@ void UAuraGameplayAbility_ProjectileSpell::SpawnProjectile(const FVector& Projec
 	{
 		const FVector SpawnLocation = ICombatInterface::Execute_GetCombatSocketLocation(GetAvatarActorFromActorInfo(), DamageAbilityProperties.AttackSocketTag);
 		FRotator SpawnRotation = (ProjectileTargetLocation - SpawnLocation).Rotation();
-
+		if(bOverridePitch)
+		{
+			SpawnRotation.Pitch = PitchOverride;
+		}
+		
 		FTransform SpawnTransform;
 		SpawnTransform.SetLocation(SpawnLocation);
-		SpawnTransform.SetRotation(SpawnRotation.Quaternion());
+		SpawnTransform.SetRotation(SpawnRotation.Quaternion());		
 
 		// Spawn Projectile Deferred
 		AAuraProjectile* Projectile = GetWorld()->SpawnActorDeferred<AAuraProjectile>(

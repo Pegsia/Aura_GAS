@@ -64,8 +64,9 @@ void FAuraGameplayTags::AddAllTags(UGameplayTagsManager& Manager)
 	// Effects
 	AddTag(Effects_HitReact, "Effects.HitReact", "Enemies React to Hit");
 
-	// Abilities Attack
+	// Abilities
 	AddTag(Abilities_Attack, "Abilities.Attack", "Attack Ability Tag");
+	AddTag(Abilities_Summon, "Abilities.Summon", "Summon Ability Tag");
 
 	// Combat Socket
 	AddTag(CombatSocket_Weapon, "CombatSocket.Weapon", "Weapon");

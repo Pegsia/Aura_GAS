@@ -37,6 +37,8 @@ public:
 	virtual bool IsDead_Implementation() const override;
 	virtual AActor* GetAvatar_Implementation() override;
 	virtual UNiagaraSystem* GetBloodEffect_Implementation() const override;
+	virtual int32 GetMinionCount_Implementation() const override;
+	virtual void IncrementMinionCount_Implementation(int32 Amount) override;
 	//~ End ICombatInterface
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Combat", meta = (TitleProperty = "MontageTag"))
@@ -112,6 +114,9 @@ protected:
 	// Death
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TObjectPtr<USoundBase> DeathSound;
+
+	// Minions
+	int32 MinionCount = 0;
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Ability")

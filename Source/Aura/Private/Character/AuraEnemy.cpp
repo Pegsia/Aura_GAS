@@ -35,7 +35,9 @@ AAuraEnemy::AAuraEnemy()
 	GetCharacterMovement()->bUseControllerDesiredRotation = true;
 	
 	// Add Actor Tag for BTS_FindNearestPlayer
-	Tags.Emplace(ACTOR_TAG_ENEMY); 
+	Tags.Emplace(ACTOR_TAG_ENEMY);
+
+	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 }
 
 void AAuraEnemy::PossessedBy(AController* NewController)

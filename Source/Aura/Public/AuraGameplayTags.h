@@ -60,8 +60,9 @@ public:
 	// Effect
 	FGameplayTag Effects_HitReact;
 
-	// Attack
+	// Abilities
 	FGameplayTag Abilities_Attack;
+	FGameplayTag Abilities_Summon;
 
 	// Combat Socket
 	FGameplayTag CombatSocket_Weapon;

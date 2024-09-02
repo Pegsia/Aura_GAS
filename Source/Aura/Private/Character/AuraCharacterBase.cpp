@@ -91,31 +91,6 @@ void AAuraCharacterBase::Dissolve()
 	}
 }
 
-bool AAuraCharacterBase::IsDead_Implementation() const
-{
-	return bDead;
-}
-
-AActor* AAuraCharacterBase::GetAvatar_Implementation()
-{
-	return this;
-}
-
-UNiagaraSystem* AAuraCharacterBase::GetBloodEffect_Implementation() const
-{
-	return BloodEffect;
-}
-
-UAnimMontage* AAuraCharacterBase::GetHitReactMontage_Implementation()
-{
-	return HitReactMontage;
-}
-
-TArray<FTaggedMontage> AAuraCharacterBase::GetAttackMontages_Implementation()
-{
-	return AttackMontageArray;
-}
-
 FTaggedMontage AAuraCharacterBase::GetTaggedMontageByMontageTag_Implementation(const FGameplayTag& Tag)
 {
 	for(FTaggedMontage& TaggedMontage : AttackMontageArray)
@@ -148,6 +123,41 @@ FVector AAuraCharacterBase::GetCombatSocketLocation_Implementation(const FGamepl
 		return GetMesh()->GetSocketLocation(TailSocketName);
 	}
 	return FVector();
+}
+
+bool AAuraCharacterBase::IsDead_Implementation() const
+{
+	return bDead;
+}
+
+AActor* AAuraCharacterBase::GetAvatar_Implementation()
+{
+	return this;
+}
+
+UNiagaraSystem* AAuraCharacterBase::GetBloodEffect_Implementation() const
+{
+	return BloodEffect;
+}
+
+int32 AAuraCharacterBase::GetMinionCount_Implementation() const
+{
+	return MinionCount;
+}
+
+void AAuraCharacterBase::IncrementMinionCount_Implementation(int32 Amount)
+{
+	MinionCount += Amount;
+}
+
+UAnimMontage* AAuraCharacterBase::GetHitReactMontage_Implementation()
+{
+	return HitReactMontage;
+}
+
+TArray<FTaggedMontage> AAuraCharacterBase::GetAttackMontages_Implementation()
+{
+	return AttackMontageArray;
 }
 
 UAbilitySystemComponent* AAuraCharacterBase::GetAbilitySystemComponent() const
