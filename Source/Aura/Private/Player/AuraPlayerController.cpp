@@ -134,6 +134,7 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 		const APawn* ControlledPawn = GetPawn();
 		if (FollowTime <= ShortPressThreshold && ControlledPawn)
 		{
+			// Need a NavMesh
 			if (UNavigationPath* NavPath = UNavigationSystemV1::FindPathToLocationSynchronously(this, ControlledPawn->GetActorLocation(), CachedDestination))
 			{
 				SplineComponent->ClearSplinePoints();
