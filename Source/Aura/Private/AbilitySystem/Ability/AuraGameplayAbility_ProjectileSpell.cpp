@@ -34,7 +34,8 @@ void UAuraGameplayAbility_ProjectileSpell::TargetDataReceived(const FGameplayAbi
 	
 	UAbilityTask_PlayMontageAndWait* PlayMontageAndWaitTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, FName(), DamageAbilityProperties.AttackMontage);
 	UAbilityTask_WaitGameplayEvent* GameplayEventTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, DamageAbilityProperties.AttackMontageTag);
-		
+
+	GameplayEventTask->OnlyTriggerOnce = true;
 	GameplayEventTask->EventReceived.AddDynamic(this, &ThisClass::FireBoltEventReceived);
 	PlayMontageAndWaitTask->OnCancelled.AddDynamic(this, &ThisClass::MontageEndAbility);
 	PlayMontageAndWaitTask->OnCompleted.AddDynamic(this, &ThisClass::MontageEndAbility);
