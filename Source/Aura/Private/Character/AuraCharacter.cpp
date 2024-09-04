@@ -80,7 +80,8 @@ void AAuraCharacter::InitialAbilityActorInfo()
 		{
 			AuraHUD->InitOverlay(AuraPlayerController, AuraPlayerState, AbilitySystemComponent, AttributeSet);
 		}
-	}	
+	}
+	
 }
 
 int32 AAuraCharacter::GetPlayerLevel()
