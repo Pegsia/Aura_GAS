@@ -67,6 +67,7 @@ void FAuraGameplayTags::AddAllTags(UGameplayTagsManager& Manager)
 	// Abilities
 	AddTag(Abilities_Attack, "Abilities.Attack", "Attack Ability Tag");
 	AddTag(Abilities_Summon, "Abilities.Summon", "Summon Ability Tag");
+	AddTag(Abilities_Fire_FireBolt, "Abilities.Fire.FireBolt", "FireBolt Ability Tag");
 
 	// Combat Socket
 	AddTag(CombatSocket_Weapon, "CombatSocket.Weapon", "Weapon");

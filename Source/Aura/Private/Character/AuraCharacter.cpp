@@ -44,9 +44,10 @@ void AAuraCharacter::PossessedBy(AController* NewController)
 
 	// Init Ability Actor Info for the Server
 	InitialAbilityActorInfo();
+	InitAuraStartupAbilities(); // Called Before Widget Controller Set
 	// Init Attribute through GameplayEffects in AuraCharacterBase
 	InitialDefaultAttributes(); // 可以只在Server端调用，因为所有变量都是Replicated的，而且ASC复制模式为Mixed
-	InitAuraStartupAbilities();
+	
 }
 
 void AAuraCharacter::OnRep_PlayerState()
@@ -68,6 +69,8 @@ void AAuraCharacter::InitialAbilityActorInfo()
 	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
 	AttributeSet = AuraPlayerState->GetAttributeSet();
 
+
+	
 	/**
 	 * Init AuraHUD
 	 *  - Set UAuraWideget(WBP_Overlay) && UAuraWidgetController(BP_OverlayWidgetController)

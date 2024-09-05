@@ -21,7 +21,7 @@ void UAuraGameplayAbility_ProjectileSpell::ActivateAbility(const FGameplayAbilit
 		if(DamageAbilityProperties.AvatarActor->ActorHasTag(ACTOR_TAG_ENEMY)) return;		
 		
 		UTargetDataUnderMouse* TargetData = UTargetDataUnderMouse::CreateTargetDataUnderMouse(this);
-		TargetData->OnValidDataReceived.AddDynamic(this, &ThisClass::TargetDataReceived);
+		TargetData->OnValidDataReceived.AddDynamic(this, &UAuraGameplayAbility_ProjectileSpell::TargetDataReceived);
 		TargetData->Activate();
 	}
 }
@@ -36,10 +36,10 @@ void UAuraGameplayAbility_ProjectileSpell::TargetDataReceived(const FGameplayAbi
 	UAbilityTask_WaitGameplayEvent* GameplayEventTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, DamageAbilityProperties.AttackMontageTag);
 
 	GameplayEventTask->OnlyTriggerOnce = true;
-	GameplayEventTask->EventReceived.AddDynamic(this, &ThisClass::FireBoltEventReceived);
-	PlayMontageAndWaitTask->OnCancelled.AddDynamic(this, &ThisClass::MontageEndAbility);
-	PlayMontageAndWaitTask->OnCompleted.AddDynamic(this, &ThisClass::MontageEndAbility);
-	PlayMontageAndWaitTask->OnInterrupted.AddDynamic(this, &ThisClass::MontageEndAbility);
+	GameplayEventTask->EventReceived.AddDynamic(this, &UAuraGameplayAbility_ProjectileSpell::FireBoltEventReceived);
+	PlayMontageAndWaitTask->OnCancelled.AddDynamic(this, &UAuraGameplayAbility_ProjectileSpell::MontageEndAbility);
+	PlayMontageAndWaitTask->OnCompleted.AddDynamic(this, &UAuraGameplayAbility_ProjectileSpell::MontageEndAbility);
+	PlayMontageAndWaitTask->OnInterrupted.AddDynamic(this, &UAuraGameplayAbility_ProjectileSpell::MontageEndAbility);
 		
 	PlayMontageAndWaitTask->Activate();
 	GameplayEventTask->Activate();

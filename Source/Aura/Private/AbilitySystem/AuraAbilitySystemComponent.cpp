@@ -4,6 +4,7 @@
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AuraGameplayTags.h"
 #include "AuraGameplayAbility.h"
+#include "Aura/AuraLogChannels.h"
 
 void UAuraAbilitySystemComponent::AbilityActorInfoSet()
 {
@@ -31,6 +32,47 @@ void UAuraAbilitySystemComponent::AddCharacterStartupAbilities(const TArray<TSub
 			GiveAbility(AbilitySpec);
 		}
 	}
+	bStartupAbilitiesGiven = true; // Set if this Delegate Broadcast too early 上下反过来不行
+	AbilityGivenDelegate.Broadcast(this);		
+}
+
+void UAuraAbilitySystemComponent::ForEachAbility(const FForEachAbilitySignature& Delegate)
+{
+	FScopedAbilityListLock ScopedAbilityListLock(*this); // Lock Abilities Array
+	for(const FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
+	{
+		if(!Delegate.ExecuteIfBound(AbilitySpec))
+		{
+			UE_LOG(LogAura, Error, TEXT("Failed to Execute Delegate in %hs"), __FUNCTION__);
+		}
+	}
+}
+
+FGameplayTag UAuraAbilitySystemComponent::GetAbilityTagFromSpec(const FGameplayAbilitySpec& Spec)
+{
+	if(Spec.Ability)
+	{
+		for(const FGameplayTag& Tag : Spec.Ability->AbilityTags)
+		{
+			if(Tag.MatchesTag(FGameplayTag::RequestGameplayTag("Abilities")))
+			{
+				return Tag;
+			}
+		}
+	}
+	return FGameplayTag();
+}
+
+FGameplayTag UAuraAbilitySystemComponent::GetInputTagFromSpec(const FGameplayAbilitySpec& Spec)
+{
+	for(const FGameplayTag& Tag : Spec.DynamicAbilityTags)
+	{
+		if(Tag.MatchesTag(FGameplayTag::RequestGameplayTag("InputTag")))
+		{
+			return Tag;
+		}
+	}
+	return FGameplayTag();
 }
 
 // UAbilitySystemComponent provides RPC replication for the actual activation of abilities
@@ -64,4 +106,16 @@ void UAuraAbilitySystemComponent::AbilityInputReleased(const FGameplayTag& Input
 			AbilitySpecInputReleased(AbilitySpec);
 		}
 	}
+}
+
+void UAuraAbilitySystemComponent::OnRep_ActivateAbilities()
+{
+	Super::OnRep_ActivateAbilities();
+
+	if(!bStartupAbilitiesGiven)
+	{
+		bStartupAbilitiesGiven = true;
+		AbilityGivenDelegate.Broadcast(this);
+	}
+	
 }
