@@ -75,7 +75,7 @@ protected:
 	TObjectPtr<UAbilityInfo> AbilityInfo;
 
 	// Get Information about all Abilities, look up their Ability Info, Broadcast AbilityInfo to Widget
-	void OnInitializeStartupAbilities(UAuraAbilitySystemComponent* AuraAbilitySystemComponent);
+	void OnInitializeStartupAbilities() const;
 	
 	template<typename T>
 	T* GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag);

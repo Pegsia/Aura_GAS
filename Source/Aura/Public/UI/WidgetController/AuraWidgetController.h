@@ -6,6 +6,7 @@
 #include "UObject/NoExportTypes.h"
 #include "AuraWidgetController.generated.h"
 
+class UAuraAbilitySystemComponent;
 class UAbilitySystemComponent;
 class UAttributeSet;
 
@@ -45,6 +46,7 @@ public:
 	virtual void BroadcastInitialValue();
 	virtual void BindCallBacksToDependencies();
 
+	UAuraAbilitySystemComponent* GetAuraASC() const;
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "WidgetController")
 	TObjectPtr<APlayerController> PlayerController;
@@ -53,7 +55,7 @@ protected:
 	TObjectPtr<APlayerState> PlayerState;
 
 	UPROPERTY(BlueprintReadOnly, Category = "WidgetController")
-	TObjectPtr<UAbilitySystemComponent> AbilityStstemComponent;
+	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 
 	UPROPERTY(BlueprintReadOnly, Category = "WidgetController")
 	TObjectPtr<UAttributeSet> AttributeSet;

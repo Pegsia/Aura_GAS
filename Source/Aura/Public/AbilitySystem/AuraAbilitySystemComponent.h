@@ -7,7 +7,7 @@
 #include "AuraAbilitySystemComponent.generated.h"
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FEffectAssetTagsSignature, FGameplayTagContainer& /* Asset Tags*/)
-DECLARE_MULTICAST_DELEGATE_OneParam(FAbilityGivenSignature, UAuraAbilitySystemComponent*);
+DECLARE_MULTICAST_DELEGATE(FAbilityGivenSignature);
 DECLARE_DELEGATE_OneParam(FForEachAbilitySignature, const FGameplayAbilitySpec&);
 
 UCLASS()
@@ -26,8 +26,8 @@ public:
 	bool bStartupAbilitiesGiven = false;
 
 	// loop through Activatable Abilities, Broadcast Ability Tag and Input Tag
-	// FForEachAbilitySignature ForEachAbilityDelegate;	
-	void ForEachAbility(const FForEachAbilitySignature& Delegate);
+	FForEachAbilitySignature ForEachAbilityDelegate;	
+	void ForEachAbility();
 
 	// Utility Functions
 	static FGameplayTag GetAbilityTagFromSpec(const FGameplayAbilitySpec& Spec);

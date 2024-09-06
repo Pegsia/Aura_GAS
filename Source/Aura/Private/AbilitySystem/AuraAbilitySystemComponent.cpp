@@ -33,15 +33,27 @@ void UAuraAbilitySystemComponent::AddCharacterStartupAbilities(const TArray<TSub
 		}
 	}
 	bStartupAbilitiesGiven = true; // Set if this Delegate Broadcast too early 上下反过来不行
-	AbilityGivenDelegate.Broadcast(this);		
+	AbilityGivenDelegate.Broadcast();		
 }
 
-void UAuraAbilitySystemComponent::ForEachAbility(const FForEachAbilitySignature& Delegate)
+// Received ActivatableAbilities Broadcast AbilityInfo for Client
+void UAuraAbilitySystemComponent::OnRep_ActivateAbilities()
+{
+	Super::OnRep_ActivateAbilities();
+
+	if(!bStartupAbilitiesGiven)
+	{
+		bStartupAbilitiesGiven = true;
+		AbilityGivenDelegate.Broadcast();
+	}	
+}
+
+void UAuraAbilitySystemComponent::ForEachAbility()
 {
 	FScopedAbilityListLock ScopedAbilityListLock(*this); // Lock Abilities Array
 	for(const FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
 	{
-		if(!Delegate.ExecuteIfBound(AbilitySpec))
+		if(!ForEachAbilityDelegate.ExecuteIfBound(AbilitySpec)) // Broadcast StartupAbilities for Spells Globe
 		{
 			UE_LOG(LogAura, Error, TEXT("Failed to Execute Delegate in %hs"), __FUNCTION__);
 		}
@@ -106,16 +118,4 @@ void UAuraAbilitySystemComponent::AbilityInputReleased(const FGameplayTag& Input
 			AbilitySpecInputReleased(AbilitySpec);
 		}
 	}
-}
-
-void UAuraAbilitySystemComponent::OnRep_ActivateAbilities()
-{
-	Super::OnRep_ActivateAbilities();
-
-	if(!bStartupAbilitiesGiven)
-	{
-		bStartupAbilitiesGiven = true;
-		AbilityGivenDelegate.Broadcast(this);
-	}
-	
 }
