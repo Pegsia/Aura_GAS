@@ -9,7 +9,7 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMouseTargetDataSignature, const FGameplayAbilityTargetDataHandle&, DataHandle);
 
 /**
- * 
+ * Consider rename to AbilityTask_WaitTargetDataUnderMouse 
  */
 UCLASS()
 class AURA_API UTargetDataUnderMouse : public UAbilityTask

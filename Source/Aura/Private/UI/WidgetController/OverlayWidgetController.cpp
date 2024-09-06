@@ -7,32 +7,6 @@
 #include "AuraAttributeSet.h"
 #include "AuraAbilitySystemComponent.h"
 
-/*
- * Called After BindCallBacksToDependencies()
- */
-void UOverlayWidgetController::BroadcastInitialValue() 
-{
-	const UAuraAttributeSet* AuraAttributeSet = Cast<UAuraAttributeSet>(AttributeSet);
-
-	// Init Health
-	OnHealthChanged.Broadcast(AuraAttributeSet->GetHealth());
-	OnMaxHealthChanged.Broadcast(AuraAttributeSet->GetMaxHealth());
-
-	// Init Mana
-	OnManaChanged.Broadcast(AuraAttributeSet->GetMana());
-	OnMaxManaChanged.Broadcast(AuraAttributeSet->GetMaxMana());
-
-	// Broadcast StartupAbilities for Spells Globe
-	if (GetAuraASC()->bStartupAbilitiesGiven) // if this Delegate is already BroadCasted
-	{
-		OnInitializeStartupAbilities();
-	}
-	else
-	{
-		GetAuraASC()->AbilityGivenDelegate.AddUObject(this, &UOverlayWidgetController::OnInitializeStartupAbilities);
-	}
-}
-
 void UOverlayWidgetController::BindCallBacksToDependencies()
 {
 	const UAuraAttributeSet* AuraAttributeSet = Cast<UAuraAttributeSet>(AttributeSet);
@@ -77,8 +51,40 @@ void UOverlayWidgetController::BindCallBacksToDependencies()
 					MessageWidgetRowDelegate.Broadcast(*Row);
 				}
 			}
-		}
-	);
+		});
+
+	// Bind Ability Committed for Cooldown time
+	AuraASC->AbilityCommittedCallbacks.AddLambda(
+		[this](const UGameplayAbility* Ability)
+		{
+			OnAbilityCommitted.Broadcast(Ability->GetCooldownTimeRemaining());
+		});
+}
+
+/*
+ * Called After BindCallBacksToDependencies()
+ */
+void UOverlayWidgetController::BroadcastInitialValue() 
+{
+	const UAuraAttributeSet* AuraAttributeSet = Cast<UAuraAttributeSet>(AttributeSet);
+
+	// Init Health
+	OnHealthChanged.Broadcast(AuraAttributeSet->GetHealth());
+	OnMaxHealthChanged.Broadcast(AuraAttributeSet->GetMaxHealth());
+
+	// Init Mana
+	OnManaChanged.Broadcast(AuraAttributeSet->GetMana());
+	OnMaxManaChanged.Broadcast(AuraAttributeSet->GetMaxMana());
+
+	// Broadcast StartupAbilities for Spells Globe
+	if (GetAuraASC()->bStartupAbilitiesGiven) // if this Delegate is already BroadCasted
+	{
+		OnInitializeStartupAbilities();
+	}
+	else
+	{
+		GetAuraASC()->AbilityGivenDelegate.AddUObject(this, &UOverlayWidgetController::OnInitializeStartupAbilities);
+	}
 }
 
 void UOverlayWidgetController::OnInitializeStartupAbilities() const

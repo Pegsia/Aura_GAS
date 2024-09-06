@@ -14,11 +14,16 @@
 void UAuraGameplayAbility_ProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-	
+
+	/*
+	 * if (bHasBlueprintActivate) K2_ActivateAbility(); 只要蓝图里有ActivateAbility节点就会先调用蓝图版本随后才调用C++
+	 */
 	if(SetDamageAbilityProperties(DamageAbilityProperties))
 	{
 		// Enemy has a BP implementation
 		if(DamageAbilityProperties.AvatarActor->ActorHasTag(ACTOR_TAG_ENEMY)) return;		
+
+		CommitAbility(Handle, ActorInfo, ActivationInfo); // Fail时甚至不会触发ActivateAbility
 		
 		UTargetDataUnderMouse* TargetData = UTargetDataUnderMouse::CreateTargetDataUnderMouse(this);
 		TargetData->OnValidDataReceived.AddDynamic(this, &UAuraGameplayAbility_ProjectileSpell::TargetDataReceived);
