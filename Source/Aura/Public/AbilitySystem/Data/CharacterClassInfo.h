@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
+#include "ScalableFloat.h"
 #include "CharacterClassInfo.generated.h"
 
 class UGameplayAbility;
@@ -31,10 +32,13 @@ struct FCharacterClassDefaultInfo
 
 	UPROPERTY(EditDefaultsOnly, Category = "Class Defaults")
 	TArray<TSubclassOf<UGameplayAbility>> StartUpAbilities;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Class Defaults")
+	FScalableFloat XPReward = FScalableFloat();
 };
 
 /**
- * 
+ *  Data Asset Contains RPG Character Attributes, Abilities, XPReward, DamageCalculationCoefficients, etc.
  */
 UCLASS()
 class AURA_API UCharacterClassInfo : public UDataAsset
@@ -45,14 +49,14 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Character Class Defaults")
 	TMap<ECharacterClass, FCharacterClassDefaultInfo> CharacterClassInfoMap;
 
+	FCharacterClassDefaultInfo GetClassDefaultInfo(const ECharacterClass& CharacterClass) const;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Common Class Defaults")
 	TSubclassOf<UGameplayEffect> VitalAttributes;
 
 	// Abilities like HitReact, 
 	UPROPERTY(EditDefaultsOnly, Category = "Common Class Defaults")
-	TArray<TSubclassOf<UGameplayAbility>> CommonAbilities;
-	
-	FCharacterClassDefaultInfo GetClassDefaultInfo(const ECharacterClass& CharacterClass) const;
+	TArray<TSubclassOf<UGameplayAbility>> CommonAbilities;	
 
 	UPROPERTY(EditDefaultsOnly, Category = "Common Class Defaults|Damage")
 	TObjectPtr<UCurveTable> DamageCalculationCoefficients;

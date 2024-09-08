@@ -35,6 +35,7 @@ AAuraCharacter::AAuraCharacter()
 
 	MotionWarpingComponent = CreateDefaultSubobject<UMotionWarpingComponent>("MotionWarpingComponent");
 
+	CharacterClass = ECharacterClass::HeroAura;
 	Tags.Emplace(ACTOR_TAG_PLAYER);
 }
 
@@ -46,8 +47,7 @@ void AAuraCharacter::PossessedBy(AController* NewController)
 	InitialAbilityActorInfo();
 	InitAuraStartupAbilities(); // Called Before Widget Controller Set
 	// Init Attribute through GameplayEffects in AuraCharacterBase
-	InitialDefaultAttributes(); // 可以只在Server端调用，因为所有变量都是Replicated的，而且ASC复制模式为Mixed
-	
+	InitialDefaultAttributes(); // 可以只在Server端调用，因为所有变量都是Replicated的，而且ASC复制模式为Mixed	
 }
 
 void AAuraCharacter::OnRep_PlayerState()
@@ -68,8 +68,6 @@ void AAuraCharacter::InitialAbilityActorInfo()
 	AbilitySystemComponent->InitAbilityActorInfo(AuraPlayerState, this);
 	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
 	AttributeSet = AuraPlayerState->GetAttributeSet();
-
-
 	
 	/**
 	 * Init AuraHUD

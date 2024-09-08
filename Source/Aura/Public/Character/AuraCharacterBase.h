@@ -39,6 +39,7 @@ public:
 	virtual UNiagaraSystem* GetBloodEffect_Implementation() const override;
 	virtual int32 GetMinionCount_Implementation() const override;
 	virtual void IncrementMinionCount_Implementation(int32 Amount) override;
+	virtual ECharacterClass GetCharacterClass_Implementation() override;
 	//~ End ICombatInterface
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Combat", meta = (TitleProperty = "MontageTag"))

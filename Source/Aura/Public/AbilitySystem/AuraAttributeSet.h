@@ -84,6 +84,9 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "Meta Attributes")
 	FGameplayAttributeData IncomingDamage;
 
+	UPROPERTY(BlueprintReadOnly, Category = "Meat Attributes")
+	FGameplayAttributeData IncomingXP;
+	
 	/**
 	 * Vital  Attributes
 	 */
@@ -218,6 +221,7 @@ public:
 	 * Meta  Attributes
 	 */
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, IncomingDamage);
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, IncomingXP);
 
 	/**
 	 * Vital  Attributes

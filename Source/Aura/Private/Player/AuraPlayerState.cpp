@@ -26,7 +26,7 @@ void AAuraPlayerState::SetXP(int32 InXP)
 {
 	if(InXP < 0) return;
 	XP = InXP;
-	OnXpChangeDelegate.Broadcast(XP);
+	OnXPChangeDelegate.Broadcast(XP);
 }
 
 void AAuraPlayerState::SetLevel(int32 InLevel)
@@ -39,7 +39,7 @@ void AAuraPlayerState::SetLevel(int32 InLevel)
 void AAuraPlayerState::AddToXP(int32 InXP)
 {
 	XP += InXP;
-	OnXpChangeDelegate.Broadcast(XP);
+	OnXPChangeDelegate.Broadcast(XP);
 }
 
 void AAuraPlayerState::AddToLevel(int32 InLevel)
@@ -55,7 +55,7 @@ void AAuraPlayerState::OnRep_Level(int32 OldLevel)
 
 void AAuraPlayerState::OnRep_XP(int32 OldXP)
 {
-	OnXpChangeDelegate.Broadcast(XP);
+	OnXPChangeDelegate.Broadcast(XP);
 }
 
 void AAuraPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

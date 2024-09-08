@@ -7,6 +7,7 @@
 #include "AbilitySystemInterface.h"
 #include "AuraPlayerState.generated.h"
 
+class ULevelUpInfo;
 class UAbilitySystemComponent;
 class UAttributeSet;
 
@@ -23,16 +24,20 @@ public:
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 
 	// Player State
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "LevelUpInfo")
+	TObjectPtr<ULevelUpInfo> LevelUpInfo;
+	
 	FORCEINLINE int32 GetPlayerLevel() const { return Level; }
 	FORCEINLINE int32 GetXP() const { return XP; }
 	
 	void SetXP(int32 InXP);
 	void SetLevel(int32 InLevel);
-	
+
+	UFUNCTION(BlueprintCallable)
 	void AddToXP(int32 InXP);
 	void AddToLevel(int32 InLevel);
 
-	FOnPlayerStateChangedSignature OnXpChangeDelegate;
+	FOnPlayerStateChangedSignature OnXPChangeDelegate;
 	FOnPlayerStateChangedSignature OnLevelChangeDelegate;
 	
 protected:
@@ -40,7 +45,7 @@ protected:
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 
 	UPROPERTY()
-	TObjectPtr<UAttributeSet> AttributeSet;
+	TObjectPtr<UAttributeSet> AttributeSet;	
 
 private:
 	UPROPERTY(VisibleAnywhere, ReplicatedUsing = "OnRep_Level")

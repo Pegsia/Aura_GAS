@@ -13,8 +13,6 @@ class UAuraUserWidget;
 class UAbilityInfo;
 class UAuraAbilitySystemComponent;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeChangedSignature, float, NewValue);
-
 USTRUCT(BlueprintType)
 struct FUIWidgetRow : public FTableRowBase
 {
@@ -33,9 +31,11 @@ struct FUIWidgetRow : public FTableRowBase
 	UTexture2D* Image = nullptr;
 };
 
+// Delegate Signature
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeChangedSignature, float, NewValue);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMessageWidgetRowSignature, FUIWidgetRow, Row);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAbilityInfoSignature, const FAuraAbilityInfo&, Info);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAbilityCommitted, float, TimeRemaining);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAbilityCommittedSignature, float, TimeRemaining);
 
 UCLASS(BlueprintType, Blueprintable)
 class AURA_API UOverlayWidgetController : public UAuraWidgetController
@@ -64,7 +64,12 @@ public:
 	FAbilityInfoSignature AbilityInfoDelegate;
 
 	UPROPERTY(BlueprintAssignable, Category="GAS|Messages")
-	FOnAbilityCommitted OnAbilityCommitted;
+	FOnAbilityCommittedSignature OnAbilityCommittedDelegate;
+
+	// Level Delegate
+	UPROPERTY(BlueprintAssignable, Category="GAS|XP")
+	FOnAttributeChangedSignature OnXPPercentChangeDelegate;
+	
 	
 	//~ Begin UAuraWidgetController Interface
 	virtual void BroadcastInitialValue() override;
@@ -75,9 +80,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Message Widget")
 	TObjectPtr<UDataTable> MessageWidgetDataTable;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AbilityInfo")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Message Widget")
 	TObjectPtr<UAbilityInfo> AbilityInfo;
-
+	
 	// Get Information about all Abilities, look up their Ability Info, Broadcast AbilityInfo to Widget
 	void OnInitializeStartupAbilities() const;
 	

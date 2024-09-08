@@ -31,4 +31,6 @@ public:
 	TArray<FAuraLevelUpInfo> LevelUpInformation;
 
 	int32 FindLeveForXP(int32 XP);
+
+	float FindPercentForXP(const int32 XP);
 };

@@ -6,10 +6,14 @@
 #include "AbilityInfo.h"
 #include "AuraAttributeSet.h"
 #include "AuraAbilitySystemComponent.h"
+#include "AuraPlayerState.h"
+#include "LevelUpInfo.h"
 
 void UOverlayWidgetController::BindCallBacksToDependencies()
 {
 	const UAuraAttributeSet* AuraAttributeSet = Cast<UAuraAttributeSet>(AttributeSet);
+	UAuraAbilitySystemComponent* AuraASC = GetAuraASC();
+	AAuraPlayerState* AuraPS = CastChecked<AAuraPlayerState>(PlayerState);
 
 	// Bind Health
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetHealthAttribute()).AddLambda(
@@ -25,9 +29,7 @@ void UOverlayWidgetController::BindCallBacksToDependencies()
 	);
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetMaxManaAttribute()).AddLambda(
 		[this](const FOnAttributeChangeData& Data) { OnMaxManaChanged.Broadcast(Data.NewValue); }
-	);
-
-	UAuraAbilitySystemComponent* AuraASC = GetAuraASC();
+	);	
 	
 	// Bind StartupAbilities for Spell Globe
 	AuraASC->ForEachAbilityDelegate.BindLambda(
@@ -57,7 +59,15 @@ void UOverlayWidgetController::BindCallBacksToDependencies()
 	AuraASC->AbilityCommittedCallbacks.AddLambda(
 		[this](const UGameplayAbility* Ability)
 		{
-			OnAbilityCommitted.Broadcast(Ability->GetCooldownTimeRemaining());
+			OnAbilityCommittedDelegate.Broadcast(Ability->GetCooldownTimeRemaining());
+		});	
+
+	// Bind XP Change
+	AuraPS->OnXPChangeDelegate.AddLambda(
+		[this, AuraPS](int32 InXP)
+		{
+			const float Percent = AuraPS->LevelUpInfo->FindPercentForXP(InXP);
+			OnXPPercentChangeDelegate.Broadcast(Percent);
 		});
 }
 

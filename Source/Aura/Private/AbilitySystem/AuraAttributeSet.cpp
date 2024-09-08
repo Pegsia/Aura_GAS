@@ -10,6 +10,7 @@
 #include "AuraGameplayTags.h"
 #include "AuraPlayerController.h"
 #include "CombatInterface.h"
+#include "Aura/AuraLogChannels.h"
 
 UAuraAttributeSet::UAuraAttributeSet()
 {
@@ -83,7 +84,7 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 	{
 		SetMana(FMath::Clamp(GetMana(), 0.f, GetMaxMana()));
 	}
-	if (Data.EvaluatedData.Attribute == GetIncomingDamageAttribute())  // SERVER IncomingDamage is NOT REPLICATED
+	if (Data.EvaluatedData.Attribute == GetIncomingDamageAttribute())  // SERVER, IncomingDamage is NOT REPLICATED
 	{
 		const float LocalIncomingDamage = GetIncomingDamage();
 		SetIncomingDamage(0.f);
@@ -112,6 +113,12 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 			const bool bCriticalHit = UAuraAbilitySystemLibrary::IsCriticalHit(Props.EffectContextHandle);
 			ShowFloatingDamage(Props, LocalIncomingDamage, bBlockedHit, bCriticalHit);			
 		}
+	} // IncomingDamage
+	if(Data.EvaluatedData.Attribute == GetIncomingXPAttribute())
+	{
+		const float LocalIncomingXP = GetIncomingXP();
+		SetIncomingXP(0.f);
+		UE_LOG(LogAura, Log, TEXT("IncomingXP Attribute %f"), LocalIncomingXP);
 	}
 }
 
