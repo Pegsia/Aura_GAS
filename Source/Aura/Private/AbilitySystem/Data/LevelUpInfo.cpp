@@ -25,3 +25,9 @@ float ULevelUpInfo::FindPercentForXP(const int32 XP)
 	const int32 RequirementXP = LevelUpInformation[Level].LevelUpRequirement - LevelUpInformation[Level - 1].LevelUpRequirement;
 	return RemainingXP * 1.f / RequirementXP;
 }
+
+bool ULevelUpInfo::CanLevelUp(const int32 InLevel, const int32 InXP)
+{
+	if(InLevel <=0 || InXP < 0) return false;
+	return FindLeveForXP(InXP) > InLevel;
+}

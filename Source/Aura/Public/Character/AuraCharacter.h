@@ -9,8 +9,8 @@
 
 class UCameraComponent;
 class USpringArmComponent;
-class AAuraHUD;
 class UMotionWarpingComponent;
+class UNiagaraComponent;
 
 UCLASS()
 class AURA_API AAuraCharacter : public AAuraCharacterBase, public IPlayerInterface
@@ -34,7 +34,7 @@ public:
 	virtual void SetAttributePoint_Implementation(int32 InAttributePoint) override;
 	virtual void SetSpellPoint_Implementation(int32 InSpellPoint) override;
 	virtual void SetPlayerLevel_Implementation(int32 InPlayerLevel) override;
-	virtual void LevelUp_Implementation() override;
+	virtual void LevelUp_Implementation(int32 NumberOfLevelUps) override;
 	//~ End IPlayerInterface
 	
 	//~ Begin ICombatInterface
@@ -51,6 +51,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
 	TObjectPtr<UMotionWarpingComponent> MotionWarpingComponent;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
+	TObjectPtr<UNiagaraComponent> LevelUpNiagaraComponent;
+	
 	UPROPERTY(EditAnywhere, Category = "Component")
 	FRotator AuraRotationRate{0.f, 400.f, 0.f};
 
@@ -58,4 +61,7 @@ private:
 	//~ Begin AuraCharacterBase Interface
 	virtual void InitialAbilityActorInfo() override;
 	//~ End AuraCharacterBase Interface
+
+	UFUNCTION(NetMulticast, Unreliable)
+	void MulticastLevelUpVFX() const;
 };

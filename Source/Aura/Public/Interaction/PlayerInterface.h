@@ -42,5 +42,5 @@ public:
 	void SetPlayerLevel(int32 InPlayerLevel);
 	
 	UFUNCTION(BlueprintNativeEvent)
-	void LevelUp();
+	void LevelUp(int32 NumberOfLevelUps);
 };

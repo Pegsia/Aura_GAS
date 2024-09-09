@@ -64,7 +64,8 @@ public:
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
 	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
 	//~ End UAttributeSet Interface
-	
+
+	void RefillVitalAttributes();
 private:
 	// Store Effect Properties when a GameplayEffect is applied
 	void SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& OutProps) const;

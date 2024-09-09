@@ -67,7 +67,13 @@ void UOverlayWidgetController::BindCallBacksToDependencies()
 		[this, AuraPS](int32 InXP)
 		{
 			const float Percent = AuraPS->LevelUpInfo->FindPercentForXP(InXP);
-			OnXPPercentChangeDelegate.Broadcast(Percent);
+			OnXPPercentChangedDelegate.Broadcast(Percent);
+		});
+
+	AuraPS->OnLevelChangeDelegate.AddLambda(
+		[this](int32 InLevel)
+		{
+			OnLevelChangedDelegate.Broadcast(InLevel);
 		});
 }
 

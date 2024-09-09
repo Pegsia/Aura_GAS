@@ -33,4 +33,6 @@ public:
 	int32 FindLeveForXP(int32 XP);
 
 	float FindPercentForXP(const int32 XP);
+
+	bool CanLevelUp(const int32 InLevel, const int32 InXP);
 };

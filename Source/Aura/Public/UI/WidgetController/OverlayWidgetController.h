@@ -33,6 +33,7 @@ struct FUIWidgetRow : public FTableRowBase
 
 // Delegate Signature
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeChangedSignature, float, NewValue);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStateChangedSignature, int32, NewValue);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMessageWidgetRowSignature, FUIWidgetRow, Row);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAbilityInfoSignature, const FAuraAbilityInfo&, Info);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAbilityCommittedSignature, float, TimeRemaining);
@@ -68,8 +69,10 @@ public:
 
 	// Level Delegate
 	UPROPERTY(BlueprintAssignable, Category="GAS|XP")
-	FOnAttributeChangedSignature OnXPPercentChangeDelegate;
-	
+	FOnAttributeChangedSignature OnXPPercentChangedDelegate;
+
+	UPROPERTY(BlueprintAssignable, Category="GAS|Level")
+	FOnStateChangedSignature OnLevelChangedDelegate;
 	
 	//~ Begin UAuraWidgetController Interface
 	virtual void BroadcastInitialValue() override;
