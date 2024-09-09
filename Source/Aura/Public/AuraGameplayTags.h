@@ -33,6 +33,8 @@ public:
 	FGameplayTag Attributes_Secondary_ManaRegeneration;
 	FGameplayTag Attributes_Secondary_MaxHealth;
 	FGameplayTag Attributes_Secondary_MaxMana;
+
+	FGameplayTag Attributes_Meta_IncomingXP;
 	
 	// Inputs
 	FGameplayTag InputTag_LMB; // Left Mouse Button

@@ -69,14 +69,14 @@ private:
 	// Store Effect Properties when a GameplayEffect is applied
 	void SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& OutProps) const;
 	void ShowFloatingDamage(const FEffectProperties& Props, float Damage, bool bBlockedHit, bool bCriticalHit);
+	void SendXPEvent(const FEffectProperties& Props);
 
 
-public:
-
+	
 /* ---------------------------------------------------------------
 	FGameplayAttributeData and Corresponding Boiler Plate
 -----------------------------------------------------------------*/
-
+public:
 	/**
 	 * FGameplayAttributeData
 	 * Meat  Attributes

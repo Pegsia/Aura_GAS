@@ -45,6 +45,7 @@ void AAuraCharacterBase::InitAuraStartupAbilities() const
 	if (!HasAuthority()) return;
 	UAuraAbilitySystemComponent* AuraASC = CastChecked<UAuraAbilitySystemComponent>(GetAbilitySystemComponent());
 	AuraASC->AddCharacterStartupAbilities(StartupAbilities);
+	AuraASC->AddCharacterStartupPassiveAbilities(StartupPassiveAbilities);
 }
 
 void AAuraCharacterBase::CharacterDeath()

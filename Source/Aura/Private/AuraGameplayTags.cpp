@@ -34,13 +34,15 @@ void FAuraGameplayTags::AddAllTags(UGameplayTagsManager& Manager)
 	AddTag(Attributes_Secondary_MaxHealth, "Attributes.Secondary.MaxHealth", "Maximum amount of Health obtainable");
 	AddTag(Attributes_Secondary_MaxMana, "Attributes.Secondary.MaxMana", "Maximum amount of Mana obtainable");
 
+	AddTag(Attributes_Meta_IncomingXP, "Attributes.Meta.IncomingXP", "IncomingXP Meta Attribute");
+	
 	// Input
 	AddTag(InputTag_LMB, "InputTag.LMB", "Input Tag for Left Mouse Button");
 	AddTag(InputTag_RMB, "InputTag.RMB", "Input Tag for Right Mouse Button");
-	AddTag(InputTag_1, "InputTag.1", "Input Tag for Num 1 Key");
-	AddTag(InputTag_2, "InputTag.2", "Input Tag for Num 2 Key");
-	AddTag(InputTag_3, "InputTag.3", "Input Tag for Num 3 Key");
-	AddTag(InputTag_4, "InputTag.4", "Input Tag for Num 4 Key");
+	AddTag(InputTag_1, "InputTag.1", "Input Tag for Number 1 Key");
+	AddTag(InputTag_2, "InputTag.2", "Input Tag for Number 2 Key");
+	AddTag(InputTag_3, "InputTag.3", "Input Tag for Number 3 Key");
+	AddTag(InputTag_4, "InputTag.4", "Input Tag for Number 4 Key");
 
 	// Damage
 	AddTag(Damage, "Damage", "Assign Tag Set By Caller Damage Magnitude");

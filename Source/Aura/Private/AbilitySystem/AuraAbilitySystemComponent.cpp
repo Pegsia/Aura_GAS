@@ -36,6 +36,15 @@ void UAuraAbilitySystemComponent::AddCharacterStartupAbilities(const TArray<TSub
 	AbilityGivenDelegate.Broadcast();		
 }
 
+void UAuraAbilitySystemComponent::AddCharacterStartupPassiveAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupPassiveAbilities)
+{
+	for (TSubclassOf<UGameplayAbility> AbilityClass : StartupPassiveAbilities)
+	{
+		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
+		GiveAbilityAndActivateOnce(AbilitySpec);
+	}
+}
+
 // Received ActivatableAbilities Broadcast AbilityInfo for Client
 void UAuraAbilitySystemComponent::OnRep_ActivateAbilities()
 {
