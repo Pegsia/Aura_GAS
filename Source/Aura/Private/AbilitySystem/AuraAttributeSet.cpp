@@ -10,7 +10,7 @@
 #include "AuraGameplayTags.h"
 #include "AuraPlayerController.h"
 #include "CombatInterface.h"
-#include "Aura/AuraLogChannels.h"
+#include "PlayerInterface.h"
 
 UAuraAttributeSet::UAuraAttributeSet()
 {
@@ -45,15 +45,6 @@ UAuraAttributeSet::UAuraAttributeSet()
 void UAuraAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
 {
 	Super::PreAttributeChange(Attribute, NewValue);
-	//SetHealth(100.f);
-	//void FActiveGameplayEffectsContainer::SetAttributeBaseValue(FGameplayAttribute Attribute, float NewBaseValue)
-	//{
-	//	const UAttributeSet* Set = Owner->GetAttributeSubobject(Attribute.GetAttributeSetClass());
-	//	// ...
-	//	float OldBaseValue = 0.0f;
-	//	Set->PreAttributeBaseChange(Attribute, NewBaseValue);
-	//	// ...
-	//}
 	// Change Current Value
 	if (Attribute == GetHealthAttribute())
 	{
@@ -76,14 +67,13 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
 	{
 		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("%f Health Changed on %s, Health: %f"), Data.EvaluatedData.Magnitude, *Props.TargetAvatarActor->GetName(), GetHealth()));
-		/*float MutableBaseHealth = Health.GetBaseValue();
-		float MutableCurrentHealth = Health.GetCurrentValue();*/
 		SetHealth(FMath::Clamp(GetHealth(), 0.f, GetMaxHealth()));
 	}
 	if (Data.EvaluatedData.Attribute == GetManaAttribute())
 	{
 		SetMana(FMath::Clamp(GetMana(), 0.f, GetMaxMana()));
 	}
+	
 	if (Data.EvaluatedData.Attribute == GetIncomingDamageAttribute())  // SERVER, IncomingDamage is NOT REPLICATED
 	{
 		const float LocalIncomingDamage = GetIncomingDamage();
@@ -115,19 +105,43 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 			ShowFloatingDamage(Props, LocalIncomingDamage, bBlockedHit, bCriticalHit);			
 		}
 	} // IncomingDamage
+	
 	if(Data.EvaluatedData.Attribute == GetIncomingXPAttribute())
 	{
 		const float LocalIncomingXP = GetIncomingXP();
 		SetIncomingXP(0.f);
-		// UE_LOG(LogAura, Log, TEXT("IncomingXP Attribute %f"), LocalIncomingXP);
+
+		// SourceCharacter is the Owner of this AS, GA_ListenForEvents triggers GE_EventBasedEffect, which applies to self
+		if(Props.SourceCharacter->Implements<UPlayerInterface>() && Props.SourceCharacter->Implements<UCombatInterface>())
+		{
+			// Handle LevelUp
+			const int32 CurrentLevel = ICombatInterface::Execute_GetPlayerLevel(Props.SourceCharacter);
+			const int32 CurrentXP = IPlayerInterface::Execute_GetXP(Props.SourceCharacter);
+			const int32 NewLevel = IPlayerInterface::Execute_GetLevelForXP(Props.SourceCharacter, CurrentXP + LocalIncomingXP);
+			const int32 NumLevelUps = NewLevel - CurrentLevel;
+			if(NumLevelUps > 0)
+			{
+				const int32 AttributePointsToReward = IPlayerInterface::Execute_GetAttributePointReward(Props.SourceCharacter, CurrentLevel);
+				const int32 SpellPointsToReward = IPlayerInterface::Execute_GetSpellPointReward(Props.SourceCharacter, CurrentLevel);
+				IPlayerInterface::Execute_SetAttributePoint(Props.SourceCharacter, AttributePointsToReward);
+				IPlayerInterface::Execute_SetSpellPoint(Props.SourceCharacter, SpellPointsToReward);
+				IPlayerInterface::Execute_SetPlayerLevel(Props.SourceCharacter, NumLevelUps);
+				SetHealth(GetMaxHealth());
+				SetMana(GetMaxMana());
+
+				IPlayerInterface::Execute_LevelUp(Props.SourceCharacter);
+			}
+			
+			IPlayerInterface::Execute_AddToXP(Props.SourceCharacter, LocalIncomingXP);
+		}
 	}
 }
 
 void UAuraAttributeSet::SendXPEvent(const FEffectProperties& Props)
 {
-	if(TScriptInterface<ICombatInterface> CombatInterface = Props.TargetCharacter)
+	if(Props.TargetCharacter->Implements<UCombatInterface>())
 	{				
-		const int32 TargetLevel = CombatInterface->GetPlayerLevel();
+		const int32 TargetLevel = ICombatInterface::Execute_GetPlayerLevel(Props.TargetCharacter);
 		const ECharacterClass TargetClass = ICombatInterface::Execute_GetCharacterClass(Props.TargetCharacter);
 		const int32 XPReward = UAuraAbilitySystemLibrary::GetXPRewardByClassAndLevel(Props.TargetCharacter, TargetClass, TargetLevel);
 

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "PlayerInterface.h"
 #include "Character/AuraCharacterBase.h"
 #include "AuraCharacter.generated.h"
 
@@ -12,7 +13,7 @@ class AAuraHUD;
 class UMotionWarpingComponent;
 
 UCLASS()
-class AURA_API AAuraCharacter : public AAuraCharacterBase
+class AURA_API AAuraCharacter : public AAuraCharacterBase, public IPlayerInterface
 {
 	GENERATED_BODY()
 	
@@ -24,8 +25,20 @@ public:
 	virtual void OnRep_PlayerState() override;
 	//~ End APawn Interface
 
+	//~ Begin IPlayerInterface
+	virtual void AddToXP_Implementation(int32 InXP) override;
+	virtual int32 GetXP_Implementation() const override;
+	virtual int32 GetLevelForXP_Implementation(int32 InXP) override;
+	virtual int32 GetAttributePointReward_Implementation(int32 PlayerLevel) override;
+	virtual int32 GetSpellPointReward_Implementation(int32 PlayerLevel) override;
+	virtual void SetAttributePoint_Implementation(int32 InAttributePoint) override;
+	virtual void SetSpellPoint_Implementation(int32 InSpellPoint) override;
+	virtual void SetPlayerLevel_Implementation(int32 InPlayerLevel) override;
+	virtual void LevelUp_Implementation() override;
+	//~ End IPlayerInterface
+	
 	//~ Begin ICombatInterface
-	virtual int32 GetPlayerLevel() override;
+	virtual int32 GetPlayerLevel_Implementation() override;
 	//~ End ICombatInterface
 
 protected:

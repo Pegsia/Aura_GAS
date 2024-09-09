@@ -35,13 +35,20 @@ class UCombatInterface : public UInterface
 	GENERATED_BODY()
 };
 
+/*
+ * Both Player and Enemy Implements this Interface
+ */
 class AURA_API ICombatInterface
 {
 	GENERATED_BODY()
 
 public:
-	virtual int32 GetPlayerLevel() { return 0; }
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	int32 GetPlayerLevel();
 
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	ECharacterClass GetCharacterClass();
+	
 	// 根据敌人使用武器或者手部发动攻击，返回相应的Socket
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	FVector GetCombatSocketLocation(const FGameplayTag& SocketTag);
@@ -75,7 +82,4 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void IncrementMinionCount(int32 Amount);
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	ECharacterClass GetCharacterClass();
 };

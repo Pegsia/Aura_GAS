@@ -34,7 +34,7 @@ public:
 	//~ End IEnemyInterface
 
 	//~ Begin ICombatInterface
-	virtual int32 GetPlayerLevel() override { return Level; }
+	virtual int32 GetPlayerLevel_Implementation() override { return Level; }
 	virtual void CharacterDeath() override;
 	//~ End ICombatInterface
 

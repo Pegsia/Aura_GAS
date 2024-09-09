@@ -12,6 +12,7 @@
 #include "AuraPlayerController.h"
 #include "MotionWarpingComponent.h"
 #include "Aura/Aura.h"
+#include "LevelUpInfo.h"
 
 AAuraCharacter::AAuraCharacter()
 {
@@ -85,7 +86,64 @@ void AAuraCharacter::InitialAbilityActorInfo()
 	
 }
 
-int32 AAuraCharacter::GetPlayerLevel()
+void AAuraCharacter::AddToXP_Implementation(int32 InXP)
+{
+	AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
+	check(AuraPlayerState);
+	AuraPlayerState->AddToXP(InXP);
+}
+
+int32 AAuraCharacter::GetXP_Implementation() const
+{
+	const AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
+	check(AuraPlayerState);
+	return AuraPlayerState->GetXP();
+}
+
+int32 AAuraCharacter::GetLevelForXP_Implementation(int32 InXP)
+{
+	const AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
+	check(AuraPlayerState);
+	return AuraPlayerState->LevelUpInfo->FindLeveForXP(InXP);
+}
+
+int32 AAuraCharacter::GetAttributePointReward_Implementation(int32 PlayerLevel)
+{
+	const AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
+	check(AuraPlayerState);
+	return AuraPlayerState->LevelUpInfo->LevelUpInformation[PlayerLevel].AttributePointReward;
+}
+
+int32 AAuraCharacter::GetSpellPointReward_Implementation(int32 PlayerLevel)
+{
+	const AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
+	check(AuraPlayerState);
+	return AuraPlayerState->LevelUpInfo->LevelUpInformation[PlayerLevel].SpellPointReward;
+}
+
+void AAuraCharacter::SetAttributePoint_Implementation(int32 InAttributePoint)
+{
+
+}
+
+void AAuraCharacter::SetSpellPoint_Implementation(int32 InSpellPoint)
+{
+	
+}
+
+void AAuraCharacter::SetPlayerLevel_Implementation(int32 InPlayerLevel)
+{
+	AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
+	check(AuraPlayerState);
+	AuraPlayerState->SetLevel(InPlayerLevel);
+}
+
+void AAuraCharacter::LevelUp_Implementation()
+{
+	
+}
+
+int32 AAuraCharacter::GetPlayerLevel_Implementation()
 {
 	const AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
 	check(AuraPlayerState);
