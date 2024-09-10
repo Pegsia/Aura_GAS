@@ -4,35 +4,51 @@
 #include "UI/WidgetController/AttributeMenuWidgetController.h"
 #include "AuraAttributeSet.h"
 #include "AuraGameplayTags.h"
+#include "AuraPlayerState.h"
 #include "Data/AttributeInfo.h"
 
-void UAttributeMenuWidgetController::BroadcastInitialValue()
-{
-	check(AttributeInfo);
-	UAuraAttributeSet* AS = CastChecked<UAuraAttributeSet>(AttributeSet);
-
-	for (TTuple<FGameplayTag, FGameplayAttribute(*)()>& Pair : AS->TagsToAttributesFuncPtr)
-	{
-		BroadcastAttributeInfo(Pair.Key, Pair.Value());
-	}
-}
-
 void UAttributeMenuWidgetController::BindCallBacksToDependencies()
-{
+{ 
 	// GetAttributeMenuWidgetController 时绑定
 	check(AttributeInfo);
-	UAuraAttributeSet* AS = CastChecked<UAuraAttributeSet>(AttributeSet);
+	UAuraAttributeSet* AuraAS = CastChecked<UAuraAttributeSet>(AttributeSet);
 
-	for (TTuple<FGameplayTag, FGameplayAttribute(*)()>& Pair : AS->TagsToAttributesFuncPtr)
+	for (TTuple<FGameplayTag, FGameplayAttribute(*)()>& Pair : AuraAS->TagsToAttributesFuncPtr)
 	{
 		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(Pair.Value()).AddLambda(
 			[this, Pair](const FOnAttributeChangeData& Data)
 			{
 				//Info.AttributeValue = Data.NewValue;
 				BroadcastAttributeInfo(Pair.Key, Pair.Value());
-			}
-		);
+			});
 	}
+
+	AAuraPlayerState* AuraPS = CastChecked<AAuraPlayerState>(PlayerState);
+	AuraPS->OnAttributePointsChangeDelegate.AddLambda(
+		[this](int32 AttributePoints)
+		{
+			AttributePointsChangeDelegate.Broadcast(AttributePoints);
+		});
+	AuraPS->OnSpellPointsChangeDelegate.AddLambda(
+		[this](int32 SpellPoints)
+		{
+			SpellPointsChangeDelegate.Broadcast(SpellPoints);
+		});
+}
+
+void UAttributeMenuWidgetController::BroadcastInitialValue()
+{
+	check(AttributeInfo);
+	UAuraAttributeSet* AuraAS = CastChecked<UAuraAttributeSet>(AttributeSet);
+
+	for (TTuple<FGameplayTag, FGameplayAttribute(*)()>& Pair : AuraAS->TagsToAttributesFuncPtr)
+	{
+		BroadcastAttributeInfo(Pair.Key, Pair.Value());
+	}
+
+	AAuraPlayerState* AuraPS = CastChecked<AAuraPlayerState>(PlayerState);
+	AttributePointsChangeDelegate.Broadcast(AuraPS->GetAttributePoints());
+	SpellPointsChangeDelegate.Broadcast(AuraPS->GetSpellPoints());
 }
 
 // Set Attribute Value And Broadcast to Attribute Menu

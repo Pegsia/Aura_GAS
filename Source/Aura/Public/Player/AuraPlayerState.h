@@ -23,22 +23,27 @@ public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 
-	// Player State
+	// Level Up System
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "LevelUpInfo")
 	TObjectPtr<ULevelUpInfo> LevelUpInfo;
 	
 	FORCEINLINE int32 GetPlayerLevel() const { return Level; }
 	FORCEINLINE int32 GetXP() const { return XP; }
+	FORCEINLINE int32 GetAttributePoints() const { return AttributePoints; }
+	FORCEINLINE int32 GetSpellPoints() const { return SpellPoints; }
 	
 	void SetXP(int32 InXP);
 	void SetLevel(int32 InLevel);
 
-	UFUNCTION(BlueprintCallable)
 	void AddToXP(int32 InXP);
 	void AddToLevel(int32 InLevel);
-
+	void AddToAttributePoints(int32 InAttributePoints);
+	void AddToSpellPoints(int32 InSpellPoints);
+	
 	FOnPlayerStateChangedSignature OnXPChangeDelegate;
 	FOnPlayerStateChangedSignature OnLevelChangeDelegate;
+	FOnPlayerStateChangedSignature OnAttributePointsChangeDelegate;
+	FOnPlayerStateChangedSignature OnSpellPointsChangeDelegate;
 	
 protected:
 	UPROPERTY(VisibleAnywhere)
@@ -48,15 +53,25 @@ protected:
 	TObjectPtr<UAttributeSet> AttributeSet;	
 
 private:
+	// Level Up System
 	UPROPERTY(VisibleAnywhere, ReplicatedUsing = "OnRep_Level")
 	int32 Level = 1;
 
 	UPROPERTY(VisibleAnywhere, ReplicatedUsing = "OnRep_XP")
 	int32 XP = 0;
+
+	UPROPERTY(VisibleAnywhere, ReplicatedUsing = "OnRep_AttributePoints")
+	int32 AttributePoints = 0;
+
+	UPROPERTY(VisibleAnywhere, ReplicatedUsing = "OnRep_SpellPoints")
+	int32 SpellPoints = 0;
 	
 	UFUNCTION()
 	void OnRep_Level(int32 OldLevel);
-
 	UFUNCTION()
 	void OnRep_XP(int32 OldXP);
+	UFUNCTION()
+	void OnRep_AttributePoints(int32 OldAttributesPoints);
+	UFUNCTION()
+	void OnRep_SpellPoints(int32 OldSpellPoints);
 };

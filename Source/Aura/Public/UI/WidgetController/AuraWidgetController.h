@@ -17,7 +17,7 @@ struct FWidgetControllerParams
 
 	FWidgetControllerParams() {}
 	FWidgetControllerParams(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UAttributeSet* AS)
-		:PlayerController(PC), PlayerState(PS), AbilityStstemComponent(ASC), AttributeSet(AS) {}
+		:PlayerController(PC), PlayerState(PS), AbilitySystemComponent(ASC), AttributeSet(AS) {}
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<APlayerController> PlayerController = nullptr;
@@ -26,12 +26,13 @@ struct FWidgetControllerParams
 	TObjectPtr<APlayerState> PlayerState = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TObjectPtr<UAbilitySystemComponent> AbilityStstemComponent = nullptr;
+	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<UAttributeSet> AttributeSet = nullptr;
 };
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStateChangedSignature, int32, NewValue);
 
 UCLASS()
 class AURA_API UAuraWidgetController : public UObject

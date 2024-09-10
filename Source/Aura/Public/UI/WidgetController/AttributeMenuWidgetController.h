@@ -25,6 +25,12 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Attributes")
 	FAttributeInfoSignature AttributeInfoDelegate;
 
+	UPROPERTY(BlueprintAssignable, Category = "GAS|PlayerState")
+	FOnStateChangedSignature AttributePointsChangeDelegate;
+
+	UPROPERTY(BlueprintAssignable, Category = "GAS|PlayerState")
+	FOnStateChangedSignature SpellPointsChangeDelegate;
+	
 	//~ Begin UAuraWidgetController Interface
 	virtual void BroadcastInitialValue() override;
 	virtual void BindCallBacksToDependencies() override;

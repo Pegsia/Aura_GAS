@@ -110,7 +110,6 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 	{
 		const float LocalIncomingXP = GetIncomingXP();
 		SetIncomingXP(0.f);
-
 		// SourceCharacter is the Owner of this AS, GA_ListenForEvents triggers GE_EventBasedEffect, which applies to self
 		if(Props.SourceCharacter->Implements<UPlayerInterface>())
 		{
