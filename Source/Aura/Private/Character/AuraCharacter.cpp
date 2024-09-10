@@ -96,22 +96,17 @@ void AAuraCharacter::InitialAbilityActorInfo()
 		{
 			AuraHUD->InitOverlay(AuraPlayerController, AuraPlayerState, AbilitySystemComponent, AttributeSet);
 		}
-	}
-	
+	}	
 }
 
-void AAuraCharacter::AddToXP_Implementation(int32 InXP)
+void AAuraCharacter::AddToXP_Implementation(int32 InXP) // AuraAS
 {
-	AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
-	check(AuraPlayerState);
-	AuraPlayerState->AddToXP(InXP);
+	GetAuraPSChecked()->AddToXP(InXP);
 }
 
-int32 AAuraCharacter::GetPlayerLevel_Implementation()
+int32 AAuraCharacter::GetPlayerLevel_Implementation() // ExecCalc, MMC
 {
-	const AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
-	check(AuraPlayerState);
-	return AuraPlayerState->GetPlayerLevel();
+	return GetAuraPSChecked()->GetPlayerLevel();
 }
 
 void AAuraCharacter::MulticastLevelUpVFX_Implementation() const
@@ -126,55 +121,32 @@ void AAuraCharacter::MulticastLevelUpVFX_Implementation() const
 	}
 }
 
-// UnUsed
-
-void AAuraCharacter::LevelUp_Implementation(int32 NumberOfLevelUps)
+int32 AAuraCharacter::GetAttributePoint_Implementation()
 {
-	
+	return GetAuraPSChecked()->GetAttributePoints();
+}
+
+void AAuraCharacter::AddToAttributePoints_Implementation(int32 InAttributePoints)
+{
+	GetAuraPSChecked()->AddToAttributePoints(InAttributePoints);
+}
+
+int32 AAuraCharacter::GetSpellPoint_Implementation()
+{
+	return GetAuraPSChecked()->GetSpellPoints();
+}
+
+void AAuraCharacter::AddToSpellPoints_Implementation(int32 InSpellPoints)
+{
+	GetAuraPSChecked()->AddToSpellPoints(InSpellPoints);
 }
 
 int32 AAuraCharacter::GetXP_Implementation() const
 {
-	const AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
-	check(AuraPlayerState);
-	return AuraPlayerState->GetXP();
+	return GetAuraPSChecked()->GetXP();
 }
 
-int32 AAuraCharacter::GetLevelForXP_Implementation(int32 InXP)
+AAuraPlayerState* AAuraCharacter::GetAuraPSChecked() const
 {
-	const AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
-	check(AuraPlayerState);
-	return AuraPlayerState->LevelUpInfo->FindLeveForXP(InXP);
+	return GetPlayerStateChecked<AAuraPlayerState>();
 }
-
-int32 AAuraCharacter::GetAttributePointReward_Implementation(int32 PlayerLevel)
-{
-	const AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
-	check(AuraPlayerState);
-	return AuraPlayerState->LevelUpInfo->LevelUpInformation[PlayerLevel].AttributePointReward;
-}
-
-int32 AAuraCharacter::GetSpellPointReward_Implementation(int32 PlayerLevel)
-{
-	const AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
-	check(AuraPlayerState);
-	return AuraPlayerState->LevelUpInfo->LevelUpInformation[PlayerLevel].SpellPointReward;
-}
-
-void AAuraCharacter::SetAttributePoint_Implementation(int32 InAttributePoint)
-{
-
-}
-
-void AAuraCharacter::SetSpellPoint_Implementation(int32 InSpellPoint)
-{
-	
-}
-
-void AAuraCharacter::SetPlayerLevel_Implementation(int32 InPlayerLevel)
-{
-	AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
-	check(AuraPlayerState);
-	AuraPlayerState->SetLevel(InPlayerLevel);
-}
-

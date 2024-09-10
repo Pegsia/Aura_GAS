@@ -11,9 +11,9 @@
 
 void UOverlayWidgetController::BindCallBacksToDependencies()
 {
-	const UAuraAttributeSet* AuraAttributeSet = Cast<UAuraAttributeSet>(AttributeSet);
+	AAuraPlayerState* AuraPS = GetAuraPS();
 	UAuraAbilitySystemComponent* AuraASC = GetAuraASC();
-	AAuraPlayerState* AuraPS = CastChecked<AAuraPlayerState>(PlayerState);
+	const UAuraAttributeSet* AuraAttributeSet = GetAuraAS();	
 
 	// Bind Health
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetHealthAttribute()).AddLambda(
@@ -82,7 +82,7 @@ void UOverlayWidgetController::BindCallBacksToDependencies()
  */
 void UOverlayWidgetController::BroadcastInitialValue() 
 {
-	const UAuraAttributeSet* AuraAttributeSet = Cast<UAuraAttributeSet>(AttributeSet);
+	const UAuraAttributeSet* AuraAttributeSet = GetAuraAS();
 
 	// Init Health
 	OnHealthChanged.Broadcast(AuraAttributeSet->GetHealth());

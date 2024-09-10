@@ -39,9 +39,15 @@ public:
 	void AbilityInputHeld(const FGameplayTag& InputTag);
 	void AbilityInputReleased(const FGameplayTag& InputTag);
 
+	// Spent Attribute Points and Update Attributes
+	void UpdateAttribute(const FGameplayTag& AttributeTag);
+	
 protected:
-
+	// Send Up Ability Info For Spell Globes
 	virtual void OnRep_ActivateAbilities() override;
+
+	UFUNCTION(Server, Reliable)
+	void ServerUpdateAttribute(const FGameplayTag& AttributeTag);
 	
 	UFUNCTION(Client, Reliable)
 	void ClientEffectApplied(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveEffectHandle);

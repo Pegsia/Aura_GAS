@@ -27,20 +27,14 @@ public:
 	int32 GetLevelForXP(int32 InXP);
 
 	UFUNCTION(BlueprintNativeEvent)
-	int32 GetAttributePointReward(int32 PlayerLevel);
-
-	UFUNCTION(BlueprintNativeEvent)
-	int32 GetSpellPointReward(int32 PlayerLevel);
-
-	UFUNCTION(BlueprintNativeEvent)
-	void SetAttributePoint(int32 InAttributePoint);
-
-	UFUNCTION(BlueprintNativeEvent)
-	void SetSpellPoint(int32 InSpellPoint);
-
-	UFUNCTION(BlueprintNativeEvent)
-	void SetPlayerLevel(int32 InPlayerLevel);
+	int32 GetAttributePoint();
 	
 	UFUNCTION(BlueprintNativeEvent)
-	void LevelUp(int32 NumberOfLevelUps);
+	void AddToAttributePoints(int32 InAttributePoints);
+	
+	UFUNCTION(BlueprintNativeEvent)
+	int32 GetSpellPoint();
+
+	UFUNCTION(BlueprintNativeEvent)
+	void AddToSpellPoints(int32 InSpellPoints);
 };

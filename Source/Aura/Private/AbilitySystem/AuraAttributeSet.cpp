@@ -56,6 +56,22 @@ void UAuraAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, 
 	}
 }
 
+void UAuraAttributeSet::PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue)
+{
+	Super::PostAttributeChange(Attribute, OldValue, NewValue);
+	// Level Up Recalculate MaxHealth and MaxMana
+	if(bRestoreHealth && Attribute == GetMaxHealthAttribute())
+	{
+		bRestoreHealth = false;
+		SetHealth(GetMaxHealth());
+	}
+	if(bRestoreMana && Attribute == GetMaxManaAttribute())
+	{
+		bRestoreMana = false;
+		SetMana(GetMaxMana());
+	}
+}
+
 void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
 {
 	Super::PostGameplayEffectExecute(Data);
@@ -120,8 +136,8 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 
 void UAuraAttributeSet::RefillVitalAttributes()
 {
-	SetHealth(GetMaxHealth());
-	SetMana(GetMaxMana());
+	bRestoreHealth = true;
+	bRestoreMana = true;
 }
 
 void UAuraAttributeSet::SendXPEvent(const FEffectProperties& Props)

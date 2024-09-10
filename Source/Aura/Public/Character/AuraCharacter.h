@@ -11,6 +11,7 @@ class UCameraComponent;
 class USpringArmComponent;
 class UMotionWarpingComponent;
 class UNiagaraComponent;
+class AAuraPlayerState;
 
 UCLASS()
 class AURA_API AAuraCharacter : public AAuraCharacterBase, public IPlayerInterface
@@ -28,13 +29,10 @@ public:
 	//~ Begin IPlayerInterface
 	virtual void AddToXP_Implementation(int32 InXP) override;
 	virtual int32 GetXP_Implementation() const override;
-	virtual int32 GetLevelForXP_Implementation(int32 InXP) override;
-	virtual int32 GetAttributePointReward_Implementation(int32 PlayerLevel) override;
-	virtual int32 GetSpellPointReward_Implementation(int32 PlayerLevel) override;
-	virtual void SetAttributePoint_Implementation(int32 InAttributePoint) override;
-	virtual void SetSpellPoint_Implementation(int32 InSpellPoint) override;
-	virtual void SetPlayerLevel_Implementation(int32 InPlayerLevel) override;
-	virtual void LevelUp_Implementation(int32 NumberOfLevelUps) override;
+	virtual int32 GetAttributePoint_Implementation() override;
+	virtual void AddToAttributePoints_Implementation(int32 InAttributePoints) override;
+	virtual int32 GetSpellPoint_Implementation() override;
+	virtual void AddToSpellPoints_Implementation(int32 InSpellPoints) override;
 	//~ End IPlayerInterface
 	
 	//~ Begin ICombatInterface
@@ -64,4 +62,6 @@ private:
 
 	UFUNCTION(NetMulticast, Unreliable)
 	void MulticastLevelUpVFX() const;
+
+	AAuraPlayerState* GetAuraPSChecked() const;
 };

@@ -14,7 +14,7 @@ class UAttributeInfo;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAttributeInfoSignature, const FAuraAttributeInfo&, Info);
 
 /**
- * 
+ *  For Attribute Menu Widget and It's SubWidgets
  */
 UCLASS(BlueprintType, Blueprintable)
 class AURA_API UAttributeMenuWidgetController : public UAuraWidgetController
@@ -30,6 +30,9 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "GAS|PlayerState")
 	FOnStateChangedSignature SpellPointsChangeDelegate;
+
+	UFUNCTION(BlueprintCallable)
+	void UpdateAttribute(const FGameplayTag& AttributeTag);
 	
 	//~ Begin UAuraWidgetController Interface
 	virtual void BroadcastInitialValue() override;

@@ -5,34 +5,38 @@
 #include "AuraAbilitySystemComponent.h"
 #include "AuraAttributeSet.h"
 #include "LevelUpInfo.h"
+#include "Aura/AuraLogChannels.h"
 #include "Net/UnrealNetwork.h"
 
 AAuraPlayerState::AAuraPlayerState()
 {
 	NetUpdateFrequency = 100.f;
 
-	// GAS
+	// Init ASC and AS
 	AbilitySystemComponent = CreateDefaultSubobject<UAuraAbilitySystemComponent>("AbilitySystemComponent");
 	AbilitySystemComponent->SetIsReplicated(true);
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
 	AttributeSet = CreateDefaultSubobject<UAuraAttributeSet>("AttributeSet");
 }
 
-UAbilitySystemComponent* AAuraPlayerState::GetAbilitySystemComponent() const
-{
-	return AbilitySystemComponent;
-}
-
 void AAuraPlayerState::SetXP(int32 InXP)
 {
-	if(InXP < 0) return;
+	if(InXP < 0)
+	{
+		UE_LOG(LogAura, Error, TEXT("Trying to Assign an InValid XP: %d"), InXP);
+		return;
+	}
 	XP = InXP;
 	OnXPChangeDelegate.Broadcast(XP);
 }
 
 void AAuraPlayerState::SetLevel(int32 InLevel)
 {
-	if(InLevel < 0) return;
+	if(InLevel < 0)
+	{
+		UE_LOG(LogAura, Error, TEXT("Trying to Assign an InValid Level: %d"), InLevel);
+		return;
+	}
 	Level = InLevel;
 	OnLevelChangeDelegate.Broadcast(Level);
 }
@@ -98,4 +102,9 @@ void AAuraPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	DOREPLIFETIME(AAuraPlayerState, XP);
 	DOREPLIFETIME(AAuraPlayerState, AttributePoints);
 	DOREPLIFETIME(AAuraPlayerState, SpellPoints);
+}
+
+UAbilitySystemComponent* AAuraPlayerState::GetAbilitySystemComponent() const
+{
+	return AbilitySystemComponent;
 }
