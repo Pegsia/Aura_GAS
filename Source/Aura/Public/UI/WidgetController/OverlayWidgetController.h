@@ -34,7 +34,6 @@ struct FUIWidgetRow : public FTableRowBase
 // Delegate Signature
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeChangedSignature, float, NewValue);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMessageWidgetRowSignature, FUIWidgetRow, Row);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAbilityInfoSignature, const FAuraAbilityInfo&, Info);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAbilityCommittedSignature, float, TimeRemaining);
 
 UCLASS(BlueprintType, Blueprintable)
@@ -60,10 +59,7 @@ public:
 	FMessageWidgetRowSignature MessageWidgetRowDelegate;
 
 	// Ability Spell Delegate
-	UPROPERTY(BlueprintAssignable, Category="GAS|Messages")
-	FAbilityInfoSignature AbilityInfoDelegate;
-
-	UPROPERTY(BlueprintAssignable, Category="GAS|Messages")
+	UPROPERTY(BlueprintAssignable, Category="GAS|Ability")
 	FOnAbilityCommittedSignature OnAbilityCommittedDelegate;
 
 	// Level Delegate
@@ -81,12 +77,6 @@ public:
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Message Widget")
 	TObjectPtr<UDataTable> MessageWidgetDataTable;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Message Widget")
-	TObjectPtr<UAbilityInfo> AbilityInfo;
-	
-	// Get Information about all Abilities, look up their Ability Info, Broadcast AbilityInfo to Widget
-	void OnInitializeStartupAbilities() const;
 	
 	template<typename T>
 	T* GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag);

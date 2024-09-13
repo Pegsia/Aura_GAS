@@ -6,6 +6,8 @@
 #include "UObject/NoExportTypes.h"
 #include "AuraWidgetController.generated.h"
 
+class UAbilityInfo;
+class AAuraPlayerController;
 class AAuraPlayerState;
 class UAuraAttributeSet;
 class UAuraAbilitySystemComponent;
@@ -35,6 +37,7 @@ struct FWidgetControllerParams
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStateChangedSignature, int32, NewValue);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAbilityInfoSignature, const FAuraAbilityInfo&, Info);
 
 UCLASS()
 class AURA_API UAuraWidgetController : public UObject
@@ -48,10 +51,22 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual void BroadcastInitialValue();
 	virtual void BindCallBacksToDependencies();
+	
+	UPROPERTY(BlueprintAssignable, Category="GAS|Ability")
+	FAbilityInfoSignature AbilityInfoDelegate;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Ability Info")
+	TObjectPtr<UAbilityInfo> AbilityInfo;
+	
+	// Get Information about all Abilities, look up their Ability Info, Broadcast AbilityInfo to Widget
+	void BindAbilityInfo();
+	void BroadcastAbilityInfo();
 
-	UAuraAbilitySystemComponent* GetAuraASC() const;
-	UAuraAttributeSet* GetAuraAS() const;
-	AAuraPlayerState* GetAuraPS() const;
+	// Getter
+	AAuraPlayerController* GetAuraPC();
+	UAuraAttributeSet* GetAuraAS();
+	UAuraAbilitySystemComponent* GetAuraASC();	
+	AAuraPlayerState* GetAuraPS();	
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "WidgetController")
 	TObjectPtr<APlayerController> PlayerController;
@@ -64,5 +79,18 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Category = "WidgetController")
 	TObjectPtr<UAttributeSet> AttributeSet;
+
+	// Aura
+	UPROPERTY(BlueprintReadOnly, Category = "WidgetController")
+	TObjectPtr<AAuraPlayerController> AuraPlayerController;
+
+	UPROPERTY(BlueprintReadOnly, Category = "WidgetController")
+	TObjectPtr<AAuraPlayerState> AuraPlayerState;
+
+	UPROPERTY(BlueprintReadOnly, Category = "WidgetController")
+	TObjectPtr<UAuraAbilitySystemComponent> AuraAbilitySystemComponent;
+
+	UPROPERTY(BlueprintReadOnly, Category = "WidgetController")
+	TObjectPtr<UAuraAttributeSet> AuraAttributeSet;
 	
 };
