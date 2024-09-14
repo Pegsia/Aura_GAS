@@ -48,9 +48,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetWidgetControllerParams(const FWidgetControllerParams& WCParams);
 	
+	virtual void BindCallBacksToDependencies();
 	UFUNCTION(BlueprintCallable)
 	virtual void BroadcastInitialValue();
-	virtual void BindCallBacksToDependencies();
 	
 	UPROPERTY(BlueprintAssignable, Category="GAS|Ability")
 	FAbilityInfoSignature AbilityInfoDelegate;

@@ -12,9 +12,9 @@ class AURA_API USpellMenuWidgetController : public UAuraWidgetController
 	GENERATED_BODY()
 
 public:
-	//~ Begin UAuraWidgetController Interface
-	virtual void BroadcastInitialValue() override;
+	//~ Begin UAuraWidgetController Interface	
 	virtual void BindCallBacksToDependencies() override;
+	virtual void BroadcastInitialValue() override;
 	//~ End UAuraWidgetController Interface
 	
 };

@@ -5,6 +5,7 @@
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AuraGameplayAbility.h"
+#include "AuraGameplayTags.h"
 #include "PlayerInterface.h"
 #include "Aura/AuraLogChannels.h"
 
@@ -31,6 +32,7 @@ void UAuraAbilitySystemComponent::AddCharacterStartupAbilities(const TArray<TSub
 		if (const UAuraGameplayAbility* AuraAbility = Cast<UAuraGameplayAbility>(AbilitySpec.Ability))
 		{
 			AbilitySpec.DynamicAbilityTags.AddTag(AuraAbility->StartupInputTag);
+			AbilitySpec.DynamicAbilityTags.AddTag(FAuraGameplayTags::Get().Abilities_Status_Equipped);
 			GiveAbility(AbilitySpec);
 		}
 	}
@@ -81,6 +83,18 @@ FGameplayTag UAuraAbilitySystemComponent::GetAbilityTagFromSpec(const FGameplayA
 			{
 				return Tag;
 			}
+		}
+	}
+	return FGameplayTag();
+}
+
+FGameplayTag UAuraAbilitySystemComponent::GetAbilityStatusTagFromSpec(const FGameplayAbilitySpec& Spec)
+{
+	for(const FGameplayTag& Tag : Spec.DynamicAbilityTags)
+	{
+		if(Tag.MatchesTag(FGameplayTag::RequestGameplayTag("Abilities.Status")))
+		{
+			return Tag;
 		}
 	}
 	return FGameplayTag();

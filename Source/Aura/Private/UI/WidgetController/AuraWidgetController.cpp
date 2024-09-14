@@ -6,6 +6,7 @@
 
 #include "AbilityInfo.h"
 #include "AuraAbilitySystemComponent.h"
+#include "AuraAbilitySystemLibrary.h"
 #include "AuraAttributeSet.h"
 #include "AuraPlayerController.h"
 #include "AuraPlayerState.h"
@@ -36,6 +37,7 @@ void UAuraWidgetController::BindAbilityInfo()
 		{
 			FAuraAbilityInfo Info = AbilityInfo->FindAbilityInfoByAbilityTag(UAuraAbilitySystemComponent::GetAbilityTagFromSpec(AbilitySpec));
 			Info.InputTag = UAuraAbilitySystemComponent::GetInputTagFromSpec(AbilitySpec);
+			Info.AbilityStatusTag = UAuraAbilitySystemComponent::GetAbilityStatusTagFromSpec(AbilitySpec);
 			AbilityInfoDelegate.Broadcast(Info);
 		});
 }

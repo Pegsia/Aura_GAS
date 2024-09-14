@@ -69,9 +69,9 @@ public:
 	UPROPERTY(BlueprintAssignable, Category="GAS|Level")
 	FOnStateChangedSignature OnLevelChangedDelegate;
 	
-	//~ Begin UAuraWidgetController Interface
-	virtual void BroadcastInitialValue() override;
+	//~ Begin UAuraWidgetController Interface	
 	virtual void BindCallBacksToDependencies() override;
+	virtual void BroadcastInitialValue() override;
 	//~ End UAuraWidgetController Interface
 
 protected:

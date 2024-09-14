@@ -43,6 +43,8 @@ public:
 	FGameplayTag InputTag_2;
 	FGameplayTag InputTag_3;
 	FGameplayTag InputTag_4;
+	FGameplayTag InputTag_Passive_1;
+	FGameplayTag InputTag_Passive_2;
 
 	// Damage
 	FGameplayTag Damage;
@@ -66,6 +68,16 @@ public:
 	FGameplayTag Abilities_Attack;
 	FGameplayTag Abilities_Summon;
 	FGameplayTag Abilities_Fire_FireBolt;
+	FGameplayTag Abilities_HitReact;
+	
+	FGameplayTag Abilities_Status_Locked;
+	FGameplayTag Abilities_Status_Eligible;
+	FGameplayTag Abilities_Status_Unlocked;
+	FGameplayTag Abilities_Status_Equipped;
+
+	FGameplayTag Abilities_Type_Offensive;
+	FGameplayTag Abilities_Type_Passive;
+	FGameplayTag Abilities_Type_None;	
 
 	// Abilities Cooldown
 	FGameplayTag Cooldown_Fire_FireBolt;
@@ -83,7 +95,6 @@ public:
 	FGameplayTag Montage_Attack_4;
 	
 protected:
-
 	// Copy From Lyra
 	void AddTag(FGameplayTag& OutTag, const ANSICHAR* TagName, const ANSICHAR* TagComment);
 	void AddAllTags(UGameplayTagsManager& Manager);

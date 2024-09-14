@@ -3,10 +3,12 @@
 
 #include "UI/WidgetController/SpellMenuWidgetController.h"
 
-void USpellMenuWidgetController::BroadcastInitialValue()
-{
-}
-
 void USpellMenuWidgetController::BindCallBacksToDependencies()
 {
+	BindAbilityInfo();
+}
+
+void USpellMenuWidgetController::BroadcastInitialValue()
+{
+	BroadcastAbilityInfo();
 }

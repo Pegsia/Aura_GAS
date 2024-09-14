@@ -43,6 +43,8 @@ void FAuraGameplayTags::AddAllTags(UGameplayTagsManager& Manager)
 	AddTag(InputTag_2, "InputTag.2", "Input Tag for Number 2 Key");
 	AddTag(InputTag_3, "InputTag.3", "Input Tag for Number 3 Key");
 	AddTag(InputTag_4, "InputTag.4", "Input Tag for Number 4 Key");
+	AddTag(InputTag_Passive_1, "InputTag.Passive.1", "Input Tag for Passive Ability 1");
+	AddTag(InputTag_Passive_2, "InputTag.Passive.2", "Input Tag for Passive Ability 2");
 
 	// Damage
 	AddTag(Damage, "Damage", "Assign Tag Set By Caller Damage Magnitude");
@@ -68,8 +70,18 @@ void FAuraGameplayTags::AddAllTags(UGameplayTagsManager& Manager)
 
 	// Abilities
 	AddTag(Abilities_Attack, "Abilities.Attack", "Attack Ability Tag");
-	AddTag(Abilities_Summon, "Abilities.Summon", "Summon Ability Tag");
-	AddTag(Abilities_Fire_FireBolt, "Abilities.Fire.FireBolt", "FireBolt Ability Tag");
+	AddTag(Abilities_Summon, "Abilities.Summon", "Summon Ability Tag");	
+	AddTag(Abilities_Fire_FireBolt, "Abilities.Fire.FireBolt", "FireBolt Ability Tag");	
+	AddTag(Abilities_HitReact, "Abilities.HitReact", "HitReact Ability Tag");
+	
+	AddTag(Abilities_Status_Locked, "Abilities.Status.Locked", "Locked Status");
+	AddTag(Abilities_Status_Eligible, "Abilities.Status.Eligible", "Eligible Status");
+	AddTag(Abilities_Status_Unlocked, "Abilities.Status.Unlocked", "Unlocked Status");
+	AddTag(Abilities_Status_Equipped, "Abilities.Status.Equipped", "Equipped Status");
+	
+	AddTag(Abilities_Type_Offensive, "Abilities.Type.Offensive", "AbilityType OffensiveTag");
+	AddTag(Abilities_Type_Passive, "Abilities.Type.Passive", "AbilityType Passive Tag");
+	AddTag(Abilities_Type_None, "Abilities.Type.None", "AbilityType None Tag");
 
 	// Abilities Cooldown
 	AddTag(Cooldown_Fire_FireBolt, "Cooldown.Fire.FireBolt", "FireBolt Cooldown Tag");

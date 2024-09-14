@@ -33,7 +33,8 @@ public:
 
 	// Utility Functions
 	static FGameplayTag GetAbilityTagFromSpec(const FGameplayAbilitySpec& Spec);
-	static FGameplayTag GetInputTagFromSpec(const FGameplayAbilitySpec& Spec);
+	static FGameplayTag GetAbilityStatusTagFromSpec(const FGameplayAbilitySpec& Spec);
+	static FGameplayTag GetInputTagFromSpec(const FGameplayAbilitySpec& Spec);	
 	
 	// Input Ability
 	void AbilityInputHeld(const FGameplayTag& InputTag);
