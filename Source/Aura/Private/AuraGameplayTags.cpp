@@ -70,10 +70,18 @@ void FAuraGameplayTags::AddAllTags(UGameplayTagsManager& Manager)
 
 	// Abilities
 	AddTag(Abilities_Attack, "Abilities.Attack", "Attack Ability Tag");
-	AddTag(Abilities_Summon, "Abilities.Summon", "Summon Ability Tag");	
-	AddTag(Abilities_Fire_FireBolt, "Abilities.Fire.FireBolt", "FireBolt Ability Tag");	
+	AddTag(Abilities_Summon, "Abilities.Summon", "Summon Ability Tag");
 	AddTag(Abilities_HitReact, "Abilities.HitReact", "HitReact Ability Tag");
+
+	AddTag(Abilities_Fire_FireBolt, "Abilities.Fire.FireBolt", "FireBolt Ability Tag");
+
+	AddTag(Abilities_Lightning_Electrocute, "Abilities.Lightning.Electrocute", "Electrocute Ability Tag");
 	
+	// Abilities Cooldown
+	AddTag(Cooldown_Fire_FireBolt, "Cooldown.Fire.FireBolt", "FireBolt Cooldown Tag");
+	AddTag(Cooldown_Lightning_Electrocute, "Cooldown.Lightning.Electrocute", "Electrocute Cooldown Tag");
+	
+	// Ability Status and Type
 	AddTag(Abilities_Status_Locked, "Abilities.Status.Locked", "Locked Status");
 	AddTag(Abilities_Status_Eligible, "Abilities.Status.Eligible", "Eligible Status");
 	AddTag(Abilities_Status_Unlocked, "Abilities.Status.Unlocked", "Unlocked Status");
@@ -81,10 +89,7 @@ void FAuraGameplayTags::AddAllTags(UGameplayTagsManager& Manager)
 	
 	AddTag(Abilities_Type_Offensive, "Abilities.Type.Offensive", "AbilityType OffensiveTag");
 	AddTag(Abilities_Type_Passive, "Abilities.Type.Passive", "AbilityType Passive Tag");
-	AddTag(Abilities_Type_None, "Abilities.Type.None", "AbilityType None Tag");
-
-	// Abilities Cooldown
-	AddTag(Cooldown_Fire_FireBolt, "Cooldown.Fire.FireBolt", "FireBolt Cooldown Tag");
+	AddTag(Abilities_Type_None, "Abilities.Type.None", "AbilityType None Tag");	
 
 	// Combat Socket
 	AddTag(CombatSocket_Weapon, "CombatSocket.Weapon", "Weapon");

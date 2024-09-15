@@ -15,6 +15,7 @@ class UOverlayWidgetController;
 class UAttributeMenuWidgetController;
 class UAbilitySystemComponent;
 class UGameplayEffect;
+class UAbilityInfo;
 /**
  * 
  */
@@ -46,6 +47,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|CharacterClassDefault")
 	static void InitializeCharacterDefaultAttributes(const UObject* WorldContextObject, const ECharacterClass& CharacterClass, float Level, UAbilitySystemComponent* ASC);	
 
+	// Abilities
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|Ability")
+	static UAbilityInfo* GetAbilityInfo(const UObject* WorldContextObject);
+	
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|CharacterClassDefault")
 	static void InitializeStartAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC, const ECharacterClass& CharacterClass);
 

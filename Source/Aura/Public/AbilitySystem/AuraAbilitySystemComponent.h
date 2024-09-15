@@ -9,6 +9,7 @@
 DECLARE_MULTICAST_DELEGATE_OneParam(FEffectAssetTagsSignature, FGameplayTagContainer& /* Asset Tags*/)
 DECLARE_MULTICAST_DELEGATE(FAbilityGivenSignature);
 DECLARE_DELEGATE_OneParam(FForEachAbilitySignature, const FGameplayAbilitySpec&);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FAbilityStatusChangedSignature, const FGameplayTag& /*Ability Tag*/, const FGameplayTag& /*Status Tag*/);
 
 UCLASS()
 class AURA_API UAuraAbilitySystemComponent : public UAbilitySystemComponent
@@ -18,6 +19,7 @@ class AURA_API UAuraAbilitySystemComponent : public UAbilitySystemComponent
 public:
 	FEffectAssetTagsSignature EffectAssetTagsDelegate; // Pop up Message
 	FAbilityGivenSignature AbilityGivenDelegate;	   // Spells Globe
+	FAbilityStatusChangedSignature AbilityStatusChangedDelegate; // Spell Menu
 	
 	void AbilityActorInfoSet();
 	
@@ -42,7 +44,11 @@ public:
 
 	// Spent Attribute Points and Update Attributes
 	void UpdateAttribute(const FGameplayTag& AttributeTag);
-	
+
+	// Ability Update
+	// Loop through Activatable Abilities Check if we already have this ability
+	FGameplayAbilitySpec* GetSpecFormAbilityTag(const FGameplayTag& AbilityTag);
+	void UpdateAbilityStatuses(int32 Level);
 protected:
 	// Send Up Ability Info For Spell Globes
 	virtual void OnRep_ActivateAbilities() override;
@@ -53,5 +59,6 @@ protected:
 	UFUNCTION(Client, Reliable)
 	void ClientEffectApplied(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveEffectHandle);
 
-	
+	UFUNCTION(Client, Reliable)
+	void ClientUpdateAbilityStatus(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag);
 };

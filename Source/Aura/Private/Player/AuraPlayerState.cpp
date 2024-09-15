@@ -50,8 +50,9 @@ void AAuraPlayerState::AddToXP(int32 InXP)
 		const int32 SpellPointsToReward = LevelUpInfo->LevelUpInformation[Level].SpellPointReward;
 		AddToAttributePoints(AttributePointsToReward);
 		AddToSpellPoints(SpellPointsToReward);
-		Cast<UAuraAttributeSet>(AttributeSet)->RefillVitalAttributes();
+		GetAuraAS()->RefillVitalAttributes();
 		AddToLevel(1);
+		GetAuraASC()->UpdateAbilityStatuses(Level);
 	}
 	OnXPChangeDelegate.Broadcast(XP);
 }
@@ -107,4 +108,14 @@ void AAuraPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 UAbilitySystemComponent* AAuraPlayerState::GetAbilitySystemComponent() const
 {
 	return AbilitySystemComponent;
+}
+
+UAuraAbilitySystemComponent* AAuraPlayerState::GetAuraASC() const
+{
+	return CastChecked<UAuraAbilitySystemComponent>(AbilitySystemComponent);
+}
+
+UAuraAttributeSet* AAuraPlayerState::GetAuraAS() const
+{
+	return CastChecked<UAuraAttributeSet>(AttributeSet);
 }

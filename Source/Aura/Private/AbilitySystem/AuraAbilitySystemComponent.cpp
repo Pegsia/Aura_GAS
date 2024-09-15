@@ -3,7 +3,9 @@
 
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 
+#include "AbilityInfo.h"
 #include "AbilitySystemBlueprintLibrary.h"
+#include "AuraAbilitySystemLibrary.h"
 #include "AuraGameplayAbility.h"
 #include "AuraGameplayTags.h"
 #include "PlayerInterface.h"
@@ -154,6 +156,44 @@ void UAuraAbilitySystemComponent::UpdateAttribute(const FGameplayTag& AttributeT
 			ServerUpdateAttribute(AttributeTag);
 		}
 	}
+}
+
+FGameplayAbilitySpec* UAuraAbilitySystemComponent::GetSpecFormAbilityTag(const FGameplayTag& AbilityTag)
+{
+	for(FGameplayAbilitySpec& Spec : GetActivatableAbilities())
+	{
+		for(const FGameplayTag& Tag : Spec.Ability->AbilityTags)
+		{
+			if(Tag.MatchesTagExact(AbilityTag))
+			{
+				return &Spec;
+			}
+		}
+	}
+	return nullptr;
+}
+
+void UAuraAbilitySystemComponent::UpdateAbilityStatuses(int32 Level)
+{
+	UAbilityInfo* AbilityInfo = UAuraAbilitySystemLibrary::GetAbilityInfo(GetAvatarActor());
+	for(FAuraAbilityInfo& Info : AbilityInfo->AbilityInformation)
+	{
+		if(Level < Info.LevelRequirement) continue;
+		if(!Info.AbilityTag.IsValid()) continue;
+		if(GetSpecFormAbilityTag(Info.AbilityTag) == nullptr)
+		{
+			FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(Info.AbilityClass, 1);
+			AbilitySpec.DynamicAbilityTags.AddTag(FAuraGameplayTags::Get().Abilities_Status_Eligible);
+			GiveAbility(AbilitySpec);
+			MarkAbilitySpecDirty(AbilitySpec); // Force spec to replicated now
+			ClientUpdateAbilityStatus(Info.AbilityTag, FAuraGameplayTags::Get().Abilities_Status_Eligible);
+		}
+	}
+}
+
+void UAuraAbilitySystemComponent::ClientUpdateAbilityStatus_Implementation(const FGameplayTag& AbilityTag,	const FGameplayTag& StatusTag)
+{
+	AbilityStatusChangedDelegate.Broadcast(AbilityTag, StatusTag);
 }
 
 void UAuraAbilitySystemComponent::ServerUpdateAttribute_Implementation(const FGameplayTag& AttributeTag)

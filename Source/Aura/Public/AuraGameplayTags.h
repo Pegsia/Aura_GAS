@@ -67,9 +67,17 @@ public:
 	// Abilities
 	FGameplayTag Abilities_Attack;
 	FGameplayTag Abilities_Summon;
-	FGameplayTag Abilities_Fire_FireBolt;
 	FGameplayTag Abilities_HitReact;
 	
+	FGameplayTag Abilities_Fire_FireBolt;
+
+	FGameplayTag Abilities_Lightning_Electrocute;
+
+	// Abilities Cooldown
+	FGameplayTag Cooldown_Fire_FireBolt;
+	FGameplayTag Cooldown_Lightning_Electrocute;
+	
+	// Ability Status and Type
 	FGameplayTag Abilities_Status_Locked;
 	FGameplayTag Abilities_Status_Eligible;
 	FGameplayTag Abilities_Status_Unlocked;
@@ -77,10 +85,7 @@ public:
 
 	FGameplayTag Abilities_Type_Offensive;
 	FGameplayTag Abilities_Type_Passive;
-	FGameplayTag Abilities_Type_None;	
-
-	// Abilities Cooldown
-	FGameplayTag Cooldown_Fire_FireBolt;
+	FGameplayTag Abilities_Type_None;		
 
 	// Combat Socket
 	FGameplayTag CombatSocket_Weapon;

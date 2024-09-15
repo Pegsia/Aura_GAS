@@ -7,19 +7,24 @@
 #include "Engine/DataAsset.h"
 #include "AbilityInfo.generated.h"
 
+class UGameplayAbility;
+
 USTRUCT(BlueprintType)
 struct FAuraAbilityInfo
 {
 	GENERATED_BODY()
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSubclassOf<UGameplayAbility> AbilityClass = nullptr;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	int32 LevelRequirement = 1;
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FGameplayTag AbilityTag = FGameplayTag();
 
 	UPROPERTY(BlueprintReadOnly)
 	FGameplayTag AbilityStatusTag = FGameplayTag();
-
-	// UPROPERTY(BlueprintReadOnly)
-	// FGameplayTag AbilityTypeTag = FGameplayTag();
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FGameplayTag CooldownTag = FGameplayTag();
@@ -31,7 +36,7 @@ struct FAuraAbilityInfo
 	TObjectPtr<const UTexture2D> Icon = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TObjectPtr<const UMaterialInstance> BackgroundMaterial = nullptr;
+	TObjectPtr<const UMaterialInstance> BackgroundMaterial = nullptr;	
 };
 
 /**

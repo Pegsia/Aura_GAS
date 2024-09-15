@@ -83,9 +83,9 @@ FActiveGameplayEffectHandle UAuraAbilitySystemLibrary::ApplyEffectToSelf(TSubcla
 // GetCharacterClassInfo From GameMode
 UCharacterClassInfo* UAuraAbilitySystemLibrary::GetCharacterClassInfo(const UObject* WorldContextObject)
 {
-	AAuraGameModeBase* GameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
-	if (GameMode == nullptr)	return nullptr;
-	return GameMode->CharacterClassInfo;  // UCharacterClassInfo
+	AAuraGameModeBase* AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
+	if (AuraGameMode == nullptr)	return nullptr;
+	return AuraGameMode->CharacterClassInfo;  // UCharacterClassInfo
 }
 
 void UAuraAbilitySystemLibrary::InitializeCharacterDefaultAttributes(const UObject* WorldContextObject, const ECharacterClass& CharacterClass, float Level, UAbilitySystemComponent* ASC)
@@ -97,6 +97,13 @@ void UAuraAbilitySystemLibrary::InitializeCharacterDefaultAttributes(const UObje
 		ApplyEffectToSelf(ClassDefaultInfo.SecondaryAttributes, Level, ASC);
 		ApplyEffectToSelf(ClassInfo->VitalAttributes, Level, ASC);
 	}	
+}
+
+UAbilityInfo* UAuraAbilitySystemLibrary::GetAbilityInfo(const UObject* WorldContextObject)
+{
+	AAuraGameModeBase* AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
+	if(AuraGameMode == nullptr) return nullptr;
+	return AuraGameMode->AbilityInfo;
 }
 
 void UAuraAbilitySystemLibrary::InitializeStartAbilities(const UObject* WorldContextObject,	UAbilitySystemComponent* ASC, const ECharacterClass& CharacterClass)

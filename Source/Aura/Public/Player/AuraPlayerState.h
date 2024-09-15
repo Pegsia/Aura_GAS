@@ -7,9 +7,11 @@
 #include "AbilitySystemInterface.h"
 #include "AuraPlayerState.generated.h"
 
+class UAuraAttributeSet;
 class ULevelUpInfo;
 class UAbilitySystemComponent;
 class UAttributeSet;
+class UAuraAbilitySystemComponent;
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnPlayerStateChangedSignature, int32 /*StateValue*/);
 
@@ -44,7 +46,9 @@ public:
 	FOnPlayerStateChangedSignature OnLevelChangeDelegate;
 	FOnPlayerStateChangedSignature OnAttributePointsChangeDelegate;
 	FOnPlayerStateChangedSignature OnSpellPointsChangeDelegate;
-	
+
+	UAuraAbilitySystemComponent* GetAuraASC() const;
+	UAuraAttributeSet* GetAuraAS() const;
 protected:
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
