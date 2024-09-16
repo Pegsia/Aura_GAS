@@ -122,7 +122,7 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 		}
 	} // IncomingDamage
 	
-	if(Data.EvaluatedData.Attribute == GetIncomingXPAttribute())
+	if(Data.EvaluatedData.Attribute == GetIncomingXPAttribute()) // SERVER, IncomingXP is NOT REPLICATED
 	{
 		const float LocalIncomingXP = GetIncomingXP();
 		SetIncomingXP(0.f);

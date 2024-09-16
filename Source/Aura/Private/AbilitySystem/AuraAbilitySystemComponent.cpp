@@ -182,20 +182,46 @@ void UAuraAbilitySystemComponent::UpdateAbilityStatuses(int32 Level)
 	{
 		if(Level < Info.LevelRequirement) continue;
 		if(!Info.AbilityTag.IsValid()) continue;
-		if(GetSpecFormAbilityTag(Info.AbilityTag) == nullptr)
+		if(GetSpecFormAbilityTag(Info.AbilityTag) == nullptr) // Give Ability for the first time
 		{
 			FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(Info.AbilityClass, 1);
 			AbilitySpec.DynamicAbilityTags.AddTag(FAuraGameplayTags::Get().Abilities_Status_Eligible);
 			GiveAbility(AbilitySpec);
 			MarkAbilitySpecDirty(AbilitySpec); // Force spec to replicated now
-			ClientUpdateAbilityStatus(Info.AbilityTag, FAuraGameplayTags::Get().Abilities_Status_Eligible);
+			ClientUpdateAbilityStatus(Info.AbilityTag, FAuraGameplayTags::Get().Abilities_Status_Eligible, 1);
 		}
 	}
 }
 
-void UAuraAbilitySystemComponent::ClientUpdateAbilityStatus_Implementation(const FGameplayTag& AbilityTag,	const FGameplayTag& StatusTag)
+void UAuraAbilitySystemComponent::ServerSpendSpellPoints_Implementation(const FGameplayTag& AbilityTag)
 {
-	AbilityStatusChangedDelegate.Broadcast(AbilityTag, StatusTag);
+	if(FGameplayAbilitySpec* AbilitySpec = GetSpecFormAbilityTag(AbilityTag))
+	{
+		if(GetAvatarActor()->Implements<UPlayerInterface>())
+		{
+			IPlayerInterface::Execute_AddToSpellPoints(GetAvatarActor(), -1);
+		}
+		
+		const FAuraGameplayTags& GameplayTags = FAuraGameplayTags::Get();
+		FGameplayTag StatusTag = GetAbilityStatusTagFromSpec(*AbilitySpec);
+		if(StatusTag.MatchesTagExact(GameplayTags.Abilities_Status_Eligible)) // Become Unlocked Status
+		{
+			AbilitySpec->DynamicAbilityTags.RemoveTag(GameplayTags.Abilities_Status_Eligible);
+			AbilitySpec->DynamicAbilityTags.AddTag(GameplayTags.Abilities_Status_Unlocked);
+			StatusTag = GameplayTags.Abilities_Status_Unlocked;
+		}
+		else if(StatusTag.MatchesTagExact(GameplayTags.Abilities_Status_Equipped) || StatusTag.MatchesTagExact(GameplayTags.Abilities_Status_Unlocked))
+		{
+			AbilitySpec->Level += 1; // Level Up Ability
+		}
+		ClientUpdateAbilityStatus(AbilityTag, StatusTag, AbilitySpec->Level);
+		MarkAbilitySpecDirty(*AbilitySpec);
+	}
+}
+
+void UAuraAbilitySystemComponent::ClientUpdateAbilityStatus_Implementation(const FGameplayTag& AbilityTag,	const FGameplayTag& StatusTag, int32 AbilityLevel)
+{
+	AbilityStatusChangedDelegate.Broadcast(AbilityTag, StatusTag, AbilityLevel);
 }
 
 void UAuraAbilitySystemComponent::ServerUpdateAttribute_Implementation(const FGameplayTag& AttributeTag)
