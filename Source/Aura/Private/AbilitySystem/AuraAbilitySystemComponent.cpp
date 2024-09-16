@@ -160,6 +160,8 @@ void UAuraAbilitySystemComponent::UpdateAttribute(const FGameplayTag& AttributeT
 
 FGameplayAbilitySpec* UAuraAbilitySystemComponent::GetSpecFormAbilityTag(const FGameplayTag& AbilityTag)
 {
+	if(!AbilityTag.IsValid()) return nullptr;
+	FScopedAbilityListLock ActiveScopedLock(*this);
 	for(FGameplayAbilitySpec& Spec : GetActivatableAbilities())
 	{
 		for(const FGameplayTag& Tag : Spec.Ability->AbilityTags)

@@ -13,9 +13,8 @@ void UAttributeMenuWidgetController::BindCallBacksToDependencies()
 { 
 	// GetAttributeMenuWidgetController 时绑定
 	check(AttributeInfo);
-	UAuraAttributeSet* AuraAS = GetAuraAS();
 
-	for (TTuple<FGameplayTag, FGameplayAttribute(*)()>& Pair : AuraAS->TagsToAttributesFuncPtr)
+	for (TTuple<FGameplayTag, FGameplayAttribute(*)()>& Pair : GetAuraAS()->TagsToAttributesFuncPtr)
 	{
 		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(Pair.Value()).AddLambda(
 			[this, Pair](const FOnAttributeChangeData& Data)
@@ -25,32 +24,23 @@ void UAttributeMenuWidgetController::BindCallBacksToDependencies()
 			});
 	}
 
-	AAuraPlayerState* AuraPS = GetAuraPS();
-	AuraPS->OnAttributePointsChangeDelegate.AddLambda(
+	GetAuraPS()->OnAttributePointsChangeDelegate.AddLambda(
 		[this](int32 AttributePoints)
 		{
 			AttributePointsChangeDelegate.Broadcast(AttributePoints);
-		});
-	AuraPS->OnSpellPointsChangeDelegate.AddLambda(
-		[this](int32 SpellPoints)
-		{
-			SpellPointsChangeDelegate.Broadcast(SpellPoints);
 		});
 }
 
 void UAttributeMenuWidgetController::BroadcastInitialValue()
 {
 	check(AttributeInfo);
-	UAuraAttributeSet* AuraAS = CastChecked<UAuraAttributeSet>(AttributeSet);
-
-	for (TTuple<FGameplayTag, FGameplayAttribute(*)()>& Pair : AuraAS->TagsToAttributesFuncPtr)
+	
+	for (TTuple<FGameplayTag, FGameplayAttribute(*)()>& Pair : GetAuraAS()->TagsToAttributesFuncPtr)
 	{
 		BroadcastAttributeInfo(Pair.Key, Pair.Value());
 	}
 
-	AAuraPlayerState* AuraPS = GetAuraPS();
-	AttributePointsChangeDelegate.Broadcast(AuraPS->GetAttributePoints());
-	SpellPointsChangeDelegate.Broadcast(AuraPS->GetSpellPoints());
+	AttributePointsChangeDelegate.Broadcast(GetAuraPS()->GetAttributePoints());
 }
 
 // Set Attribute Value And Broadcast to Attribute Menu
