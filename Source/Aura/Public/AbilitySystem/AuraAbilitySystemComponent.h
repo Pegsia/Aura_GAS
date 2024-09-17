@@ -53,6 +53,9 @@ public:
 	// Spell Menu Widget Controller
 	UFUNCTION(Server, Reliable)
 	void ServerSpendSpellPoints(const FGameplayTag& AbilityTag);
+
+	// Spell Menu Descriptions
+	bool GetDescriptionsByAbilityTag(const FGameplayTag& AbilityTag, FString& OutCurrentLevelDescription, FString& OutNextLevelDescription);
 protected:
 	// Send Up Ability Info For Spell Globes
 	virtual void OnRep_ActivateAbilities() override;

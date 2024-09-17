@@ -8,7 +8,7 @@
 #include "AuraGameplayAbility.generated.h"
 
 /**
- * 
+ *  Base Aura Ability Class
  */
 UCLASS()
 class AURA_API UAuraGameplayAbility : public UGameplayAbility
@@ -19,4 +19,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	FGameplayTag StartupInputTag;
 
+	virtual FString GetCurrentLevelDescription(int32 AbilityLevel);
+	virtual FString GetNextLevelDescription(int32 AbilityLevel);
+	static FString GetLockedDescription(int32 AbilityLevel);
 };

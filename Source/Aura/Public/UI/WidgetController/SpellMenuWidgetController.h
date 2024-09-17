@@ -13,7 +13,7 @@ struct FSelectedAbility
 	FGameplayTag AbilityStatusTag;
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FSpellMenuButtonEnableSignature, bool, bSpellPointButtonEnable, bool, bEquipButtonEnable);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FSelectedButtonInfoSignature, bool, bSpellPointButtonEnable, bool, bEquipButtonEnable, FString, CurrentLevelDescription, FString, NextLevelDescription);
 
 UCLASS(BlueprintType, Blueprintable)
 class AURA_API USpellMenuWidgetController : public UAuraWidgetController
@@ -26,10 +26,10 @@ public:
 	FOnStateChangedSignature SpellPointsChangeDelegate;
 
 	UPROPERTY(BlueprintAssignable, Category = "GAS|PlayerState")
-	FSpellMenuButtonEnableSignature SpellMenuButtonEnableDelegate;
+	FSelectedButtonInfoSignature SelectedButtonInfoDelegate;
 
 	UFUNCTION(BlueprintCallable)
-	void BroadcastSpellMenuButtonEnableByAbilityTag(const FGameplayTag& AbilityTag);
+	void BroadcastSelectedButtonInfoByAbilityTag(const FGameplayTag& AbilityTag);
 
 	UFUNCTION(BlueprintCallable)
 	void SpendSpellPoints();
@@ -43,6 +43,6 @@ private:
 	// Save current ability status
 	int32 CurrentSpellPoints;
 	FSelectedAbility SelectedAbility;
-	void ShouldEnableButtons(const FGameplayTag& StatusTag, int32 SpellPoints, bool& OutSpellPointEnable, bool& OutEquipEnable);
+	void BroadcastSelectedButtonInfo(const FGameplayTag& StatusTag, const FGameplayTag& AbilityTag, const int32 SpellPoints);
 	
 };
