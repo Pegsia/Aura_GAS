@@ -36,7 +36,7 @@ void USpellMenuWidgetController::BindCallBacksToDependencies()
 			SpellPointsChangeDelegate.Broadcast(SpellPoints);
 			
 			CurrentSpellPoints = SpellPoints;
-			BroadcastSelectedButtonInfo(SelectedAbility.AbilityStatusTag, SelectedAbility.AbilityStatusTag, CurrentSpellPoints);
+			BroadcastSelectedButtonInfo(SelectedAbility.AbilityStatusTag, SelectedAbility.AbilityTag, CurrentSpellPoints);
 		});
 }
 
@@ -69,11 +69,6 @@ void USpellMenuWidgetController::BroadcastSelectedButtonInfoByAbilityTag(const F
 	BroadcastSelectedButtonInfo(StatusTag, AbilityTag, SpellPoints);	
 }
 
-void USpellMenuWidgetController::SpendSpellPoints()
-{
-	GetAuraASC()->ServerSpendSpellPoints(SelectedAbility.AbilityTag);
-}
-
 void USpellMenuWidgetController::BroadcastSelectedButtonInfo(const FGameplayTag& StatusTag, const FGameplayTag& AbilityTag, const int32 SpellPoints)
 {
 	bool bSpellPointEnable = false;
@@ -95,4 +90,9 @@ void USpellMenuWidgetController::BroadcastSelectedButtonInfo(const FGameplayTag&
 	FString NextLevelDescription;
 	GetAuraASC()->GetDescriptionsByAbilityTag(AbilityTag, CurrentLevelDescription, NextLevelDescription);
 	SelectedButtonInfoDelegate.Broadcast(bSpellPointEnable, bEquipEnable, CurrentLevelDescription, NextLevelDescription);
+}
+
+void USpellMenuWidgetController::SpendSpellPoints()
+{
+	GetAuraASC()->ServerSpendSpellPoints(SelectedAbility.AbilityTag);
 }
