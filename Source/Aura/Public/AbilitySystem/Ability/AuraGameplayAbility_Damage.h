@@ -58,4 +58,6 @@ protected:
 
 	UFUNCTION()
 	void MontageEndAbility();
+
+	float GetDamageByDamageType(const int32& AbilityLevel, const FGameplayTag& DamageType) const;
 };

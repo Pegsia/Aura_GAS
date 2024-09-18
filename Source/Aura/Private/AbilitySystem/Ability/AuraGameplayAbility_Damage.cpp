@@ -50,3 +50,9 @@ void UAuraGameplayAbility_Damage::MontageEndAbility()
 {
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }
+
+float UAuraGameplayAbility_Damage::GetDamageByDamageType(const int32& AbilityLevel,	const FGameplayTag& DamageType) const
+{
+	checkf(DamageTypeMap.Contains(DamageType), TEXT("GameplayAbility [%s] does not contain DamagetType [%s]"), *GetNameSafe(this), *DamageType.ToString());
+	return DamageTypeMap[DamageType].GetValueAtLevel(AbilityLevel);
+}

@@ -6,7 +6,6 @@
 #include "AuraProjectile.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
-#include "AuraGameplayTags.h"
 #include "TargetDataUnderMouse.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
@@ -108,46 +107,5 @@ void UAuraGameplayAbility_ProjectileSpell::SpawnProjectile(const FVector& Projec
 		Projectile->DamageEffectSpecHandle = SpecHandle;		
 		Projectile->FinishSpawning(SpawnTransform);
 	}
-
-	// UKismetSystemLibrary::Delay()
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
-}
-
-FString UAuraGameplayAbility_ProjectileSpell::GetCurrentLevelDescription(int32 AbilityLevel)
-{
-	const int32 Damage = DamageTypeMap[FAuraGameplayTags::Get().Damage_Fire].GetValueAtLevel(AbilityLevel);
-	const int32 FireBoltAmount = FMath::Min(AbilityLevel, NumProjectiles);
-	const FString FireBoltString = FireBoltAmount == 1 ? FString(TEXT("a bolt")) : FString::Printf(TEXT("%d bolts"), FireBoltAmount);
-	
-	const FString CurrentLevelString = FString::Printf(
-		TEXT("<Title>Fire Bolt</>\n"
-			"<Small>Level: </>"
-			"<Level>%d</>\n\n"
-			"<Default>Launches %s of fire, exploding on impact and dealing: </>"
-			"<Damage>%d </>"
-			"<Default>fire damage with a chance to burn.</>"			
-			),
-			 AbilityLevel, *FireBoltString, Damage);
-	return CurrentLevelString;
-}
-
-FString UAuraGameplayAbility_ProjectileSpell::GetNextLevelDescription(int32 AbilityLevel)
-{
-	const int32 PreDamage = DamageTypeMap[FAuraGameplayTags::Get().Damage_Fire].GetValueAtLevel(AbilityLevel - 1);
-	const int32 Damage = DamageTypeMap[FAuraGameplayTags::Get().Damage_Fire].GetValueAtLevel(AbilityLevel);
-	const int32 FireBoltAmount = FMath::Min(AbilityLevel, NumProjectiles);
-	const FString FireBoltString = FireBoltAmount == 1 ? FString(TEXT("a bolt")) : FString::Printf(TEXT("%d bolts"), FireBoltAmount);
-	
-	const FString NextLevelString = FString::Printf(
-		TEXT("<Title>NEXT LEVEL</>\n"
-			"<Small>Level: </>"
-			"<Gray>%d -> </>"
-			"<Level>%d</>\n\n"
-			"<Default>Launches %s of fire, exploding on impact and dealing: </>"
-			"<Gray>%d -> </>"
-			"<Damage>%d </>"
-			"<Default>fire damage with a chance to burn.</>"			
-			),
-			AbilityLevel - 1, AbilityLevel, *FireBoltString, PreDamage, Damage);
-	return NextLevelString;
 }

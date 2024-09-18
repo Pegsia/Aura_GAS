@@ -36,6 +36,9 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	UFUNCTION(CallInEditor)
+	void TestCallInEditor();
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Apllied Effect")
 	bool bDestroyOnEffectApplication = false;
 

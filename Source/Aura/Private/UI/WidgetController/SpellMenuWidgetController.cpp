@@ -96,3 +96,10 @@ void USpellMenuWidgetController::SpendSpellPoints()
 {
 	GetAuraASC()->ServerSpendSpellPoints(SelectedAbility.AbilityTag);
 }
+
+void USpellMenuWidgetController::DeselectGlobe()
+{
+	SelectedAbility.AbilityTag = FAuraGameplayTags::Get().Abilities_None;
+	SelectedAbility.AbilityStatusTag = FAuraGameplayTags::Get().Abilities_Status_Locked;
+	SelectedButtonInfoDelegate.Broadcast(false, false, FString(), FString());
+}

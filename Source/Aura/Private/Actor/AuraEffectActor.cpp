@@ -18,6 +18,11 @@ void AAuraEffectActor::BeginPlay()
 	
 }
 
+void AAuraEffectActor::TestCallInEditor()
+{
+	UE_LOG(LogTemp, Error, TEXT("TestCallInEditor"));
+}
+
 void AAuraEffectActor::ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGameplayEffect> GameplayEffectClass)
 {
 	if(TargetActor->ActorHasTag(ACTOR_TAG_ENEMY) && !bApplyEffectsToEnemies) return;

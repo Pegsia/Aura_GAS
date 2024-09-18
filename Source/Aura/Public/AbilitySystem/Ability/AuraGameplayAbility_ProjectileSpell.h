@@ -31,13 +31,7 @@ protected:
 	void FireBoltEventReceived(FGameplayEventData Payload);
 
 	FVector FireBoltHitLocation{};
-
-	//~ Begin AuraGameplayAbility Interface
-	virtual FString GetCurrentLevelDescription(int32 AbilityLevel) override;
-	virtual FString GetNextLevelDescription(int32 AbilityLevel) override;
-	//~ End AuraGameplayAbility Interface
-
-private:
-	UPROPERTY(EditDefaultsOnly)
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Projectile")
 	int32 NumProjectiles = 5;
 };

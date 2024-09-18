@@ -19,7 +19,10 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	FGameplayTag StartupInputTag;
 
-	virtual FString GetCurrentLevelDescription(int32 AbilityLevel);
-	virtual FString GetNextLevelDescription(int32 AbilityLevel);
-	static FString GetLockedDescription(int32 AbilityLevel);
+	virtual FString GetCurrentLevelDescription(const int32& AbilityLevel);
+	virtual FString GetNextLevelDescription(const int32& AbilityLevel);
+	static FString GetLockedDescription(const int32& AbilityLevel);
+
+	float GetManaCost(const int32& AbilityLevel) const;
+	float GetCooldown(const int32& AbilityLevel) const;
 };

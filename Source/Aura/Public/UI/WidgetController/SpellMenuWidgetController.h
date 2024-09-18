@@ -33,6 +33,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SpendSpellPoints();
+
+	UFUNCTION(BlueprintCallable)
+	void DeselectGlobe();
 	
 	//~ Begin UAuraWidgetController Interface	
 	virtual void BindCallBacksToDependencies() override;
