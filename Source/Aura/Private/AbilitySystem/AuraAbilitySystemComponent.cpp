@@ -65,7 +65,7 @@ void UAuraAbilitySystemComponent::OnRep_ActivateAbilities()
 
 void UAuraAbilitySystemComponent::ForEachAbility()
 {
-	FScopedAbilityListLock ScopedAbilityListLock(*this); // Lock Abilities Array
+	ABILITYLIST_SCOPE_LOCK(); // Lock Abilities Array
 	for(const FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
 	{
 		if(!ForEachAbilityDelegate.ExecuteIfBound(AbilitySpec)) // Broadcast StartupAbilities for Spells Globe
@@ -161,7 +161,8 @@ void UAuraAbilitySystemComponent::UpdateAttribute(const FGameplayTag& AttributeT
 FGameplayAbilitySpec* UAuraAbilitySystemComponent::GetSpecFormAbilityTag(const FGameplayTag& AbilityTag)
 {
 	if(!AbilityTag.IsValid()) return nullptr;
-	FScopedAbilityListLock ActiveScopedLock(*this);
+	
+	ABILITYLIST_SCOPE_LOCK();
 	for(FGameplayAbilitySpec& Spec : GetActivatableAbilities())
 	{
 		for(const FGameplayTag& Tag : Spec.Ability->AbilityTags)
@@ -224,6 +225,69 @@ void UAuraAbilitySystemComponent::ClientUpdateAbilityStatus_Implementation(const
 	AbilityStatusChangedDelegate.Broadcast(AbilityTag, StatusTag, AbilityLevel);
 }
 
+void UAuraAbilitySystemComponent::ServerEquipAbility_Implementation(const FGameplayTag& AbilityTag,	const FGameplayTag& InputTag)
+{
+	// TODO: Find Current Ability State and Input Tag, Reset State and Input Tag
+	// If this **Selected Spell Button** Ability a valid ability
+	if(FGameplayAbilitySpec* AbilitySpec = GetSpecFormAbilityTag(AbilityTag))
+	{
+		const FAuraGameplayTags& AuraTags = FAuraGameplayTags::Get();
+		const FGameplayTag& PreviousAbilityInput = GetInputTagFromSpec(*AbilitySpec); 
+		const FGameplayTag& PreviousAbilityState = GetAbilityStatusTagFromSpec(*AbilitySpec);
+		
+		// Is Available For Equip
+		if(PreviousAbilityState.MatchesTagExact(AuraTags.Abilities_Status_Equipped) || PreviousAbilityState.MatchesTagExact(AuraTags.Abilities_Status_Unlocked))
+		{
+			// Clear **Selected Spell Slot**
+			ClearSelectedSlot(InputTag);
+			// Clear **Selected Spell Button** just in case if we have already equipped it
+			ClearAbilitySlot(*AbilitySpec);
+			AbilitySpec->DynamicAbilityTags.AddTag(InputTag);
+			if(PreviousAbilityState.MatchesTagExact(AuraTags.Abilities_Status_Unlocked))
+			{
+				AbilitySpec->DynamicAbilityTags.RemoveTag(AuraTags.Abilities_Status_Unlocked);
+				AbilitySpec->DynamicAbilityTags.AddTag(AuraTags.Abilities_Status_Equipped);
+			}
+			MarkAbilitySpecDirty(*AbilitySpec);
+			ClientEquipAbility(AbilityTag, AuraTags.Abilities_Status_Equipped, InputTag, PreviousAbilityInput);
+		}
+	}
+	
+}
+
+void UAuraAbilitySystemComponent::ClientEquipAbility_Implementation(const FGameplayTag& AbilityTag,	const FGameplayTag& StateTag, const FGameplayTag& Slot, const FGameplayTag& PreviousSlot)
+{
+	AbilityEquipSignature.Broadcast(AbilityTag, StateTag, Slot, PreviousSlot);
+}
+
+void UAuraAbilitySystemComponent::ClearSelectedSlot(const FGameplayTag& Slot)
+{
+	ABILITYLIST_SCOPE_LOCK();
+	for(FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
+	{
+		if(AbilitySpec.DynamicAbilityTags.HasTag(Slot))
+		{
+			ClearAbilitySlot(AbilitySpec);
+		}
+	}
+}
+
+void UAuraAbilitySystemComponent::ClearAbilitySlot(FGameplayAbilitySpec& AbilitySpec)
+{
+	const FGameplayTag& Slot = GetInputTagFromSpec(AbilitySpec);
+	AbilitySpec.DynamicAbilityTags.RemoveTag(Slot);
+	MarkAbilitySpecDirty(AbilitySpec);
+}
+
+void UAuraAbilitySystemComponent::ServerUpdateAttribute_Implementation(const FGameplayTag& AttributeTag)
+{
+	FGameplayEventData Payload;
+	Payload.EventTag = AttributeTag;
+	Payload.EventMagnitude = 1.f;
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetAvatarActor(), AttributeTag, Payload);
+	IPlayerInterface::Execute_AddToAttributePoints(GetAvatarActor(), -1);
+}
+
 bool UAuraAbilitySystemComponent::GetDescriptionsByAbilityTag(const FGameplayTag& AbilityTag, FString& OutCurrentLevelDescription, FString& OutNextLevelDescription)
 {
 	if(const FGameplayAbilitySpec* AbilitySpec = GetSpecFormAbilityTag(AbilityTag))
@@ -248,11 +312,3 @@ bool UAuraAbilitySystemComponent::GetDescriptionsByAbilityTag(const FGameplayTag
 	return false;
 }
 
-void UAuraAbilitySystemComponent::ServerUpdateAttribute_Implementation(const FGameplayTag& AttributeTag)
-{
-	FGameplayEventData Payload;
-	Payload.EventTag = AttributeTag;
-	Payload.EventMagnitude = 1.f;
-	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetAvatarActor(), AttributeTag, Payload);
-	IPlayerInterface::Execute_AddToAttributePoints(GetAvatarActor(), -1);
-}

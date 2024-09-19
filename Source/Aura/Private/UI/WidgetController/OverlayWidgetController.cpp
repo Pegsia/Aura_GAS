@@ -7,6 +7,8 @@
 #include "AuraAbilitySystemComponent.h"
 #include "AuraPlayerState.h"
 #include "LevelUpInfo.h"
+#include "AuraGameplayTags.h"
+#include "AbilityInfo.h"
 
 void UOverlayWidgetController::BindCallBacksToDependencies()
 {
@@ -28,6 +30,9 @@ void UOverlayWidgetController::BindCallBacksToDependencies()
 	
 	// Bind StartupAbilities for Spell Globe
 	BindAbilityInfo();
+
+	// Bind Equip Ability
+	GetAuraASC()->AbilityEquipSignature.AddUObject(this, &UOverlayWidgetController::OnAbilityEquip);
 	
 	// Bind AssetTags for Message
 	GetAuraASC()->EffectAssetTagsDelegate.AddLambda(
@@ -48,7 +53,7 @@ void UOverlayWidgetController::BindCallBacksToDependencies()
 	GetAuraASC()->AbilityCommittedCallbacks.AddLambda(
 		[this](const UGameplayAbility* Ability)
 		{
-			OnAbilityCommittedDelegate.Broadcast(Ability->GetCooldownTimeRemaining());
+			OnAbilityCommittedDelegate.Broadcast(*Ability->GetCooldownTags(), Ability->GetCooldownTimeRemaining());
 		});	
 
 	// Bind XP Change
@@ -88,4 +93,21 @@ void UOverlayWidgetController::BroadcastInitialValue()
 	{
 		GetAuraASC()->AbilityGivenDelegate.AddUObject(this, &UOverlayWidgetController::BroadcastAbilityInfo);
 	}
+}
+
+void UOverlayWidgetController::OnAbilityEquip(const FGameplayTag& AbilityTag, const FGameplayTag& StateTag,	const FGameplayTag& Slot, const FGameplayTag& PreviousSlot) const
+{
+	const FAuraGameplayTags& AuraTags = FAuraGameplayTags::Get();
+	// Old Ability Info
+	FAuraAbilityInfo OldInfo;
+	OldInfo.InputTag = PreviousSlot;
+	OldInfo.AbilityStatusTag = AuraTags.Abilities_Status_Locked;
+	OldInfo.AbilityTag = AuraTags.Abilities_None;
+	AbilityInfoDelegate.Broadcast(OldInfo);
+	
+	// New Ability Info
+	FAuraAbilityInfo NewInfo = AbilityInfo->FindAbilityInfoByAbilityTag(AbilityTag);
+	NewInfo.InputTag = Slot;
+	NewInfo.AbilityStatusTag = StateTag;
+	AbilityInfoDelegate.Broadcast(NewInfo);
 }

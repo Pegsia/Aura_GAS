@@ -9,6 +9,7 @@
 #include "OverlayWidgetController.generated.h"
 
 struct FAuraAbilityInfo;
+struct FGameplayTagContainer;
 class UAuraUserWidget;
 class UAbilityInfo;
 class UAuraAbilitySystemComponent;
@@ -34,7 +35,7 @@ struct FUIWidgetRow : public FTableRowBase
 // Delegate Signature
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeChangedSignature, float, NewValue);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMessageWidgetRowSignature, FUIWidgetRow, Row);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAbilityCommittedSignature, float, TimeRemaining);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAbilityCommittedSignature, const FGameplayTagContainer&, CooldownTags, float, TimeRemaining);
 
 UCLASS(BlueprintType, Blueprintable)
 class AURA_API UOverlayWidgetController : public UAuraWidgetController
@@ -80,6 +81,9 @@ protected:
 	
 	template<typename T>
 	T* GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag);
+	
+	// Equip Ability 
+	void OnAbilityEquip(const FGameplayTag& AbilityTag,	const FGameplayTag& StateTag, const FGameplayTag& Slot, const FGameplayTag& PreviousSlot) const;
 };
 
 template<typename T>

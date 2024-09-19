@@ -84,8 +84,8 @@ void FAuraGameplayTags::AddAllTags(UGameplayTagsManager& Manager)
 	
 	// Ability Status and Type
 	AddTag(Abilities_Status_Locked, "Abilities.Status.Locked", "Locked Status");
-	AddTag(Abilities_Status_Eligible, "Abilities.Status.Eligible", "Eligible Status, Not Locked");
-	AddTag(Abilities_Status_Unlocked, "Abilities.Status.Unlocked", "Unlocked Status, Not Equipped");
+	AddTag(Abilities_Status_Eligible, "Abilities.Status.Eligible", "Gray Ability Icon, can't Equip");
+	AddTag(Abilities_Status_Unlocked, "Abilities.Status.Unlocked", "Vivid Ability Icon, available for Equip");
 	AddTag(Abilities_Status_Equipped, "Abilities.Status.Equipped", "Equipped Status");
 	
 	AddTag(Abilities_Type_Offensive, "Abilities.Type.Offensive", "AbilityType OffensiveTag");

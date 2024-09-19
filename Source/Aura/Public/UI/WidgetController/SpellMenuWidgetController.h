@@ -11,10 +11,11 @@ struct FSelectedAbility
 {
 	FGameplayTag AbilityTag;
 	FGameplayTag AbilityStatusTag;
+	FGameplayTag AbilityTypeTag;
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FSelectedButtonInfoSignature, bool, bSpellPointButtonEnable, bool, bEquipButtonEnable, FString, CurrentLevelDescription, FString, NextLevelDescription);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FWaitForEquipButtonSignature, const FGameplayTag&, AbilityTYpe);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FWaitForEquipButtonSignature, const FGameplayTag&, AbilityType);
 
 UCLASS(BlueprintType, Blueprintable)
 class AURA_API USpellMenuWidgetController : public UAuraWidgetController
@@ -46,6 +47,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void EquipButtonPressed();
+
+	UFUNCTION(BlueprintCallable)
+	void SpellRowButtonPressed(const FGameplayTag& InputTag, const FGameplayTag& AbilityTypeTag);
 	
 	//~ Begin UAuraWidgetController Interface	
 	virtual void BindCallBacksToDependencies() override;
@@ -58,7 +62,10 @@ private:
 	FSelectedAbility SelectedAbility;
 	void BroadcastSelectedButtonInfo(const FGameplayTag& StatusTag, const FGameplayTag& AbilityTag, const int32 SpellPoints);
 
-	// Equip
+	// Equip Button Pressed
 	bool bWaitForEquip = false;
-	void StopWaitingForEquipButton(const FGameplayTag& AbilityTag);
+	void StopWaitingForEquipButton();
+
+	// Equip Ability 
+	void OnAbilityEquip(const FGameplayTag& AbilityTag,	const FGameplayTag& StateTag, const FGameplayTag& Slot, const FGameplayTag& PreviousSlot);
 };

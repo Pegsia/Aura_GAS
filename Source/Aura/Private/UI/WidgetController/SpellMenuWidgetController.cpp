@@ -38,6 +38,9 @@ void USpellMenuWidgetController::BindCallBacksToDependencies()
 			CurrentSpellPoints = SpellPoints;
 			BroadcastSelectedButtonInfo(SelectedAbility.AbilityStatusTag, SelectedAbility.AbilityTag, CurrentSpellPoints);
 		});
+
+	// When Equip an ability
+	GetAuraASC()->AbilityEquipSignature.AddUObject(this, &USpellMenuWidgetController::OnAbilityEquip);
 }
 
 void USpellMenuWidgetController::BroadcastInitialValue()
@@ -48,8 +51,6 @@ void USpellMenuWidgetController::BroadcastInitialValue()
 
 void USpellMenuWidgetController::BroadcastSelectedButtonInfoByAbilityTag(const FGameplayTag& AbilityTag)
 {
-	StopWaitingForEquipButton(AbilityTag);
-	
 	const FGameplayAbilitySpec* AbilitySpec = GetAuraASC()->GetSpecFormAbilityTag(AbilityTag);	
 	const int32 SpellPoints = GetAuraPS()->GetSpellPoints();
 	const FAuraGameplayTags& GameplayTags = FAuraGameplayTags::Get();
@@ -67,7 +68,9 @@ void USpellMenuWidgetController::BroadcastSelectedButtonInfoByAbilityTag(const F
 	// Cache Current Selected Spell Globe Info
 	CurrentSpellPoints = SpellPoints;
 	SelectedAbility.AbilityTag = AbilityTag;
-	SelectedAbility.AbilityStatusTag = StatusTag;				
+	SelectedAbility.AbilityStatusTag = StatusTag;
+	SelectedAbility.AbilityTypeTag = AbilityInfo->FindAbilityInfoByAbilityTag(AbilityTag).AbilityTypeTag;
+	StopWaitingForEquipButton();
 	BroadcastSelectedButtonInfo(StatusTag, AbilityTag, SpellPoints);	
 }
 
@@ -101,7 +104,7 @@ void USpellMenuWidgetController::SpendSpellPoints()
 
 void USpellMenuWidgetController::DeselectGlobe()
 {
-	StopWaitingForEquipButton(SelectedAbility.AbilityTag);
+	StopWaitingForEquipButton();
 	SelectedAbility.AbilityTag = FAuraGameplayTags::Get().Abilities_None;
 	SelectedAbility.AbilityStatusTag = FAuraGameplayTags::Get().Abilities_Status_Locked;
 	SelectedButtonInfoDelegate.Broadcast(false, false, FString(), FString());
@@ -110,16 +113,47 @@ void USpellMenuWidgetController::DeselectGlobe()
 void USpellMenuWidgetController::EquipButtonPressed()
 {
 	bWaitForEquip = true;
-	const FGameplayTag AbilityType = AbilityInfo->FindAbilityInfoByAbilityTag(SelectedAbility.AbilityTag).AbilityTypeTag;
-	WaitForEquipButtonDelegate.Broadcast(AbilityType);	
+	WaitForEquipButtonDelegate.Broadcast(SelectedAbility.AbilityTypeTag);	
 }
 
-void USpellMenuWidgetController::StopWaitingForEquipButton(const FGameplayTag& AbilityTag)
+void USpellMenuWidgetController::StopWaitingForEquipButton()
 {
 	if(bWaitForEquip)
 	{
 		bWaitForEquip = false;
-		const FGameplayTag AbilityType = AbilityInfo->FindAbilityInfoByAbilityTag(AbilityTag).AbilityTypeTag;
-		StopWaitingForEquipButtonDelegate.Broadcast(AbilityType);
+		StopWaitingForEquipButtonDelegate.Broadcast(SelectedAbility.AbilityTypeTag);
 	}
+}
+
+void USpellMenuWidgetController::SpellRowButtonPressed(const FGameplayTag& InputTag, const FGameplayTag& AbilityTypeTag)
+{
+	// Equip Button Not Pressed
+	if(!bWaitForEquip) return;
+	// Check selected ability against the slot's ability type.
+	// (don't equip an offensive spell in a passive slot and vice versa)
+	if(!AbilityTypeTag.MatchesTagExact(SelectedAbility.AbilityTypeTag)) return;
+
+	GetAuraASC()->ServerEquipAbility(SelectedAbility.AbilityTag, InputTag);
+}
+
+void USpellMenuWidgetController::OnAbilityEquip(const FGameplayTag& AbilityTag, const FGameplayTag& StateTag, const FGameplayTag& Slot, const FGameplayTag& PreviousSlot)
+{
+	bWaitForEquip = false;
+	
+	const FAuraGameplayTags& AuraTags = FAuraGameplayTags::Get();
+	// Old Ability Info
+	FAuraAbilityInfo OldInfo;
+	OldInfo.InputTag = PreviousSlot;
+	OldInfo.AbilityStatusTag = AuraTags.Abilities_Status_Locked;
+	OldInfo.AbilityTag = AuraTags.Abilities_None;
+	AbilityInfoDelegate.Broadcast(OldInfo);
+	
+	// New Ability Info
+	FAuraAbilityInfo NewInfo = AbilityInfo->FindAbilityInfoByAbilityTag(AbilityTag);
+	NewInfo.InputTag = Slot;
+	NewInfo.AbilityStatusTag = StateTag;
+	AbilityInfoDelegate.Broadcast(NewInfo);
+
+	// StopWaiting
+	StopWaitingForEquipButtonDelegate.Broadcast(NewInfo.AbilityTypeTag);
 }

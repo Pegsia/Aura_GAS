@@ -80,7 +80,9 @@ public:
 	
 	// Ability Status and Type
 	FGameplayTag Abilities_Status_Locked;
+	// Gray Ability Icon, can't Equip
 	FGameplayTag Abilities_Status_Eligible;
+	// Vivid Ability Icon, available for Equip
 	FGameplayTag Abilities_Status_Unlocked;
 	FGameplayTag Abilities_Status_Equipped;
 

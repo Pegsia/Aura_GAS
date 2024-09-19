@@ -10,6 +10,7 @@ DECLARE_MULTICAST_DELEGATE_OneParam(FEffectAssetTagsSignature, FGameplayTagConta
 DECLARE_MULTICAST_DELEGATE(FAbilityGivenSignature);
 DECLARE_DELEGATE_OneParam(FForEachAbilitySignature, const FGameplayAbilitySpec&);
 DECLARE_MULTICAST_DELEGATE_ThreeParams(FAbilityStatusChangedSignature, const FGameplayTag& /*Ability Tag*/, const FGameplayTag& /*Status Tag*/, int32 /*AbilityLevel*/);
+DECLARE_MULTICAST_DELEGATE_FourParams(FAbilityEquipSignature, const FGameplayTag& /*Ability Tag*/, const FGameplayTag& /*Status Tag*/, const FGameplayTag& /*Slot*/, const FGameplayTag& /*Previous Slot*/);
 
 UCLASS()
 class AURA_API UAuraAbilitySystemComponent : public UAbilitySystemComponent
@@ -20,6 +21,7 @@ public:
 	FEffectAssetTagsSignature EffectAssetTagsDelegate; // Pop up Message
 	FAbilityGivenSignature AbilityGivenDelegate;	   // Spells Globe
 	FAbilityStatusChangedSignature AbilityStatusChangedDelegate; // Spell Menu
+	FAbilityEquipSignature AbilityEquipSignature; // Spell Menu
 	
 	void AbilityActorInfoSet();
 	
@@ -54,6 +56,10 @@ public:
 	UFUNCTION(Server, Reliable)
 	void ServerSpendSpellPoints(const FGameplayTag& AbilityTag);
 
+	// Spell Row Button pressed, Equip Ability
+	UFUNCTION(Server, Reliable)
+	void ServerEquipAbility(const FGameplayTag& AbilityTag, const FGameplayTag& InputTag);
+
 	// Spell Menu Descriptions
 	bool GetDescriptionsByAbilityTag(const FGameplayTag& AbilityTag, FString& OutCurrentLevelDescription, FString& OutNextLevelDescription);
 protected:
@@ -68,4 +74,10 @@ protected:
 
 	UFUNCTION(Client, Reliable)
 	void ClientUpdateAbilityStatus(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag, int32 AbilityLevel);
+
+	UFUNCTION(Client, Reliable)
+	void ClientEquipAbility(const FGameplayTag& AbilityTag, const FGameplayTag& StateTag, const FGameplayTag& Slot, const FGameplayTag& PreviousSlot);
+	
+	void ClearSelectedSlot(const FGameplayTag& Slot);
+	void ClearAbilitySlot(FGameplayAbilitySpec& AbilitySpec);
 };
