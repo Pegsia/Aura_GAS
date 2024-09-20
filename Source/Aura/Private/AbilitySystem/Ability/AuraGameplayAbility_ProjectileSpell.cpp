@@ -97,12 +97,8 @@ void UAuraGameplayAbility_ProjectileSpell::SpawnProjectile(const FVector& Projec
 		const FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), EffectContextHandle);		
 
 		// Assign Damage By Damage Type
-		for(const TTuple<FGameplayTag, FScalableFloat>& Pair : DamageTypeMap)
-		{
-			const float Damage = Pair.Value.GetValueAtLevel(GetAbilityLevel());
-			UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, Pair.Key, Damage);
-			// GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Cyan, FString::Printf(TEXT("Damage: %s Causes: %f Damage"), *Pair.Key.ToString(), Damage));
-		}		
+		const float Damage = DamageAmount.GetValueAtLevel(GetAbilityLevel());
+		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, DamageType, Damage);
 		
 		Projectile->DamageEffectSpecHandle = SpecHandle;		
 		Projectile->FinishSpawning(SpawnTransform);

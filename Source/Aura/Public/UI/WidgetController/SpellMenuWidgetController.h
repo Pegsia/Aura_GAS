@@ -16,6 +16,7 @@ struct FSelectedAbility
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FSelectedButtonInfoSignature, bool, bSpellPointButtonEnable, bool, bEquipButtonEnable, FString, CurrentLevelDescription, FString, NextLevelDescription);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FWaitForEquipButtonSignature, const FGameplayTag&, AbilityType);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSpellGlobeReassignedSignature, const FGameplayTag&, AbilityTag);
 
 UCLASS(BlueprintType, Blueprintable)
 class AURA_API USpellMenuWidgetController : public UAuraWidgetController
@@ -35,6 +36,9 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "Spell|Equip")
 	FWaitForEquipButtonSignature StopWaitingForEquipButtonDelegate;
+
+	UPROPERTY(BlueprintAssignable, Category = "Spell|Equip")
+	FSpellGlobeReassignedSignature SpellGlobeReassignedDelegate;
 	
 	UFUNCTION(BlueprintCallable)
 	void BroadcastSelectedButtonInfoByAbilityTag(const FGameplayTag& AbilityTag);

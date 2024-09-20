@@ -58,8 +58,21 @@ public:
 	FGameplayTag Attributes_Resistance_Lightning;
 	FGameplayTag Attributes_Resistance_Arcane;
 	FGameplayTag Attributes_Resistance_Physical;
-	
+
 	TMap<FGameplayTag, FGameplayTag> DamageTypesToResistance;
+	
+	// Debuff
+	FGameplayTag Debuff_Burn;
+	FGameplayTag Debuff_Stun;
+	FGameplayTag Debuff_Arcane;
+	FGameplayTag Debuff_Physical;
+	
+	TMap<FGameplayTag, FGameplayTag> DamageTypesToDebuffs;
+
+	FGameplayTag Debuff_Chance;
+	FGameplayTag Debuff_Damage;
+	FGameplayTag Debuff_Duration;
+	FGameplayTag Debuff_Frequency;
 	
 	// Effect
 	FGameplayTag Effects_HitReact;

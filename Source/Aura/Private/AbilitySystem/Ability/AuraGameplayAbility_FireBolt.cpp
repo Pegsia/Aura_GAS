@@ -2,13 +2,13 @@
 
 
 #include "AbilitySystem/Ability/AuraGameplayAbility_FireBolt.h"
-#include "AuraGameplayTags.h"
 
 FString UAuraGameplayAbility_FireBolt::GetCurrentLevelDescription(const int32& AbilityLevel)
 {
+	//GetAbilityLevel(); Not Activate, NonValid CurrentActorInfo
 	const float ManaCost = FMath::Abs(GetManaCost(AbilityLevel));
 	const float Cooldown = FMath::Abs(GetCooldown(AbilityLevel));
-	const int32 Damage = GetDamageByDamageType(AbilityLevel, FAuraGameplayTags::Get().Damage_Fire);
+	const int32 Damage = DamageAmount.GetValueAtLevel(AbilityLevel);
 	const int32 FireBoltAmount = FMath::Min(AbilityLevel, NumProjectiles);
 	const FString FireBoltString = FireBoltAmount == 1 ? FString(TEXT("a bolt")) : FString::Printf(TEXT("%d bolts"), FireBoltAmount);
 	
@@ -39,8 +39,8 @@ FString UAuraGameplayAbility_FireBolt::GetNextLevelDescription(const int32& Abil
 	const float ManaCost = FMath::Abs(GetManaCost(AbilityLevel));
 	const float PreCooldown = FMath::Abs(GetCooldown(AbilityLevel - 1));
 	const float Cooldown = FMath::Abs(GetCooldown(AbilityLevel));
-	const int32 PreDamage = GetDamageByDamageType(AbilityLevel - 1, FAuraGameplayTags::Get().Damage_Fire);
-	const int32 Damage = GetDamageByDamageType(AbilityLevel, FAuraGameplayTags::Get().Damage_Fire);
+	const int32 PreDamage = DamageAmount.GetValueAtLevel(AbilityLevel - 1);
+	const int32 Damage = DamageAmount.GetValueAtLevel(AbilityLevel);
 	const int32 FireBoltAmount = FMath::Min(AbilityLevel, NumProjectiles);
 	const FString FireBoltString = FireBoltAmount == 1 ? FString(TEXT("a bolt")) : FString::Printf(TEXT("%d bolts"), FireBoltAmount);
 	

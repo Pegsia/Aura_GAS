@@ -10,11 +10,8 @@
 void UAuraGameplayAbility_Damage::ApplyAllTypeOfDamage(AActor* TargetActor)
 {
 	FGameplayEffectSpecHandle DamageSpecHandle = MakeOutgoingGameplayEffectSpec(DamageEffectClass, 1.f);
-	for(TTuple<FGameplayTag, FScalableFloat>& Pair : DamageTypeMap)
-	{
-		const float Damage = Pair.Value.GetValueAtLevel(GetAbilityLevel());
-		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(DamageSpecHandle, Pair.Key, Damage);
-	}
+	const float Damage = DamageAmount.GetValueAtLevel(GetAbilityLevel());
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(DamageSpecHandle, DamageType, Damage);
 	GetAbilitySystemComponentFromActorInfo()->ApplyGameplayEffectSpecToTarget(*DamageSpecHandle.Data.Get(), UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor));
 }
 
@@ -49,10 +46,4 @@ bool UAuraGameplayAbility_Damage::SetDamageAbilityProperties(FDamageAbilityPrope
 void UAuraGameplayAbility_Damage::MontageEndAbility()
 {
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
-}
-
-float UAuraGameplayAbility_Damage::GetDamageByDamageType(const int32& AbilityLevel,	const FGameplayTag& DamageType) const
-{
-	checkf(DamageTypeMap.Contains(DamageType), TEXT("GameplayAbility [%s] does not contain DamagetType [%s]"), *GetNameSafe(this), *DamageType.ToString());
-	return DamageTypeMap[DamageType].GetValueAtLevel(AbilityLevel);
 }

@@ -43,12 +43,30 @@ public:
 	void ApplyAllTypeOfDamage(AActor* TargetActor); 
 	
 protected:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage")
-	TMap<FGameplayTag, FScalableFloat> DamageTypeMap;
+	// UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage")
+	// TMap<FGameplayTag, FScalableFloat> DamageTypeMap;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Damage")
+	FGameplayTag DamageType;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Damage")
+	FScalableFloat DamageAmount;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")
 	TSubclassOf<UGameplayEffect> DamageEffectClass;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Damage")
+	float DebuffChance = 20.f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Damage")
+	float DebuffDamage = 5.f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Damage")
+	float DebuffFrequency = 1.f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Damage")
+	float DebuffDuration = 5.f;
+	
 	UFUNCTION(BlueprintPure)
 	FTaggedMontage GetRandomTaggedMontageFromArray(const TArray<FTaggedMontage>& TaggedMontagesArray) const;
 
@@ -58,6 +76,4 @@ protected:
 
 	UFUNCTION()
 	void MontageEndAbility();
-
-	float GetDamageByDamageType(const int32& AbilityLevel, const FGameplayTag& DamageType) const;
 };

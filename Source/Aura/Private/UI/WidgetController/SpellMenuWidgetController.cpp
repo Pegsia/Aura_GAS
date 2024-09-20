@@ -138,8 +138,6 @@ void USpellMenuWidgetController::SpellRowButtonPressed(const FGameplayTag& Input
 
 void USpellMenuWidgetController::OnAbilityEquip(const FGameplayTag& AbilityTag, const FGameplayTag& StateTag, const FGameplayTag& Slot, const FGameplayTag& PreviousSlot)
 {
-	bWaitForEquip = false;
-	
 	const FAuraGameplayTags& AuraTags = FAuraGameplayTags::Get();
 	// Old Ability Info
 	FAuraAbilityInfo OldInfo;
@@ -154,6 +152,7 @@ void USpellMenuWidgetController::OnAbilityEquip(const FGameplayTag& AbilityTag, 
 	NewInfo.AbilityStatusTag = StateTag;
 	AbilityInfoDelegate.Broadcast(NewInfo);
 
-	// StopWaiting
-	StopWaitingForEquipButtonDelegate.Broadcast(NewInfo.AbilityTypeTag);
+	// Deselected Self
+	DeselectGlobe();
+	SpellGlobeReassignedDelegate.Broadcast(AbilityTag);
 }

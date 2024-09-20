@@ -64,6 +64,22 @@ void FAuraGameplayTags::AddAllTags(UGameplayTagsManager& Manager)
 	DamageTypesToResistance.Emplace(Damage_Lightning, Attributes_Resistance_Lightning);
 	DamageTypesToResistance.Emplace(Damage_Arcane, Attributes_Resistance_Arcane);
 	DamageTypesToResistance.Emplace(Damage_Physical, Attributes_Resistance_Physical);
+
+	// Debuff
+	AddTag(Debuff_Burn, "Debuff.Burn", "Debuff for Fire Damage");
+	AddTag(Debuff_Stun, "Debuff.Stun", "Debuff for Lightning Damage");
+	AddTag(Debuff_Arcane, "Debuff.Arcane", "Debuff for Arcane Damage");
+	AddTag(Debuff_Physical, "Debuff.Physical", "Debuff for Physical Damage");
+
+	DamageTypesToDebuffs.Emplace(Damage_Fire, Debuff_Burn);
+	DamageTypesToDebuffs.Emplace(Damage_Lightning, Debuff_Stun);
+	DamageTypesToDebuffs.Emplace(Damage_Arcane, Debuff_Arcane);
+	DamageTypesToDebuffs.Emplace(Damage_Physical, Debuff_Physical);
+
+	AddTag(Debuff_Chance, "Debuff.Chance", "Debuff Chance");
+	AddTag(Debuff_Damage, "Debuff.Damage", "Debuff Damage");
+	AddTag(Debuff_Duration, "Debuff.Duration", "Debuff Duration");
+	AddTag(Debuff_Frequency, "Debuff.Frequency", "Debuff Frequency");
 	
 	// Effects
 	AddTag(Effects_HitReact, "Effects.HitReact", "Enemies React to Hit");
