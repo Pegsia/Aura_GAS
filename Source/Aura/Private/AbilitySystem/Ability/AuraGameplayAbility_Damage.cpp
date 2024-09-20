@@ -5,6 +5,7 @@
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
+#include "AbilitySystemGlobals.h"
 #include "EnemyInterface.h"
 
 void UAuraGameplayAbility_Damage::ApplyAllTypeOfDamage(AActor* TargetActor)
@@ -22,25 +23,41 @@ FTaggedMontage UAuraGameplayAbility_Damage::GetRandomTaggedMontageFromArray(cons
 	return TaggedMontagesArray[RandomIndex];
 }
 
-bool UAuraGameplayAbility_Damage::SetDamageAbilityProperties(FDamageAbilityProperties& OutProps)
+bool UAuraGameplayAbility_Damage::SetDamageAbilityProperties()
 {
-	OutProps.AvatarActor = CurrentActorInfo->AvatarActor.Get();
-	if(OutProps.AvatarActor->Implements<UEnemyInterface>())
+	DamageAbilityProperties.AvatarActor = CurrentActorInfo->AvatarActor.Get();
+	if(DamageAbilityProperties.AvatarActor->Implements<UEnemyInterface>())
 	{
-		OutProps.TargetActor = IEnemyInterface::Execute_GetCombatTarget(OutProps.AvatarActor);	
+		DamageAbilityProperties.TargetActor = IEnemyInterface::Execute_GetCombatTarget(DamageAbilityProperties.AvatarActor);	
 	}
 	
-	if(OutProps.AvatarActor->Implements<UCombatInterface>())
+	if(DamageAbilityProperties.AvatarActor->Implements<UCombatInterface>())
 	{
 		// Get Attack Props
-		FTaggedMontage TaggedMontage = GetRandomTaggedMontageFromArray(ICombatInterface::Execute_GetAttackMontages(OutProps.AvatarActor));		
-		OutProps.AttackMontage = TaggedMontage.Montage;
-		OutProps.AttackMontageTag = TaggedMontage.MontageTag;
-		OutProps.AttackSocketTag = TaggedMontage.SocketTag;
+		FTaggedMontage TaggedMontage = GetRandomTaggedMontageFromArray(ICombatInterface::Execute_GetAttackMontages(DamageAbilityProperties.AvatarActor));		
+		DamageAbilityProperties.AttackMontage = TaggedMontage.Montage;
+		DamageAbilityProperties.AttackMontageTag = TaggedMontage.MontageTag;
+		DamageAbilityProperties.AttackSocketTag = TaggedMontage.SocketTag;
 		
 		return true;
 	}
 	return false;
+}
+
+void UAuraGameplayAbility_Damage::SetDamageEffectProperties(const AActor* TargetActor)
+{
+	DamageEffectProperties.WorldContextObject = GetAvatarActorFromActorInfo();
+	DamageEffectProperties.SourceASC = GetAbilitySystemComponentFromActorInfo();
+	DamageEffectProperties.TargetASC = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(TargetActor);
+
+	DamageEffectProperties.AbilityLevel = GetAbilityLevel();
+	DamageEffectProperties.DamageEffectClass = DamageEffectClass;
+	DamageEffectProperties.DamageType = DamageType;
+	DamageEffectProperties.BaseDamage = DamageAmount.GetValueAtLevel(DamageEffectProperties.AbilityLevel);
+	DamageEffectProperties.DebuffChance = DebuffChance;
+	DamageEffectProperties.DebuffDamage = DebuffDamage;
+	DamageEffectProperties.DebuffFrequency = DebuffFrequency;
+	DamageEffectProperties.DebuffDuration = DebuffDuration;
 }
 
 void UAuraGameplayAbility_Damage::MontageEndAbility()

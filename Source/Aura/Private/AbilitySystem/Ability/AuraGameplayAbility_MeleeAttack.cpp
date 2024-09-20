@@ -14,7 +14,7 @@ void UAuraGameplayAbility_MeleeAttack::ActivateAbility(const FGameplayAbilitySpe
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-	if(SetDamageAbilityProperties(DamageAbilityProperties))
+	if(SetDamageAbilityProperties())
 	{
 		bHasHitTarget = false; // this Ability Instanced Per Actor, ensure Initialize bool correctly
 		ICombatInterface::Execute_SetFacingWarpTarget(DamageAbilityProperties.AvatarActor, DamageAbilityProperties.TargetActor->GetActorLocation());

@@ -2,6 +2,8 @@
 
 
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
+
+#include "AbilitySystemBlueprintLibrary.h"
 #include "Kismet/GameplayStatics.h"
 #include "AuraHUD.h"
 #include "AuraPlayerState.h"
@@ -9,6 +11,7 @@
 #include "AuraGameModeBase.h"
 #include "AuraAbilitySystemComponent.h"
 #include "AuraAbilityTypes.h"
+#include "AuraGameplayTags.h"
 #include "CombatInterface.h"
 #include "Aura/Aura.h"
 #include "ScalableFloat.h"
@@ -135,6 +138,23 @@ int32 UAuraAbilitySystemLibrary::GetXPRewardByClassAndLevel(const UObject* World
 		return static_cast<int32>(Info.XPReward.GetValueAtLevel(CharacterLevel));
 	}
 	return 0;
+}
+
+FGameplayEffectContextHandle UAuraAbilitySystemLibrary::ApplyDamageEffect(const FDamageEffectProperties& DamageEffectProps)
+{
+	const FAuraGameplayTags& AuraTag = FAuraGameplayTags::Get();
+	FGameplayEffectContextHandle EffectContextHandle = DamageEffectProps.SourceASC->MakeEffectContext();
+	EffectContextHandle.AddSourceObject(DamageEffectProps.SourceASC->GetAvatarActor());
+	FGameplayEffectSpecHandle EffectSpecHandle = DamageEffectProps.SourceASC->MakeOutgoingSpec(DamageEffectProps.DamageEffectClass, DamageEffectProps.AbilityLevel, EffectContextHandle);
+	
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(EffectSpecHandle, DamageEffectProps.DamageType, DamageEffectProps.BaseDamage);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(EffectSpecHandle, AuraTag.Debuff_Damage, DamageEffectProps.DebuffDamage);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(EffectSpecHandle, AuraTag.Debuff_Chance, DamageEffectProps.DebuffChance);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(EffectSpecHandle, AuraTag.Debuff_Frequency, DamageEffectProps.DebuffFrequency);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(EffectSpecHandle, AuraTag.Debuff_Duration, DamageEffectProps.DebuffDuration);
+
+	DamageEffectProps.TargetASC->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data);
+	return EffectContextHandle;
 }
 
 void UAuraAbilitySystemLibrary::GetLivePlayersWithinRadius(const UObject* WorldContextObject, TArray<AActor*>& OutOverlappedActors, const TArray<AActor*> ActorsToIgnore, const FVector& SphereOrigin, float Radius)

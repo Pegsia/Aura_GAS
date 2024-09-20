@@ -18,7 +18,7 @@ void UAuraGameplayAbility_ProjectileSpell::ActivateAbility(const FGameplayAbilit
 	/*
 	 * if (bHasBlueprintActivate) K2_ActivateAbility(); 只要蓝图里有ActivateAbility节点就会先调用蓝图版本随后才调用C++
 	 */
-	if(SetDamageAbilityProperties(DamageAbilityProperties))
+	if(SetDamageAbilityProperties())
 	{
 		// Enemy has a BP implementation
 		if(DamageAbilityProperties.AvatarActor->ActorHasTag(ACTOR_TAG_ENEMY)) return;		

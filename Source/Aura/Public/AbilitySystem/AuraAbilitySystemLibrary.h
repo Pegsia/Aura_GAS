@@ -10,6 +10,7 @@
 
 class AAuraHUD;
 struct FWidgetControllerParams;
+struct FDamageEffectProperties;
 class USpellMenuWidgetController;
 class UOverlayWidgetController;
 class UAttributeMenuWidgetController;
@@ -57,6 +58,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|XP")
 	static int32 GetXPRewardByClassAndLevel(const UObject* WorldContextObject, const ECharacterClass& CharacterClass, const int32 CharacterLevel);	
 
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|DamageEffect")
+	static FGameplayEffectContextHandle ApplyDamageEffect(const FDamageEffectProperties& DamageEffectProps);
+	
 	// Combat Detection
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayMechanics")
 	static void GetLivePlayersWithinRadius(const UObject* WorldContextObject, TArray<AActor*>& OutOverlappedActors, const TArray<AActor*> ActorsToIgnore, const FVector& SphereOrigin, float Radius);

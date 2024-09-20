@@ -4,32 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "CombatInterface.h"
+#include "AuraAbilityTypes.h"
 #include "AbilitySystem/Ability/AuraGameplayAbility.h"
 #include "AuraGameplayAbility_Damage.generated.h"
-
-// For Async Gameplay Tasks Call Back Usage
-USTRUCT()
-struct FDamageAbilityProperties
-{
-	GENERATED_BODY()
-
-	FDamageAbilityProperties(){}
-
-	UPROPERTY()
-	AActor* AvatarActor = nullptr;
-
-	UPROPERTY()
-	AActor* TargetActor = nullptr;
-	
-	UPROPERTY()
-	UAnimMontage* AttackMontage = nullptr;
-	
-	UPROPERTY()
-	FGameplayTag AttackMontageTag = FGameplayTag();
-	
-	UPROPERTY()
-	FGameplayTag AttackSocketTag = FGameplayTag();
-};
 
 /**
  * 
@@ -43,9 +20,6 @@ public:
 	void ApplyAllTypeOfDamage(AActor* TargetActor); 
 	
 protected:
-	// UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage")
-	// TMap<FGameplayTag, FScalableFloat> DamageTypeMap;
-
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")
 	FGameplayTag DamageType;
 
@@ -72,8 +46,12 @@ protected:
 
 	// For Async Tasks
 	FDamageAbilityProperties DamageAbilityProperties;
-	bool SetDamageAbilityProperties(FDamageAbilityProperties& OutProps);
+	bool SetDamageAbilityProperties();
 
+	// For Debuffs
+	FDamageEffectProperties DamageEffectProperties;
+	void SetDamageEffectProperties(const AActor* TargetActor);
+	
 	UFUNCTION()
 	void MontageEndAbility();
 };
