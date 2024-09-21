@@ -49,8 +49,7 @@ protected:
 	bool SetDamageAbilityProperties();
 
 	// For Debuffs
-	FDamageEffectProperties DamageEffectProperties;
-	void SetDamageEffectProperties(const AActor* TargetActor);
+	FDamageEffectProperties SetDamageEffectProperties(const AActor* TargetActor = nullptr) const;
 	
 	UFUNCTION()
 	void MontageEndAbility();

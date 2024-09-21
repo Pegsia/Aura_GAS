@@ -44,8 +44,9 @@ bool UAuraGameplayAbility_Damage::SetDamageAbilityProperties()
 	return false;
 }
 
-void UAuraGameplayAbility_Damage::SetDamageEffectProperties(const AActor* TargetActor)
+FDamageEffectProperties UAuraGameplayAbility_Damage::SetDamageEffectProperties(const AActor* TargetActor) const
 {
+	FDamageEffectProperties DamageEffectProperties;
 	DamageEffectProperties.WorldContextObject = GetAvatarActorFromActorInfo();
 	DamageEffectProperties.SourceASC = GetAbilitySystemComponentFromActorInfo();
 	DamageEffectProperties.TargetASC = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(TargetActor);
@@ -58,6 +59,7 @@ void UAuraGameplayAbility_Damage::SetDamageEffectProperties(const AActor* Target
 	DamageEffectProperties.DebuffDamage = DebuffDamage;
 	DamageEffectProperties.DebuffFrequency = DebuffFrequency;
 	DamageEffectProperties.DebuffDuration = DebuffDuration;
+	return DamageEffectProperties;
 }
 
 void UAuraGameplayAbility_Damage::MontageEndAbility()

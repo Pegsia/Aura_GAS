@@ -68,6 +68,10 @@ public:
 
 	void RefillVitalAttributes();
 private:
+	//
+	void HandleIncomingDamage(const FEffectProperties& Props);
+	void HandleIncomingXP(const FEffectProperties& Props);
+	
 	// Store Effect Properties when a GameplayEffect is applied
 	void SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& OutProps) const;
 	void ShowFloatingDamage(const FEffectProperties& Props, float Damage, bool bBlockedHit, bool bCriticalHit);

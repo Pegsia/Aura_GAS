@@ -72,10 +72,13 @@ static AuraDamageStatic& GetDamageStatic()
 
 void UExecCalc_Damage::InitializeAuraDamageStaticMap()
 {
-	// 全局初始化之间的依赖关系
+	// 全局初始化之间的依赖关系，在AuraAssetManager中初始化
 	GetDamageStatic().InitializeTagsToCaptureDefsMap();
 }
 
+/* ------------------------------------------------------------
+*  ExecCalc
+* ------------------------------------------------------------*/ 	
 UExecCalc_Damage::UExecCalc_Damage()
 {
 	RelevantAttributesToCapture.Emplace(GetDamageStatic().ArmorDef);
@@ -111,11 +114,11 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 		TargetPlayerLevel = ICombatInterface::Execute_GetPlayerLevel(TargetAvatar);
 	}
 	
-	const FGameplayEffectSpec& Spec = ExecutionParams.GetOwningSpec();
-	FGameplayEffectContextHandle EffectContextHandle = Spec.GetContext();
+	const FGameplayEffectSpec& EffectSpec = ExecutionParams.GetOwningSpec();
+	FGameplayEffectContextHandle EffectContextHandle = EffectSpec.GetContext();
 	
-	const FGameplayTagContainer* SourceTags = Spec.CapturedSourceTags.GetAggregatedTags();
-	const FGameplayTagContainer* TargetTags = Spec.CapturedTargetTags.GetAggregatedTags();	
+	const FGameplayTagContainer* SourceTags = EffectSpec.CapturedSourceTags.GetAggregatedTags();
+	const FGameplayTagContainer* TargetTags = EffectSpec.CapturedTargetTags.GetAggregatedTags();	
 	FAggregatorEvaluateParameters EvaluateParameters;
 	EvaluateParameters.SourceTags = SourceTags;
 	EvaluateParameters.TargetTags = TargetTags;
@@ -158,6 +161,41 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	 * calculate Damage
 	 * ------------------------------------------------------------*/ 	
 
+	// Get Debuff
+	const FAuraGameplayTags& AuraTags = FAuraGameplayTags::Get();
+	for(const TTuple<FGameplayTag, FGameplayTag>& Pair : AuraTags.DamageTypesToDebuffs)
+	{
+		const FGameplayTag& DamageType = Pair.Key;
+		const FGameplayTag& DebuffType = Pair.Value;		
+		
+		// Check if we are this kind of Damage Type
+		float DamageMagnitude = EffectSpec.GetSetByCallerMagnitude(DamageType, false);
+		if(DamageMagnitude == 0) continue;
+
+		// Get Target Debuff Resistance
+		float TargetDebuffResistance = 0;
+		const FGameplayTag& TargetResistanceType = AuraTags.DamageTypesToResistance[DamageType];
+		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(GetDamageStatic().TagsToCaptureDef[TargetResistanceType], EvaluateParameters, TargetDebuffResistance);
+		TargetDebuffResistance = FMath::Max<float>(0, TargetDebuffResistance);
+
+		// Calculate DebuffChance
+		float SourceDebuffChance = EffectSpec.GetSetByCallerMagnitude(AuraTags.Debuff_Chance, false);
+		float TargetDebuffChance = SourceDebuffChance * (100 - TargetDebuffResistance) / 100.f;
+		const bool bDebuff = FMath::RandRange(1, 100) < TargetDebuffChance;
+		if(bDebuff)
+		{
+			float DebuffDamage = EffectSpec.GetSetByCallerMagnitude(AuraTags.Debuff_Damage, false);
+			float DebuffFrequency = EffectSpec.GetSetByCallerMagnitude(AuraTags.Debuff_Frequency, false);
+			float DebuffDuration = EffectSpec.GetSetByCallerMagnitude(AuraTags.Debuff_Duration, false);
+			
+			UAuraAbilitySystemLibrary::SetDamageType(EffectContextHandle, DamageType);
+			UAuraAbilitySystemLibrary::SetIsSuccessfulDebuff(EffectContextHandle, true);
+			UAuraAbilitySystemLibrary::SetDebuffDamage(EffectContextHandle, DebuffDamage);
+			UAuraAbilitySystemLibrary::SetDebuffFrequency(EffectContextHandle, DebuffFrequency);
+			UAuraAbilitySystemLibrary::SetDebuffDuration(EffectContextHandle, DebuffDuration);
+		}		
+	}
+	
 	// Get All Types of Set by caller Damage and Resistance 
 	float Damage = 0;
 	for(const TTuple<FGameplayTag, FGameplayTag>& Pair : FAuraGameplayTags::Get().DamageTypesToResistance)
@@ -166,7 +204,7 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 		const FGameplayTag ResistanceTag = Pair.Value;
 		checkf(GetDamageStatic().TagsToCaptureDef.Contains(ResistanceTag), TEXT("Tags To Capture Def doesn't contain Tag:[%s] in ExecCala_Damage"), *ResistanceTag.ToString());
 
-		float DamageValue = Spec.GetSetByCallerMagnitude(DamageTypeTag, false);
+		float DamageValue = EffectSpec.GetSetByCallerMagnitude(DamageTypeTag, false);
 		if(DamageValue == 0) continue;
 		
 		float ResistanceValue = 0.f;

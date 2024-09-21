@@ -47,10 +47,7 @@ void AAuraProjectile::Destroyed()
 {
 	if (!bHit && !HasAuthority()) // 服务器过快发送销毁命令，客户端没有来得及进行overlap行为
 	{
-		bHit = true;
-		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation());
-		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
-		if(LoopingSoundComponent) LoopingSoundComponent->Stop();		
+		OnHit();		
 	}
 
 	Super::Destroyed();
@@ -58,29 +55,18 @@ void AAuraProjectile::Destroyed()
 
 void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if(OtherActor == GetInstigator())
-	{
-		// DedicatedServer模式下Client骨骼运动会错误，导致Server上Projectile成功生成并继续运动，
-		// 但Client立刻与Aura碰撞，由于Server上Projectile没有销毁，于是碰撞后Projectile继续运动并不再产生OverlapEvent
-		return;
-	}
-	if(UAuraAbilitySystemLibrary::IsFriend(OtherActor, GetInstigator()))
-	{
-		return;
-	}
-	if(!bHit)
-	{
-		bHit = true;
-		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation());
-		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
-		if(LoopingSoundComponent) LoopingSoundComponent->Stop();
-	}	
+	// DedicatedServer模式下Client骨骼运动会错误，导致Server上Projectile成功生成并继续运动，
+	// 但Client立刻与Aura碰撞，由于Server上Projectile没有销毁，于是碰撞后Projectile继续运动并不再产生OverlapEvent
+	if(OtherActor == GetInstigator()) return;
+	if(UAuraAbilitySystemLibrary::IsFriend(OtherActor, GetInstigator())) return;
+	if(!bHit) OnHit();
 
 	if (HasAuthority())
 	{
 		if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
 		{
-			TargetASC->ApplyGameplayEffectSpecToSelf(*DamageEffectSpecHandle.Data.Get());
+			DamageEffectProperties.TargetASC = TargetASC;
+			UAuraAbilitySystemLibrary::ApplyDamageEffect(DamageEffectProperties);
 		}
 		Destroy();
 	}
@@ -90,3 +76,10 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 	}
 }
 
+void AAuraProjectile::OnHit()
+{
+	bHit = true;
+	UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation());
+	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
+	if(LoopingSoundComponent) LoopingSoundComponent->Stop();
+}

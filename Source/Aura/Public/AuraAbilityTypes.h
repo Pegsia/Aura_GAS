@@ -98,11 +98,21 @@ public:
 	
 	virtual bool NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess) override;
 
-	bool GetIsBlockedHit() const {return bIsBlockedHit; }
-	bool GetIsCriticalHit() const {return bIsCriticalHit; }
+	bool GetIsBlockedHit() const { return bIsBlockedHit; }
+	bool GetIsCriticalHit() const { return bIsCriticalHit; }
+	bool GetIsSuccessfulDebuff() const { return bIsSuccessfulDebuff; }
+	float GetDebuffDamage() const { return DebuffDamage; }
+	float GetDebuffFrequency() const { return DebuffFrequency; }
+	float GetDebuffDuration() const { return DebuffDuration; }
+	TSharedPtr<FGameplayTag> GetDamageType() const { return DamageType; }
 
-	void SetIsBlockedHit(bool bInIsBlockedHit) { bIsBlockedHit = bInIsBlockedHit; }
-	void SetIsCriticalHit(bool bInIsCriticalHit) { bIsCriticalHit = bInIsCriticalHit; }
+	void SetIsBlockedHit(const bool& bInIsBlockedHit) { bIsBlockedHit = bInIsBlockedHit; }
+	void SetIsCriticalHit(const bool& bInIsCriticalHit) { bIsCriticalHit = bInIsCriticalHit; }
+	void SetIsSuccessfulDebuff(const bool& bInIsSuccessfulDebuff) { bIsSuccessfulDebuff = bInIsSuccessfulDebuff; }
+	void SetDebuffDamage(const float& InDebuffDamage) { DebuffDamage = InDebuffDamage; }
+	void SetDebuffFrequency(const float& InDebuffFrequency) { DebuffFrequency = InDebuffFrequency; }
+	void SetDebuffDuration(const float& InDebuffDuration) { DebuffDuration = InDebuffDuration; }
+	void SetDamageType(const TSharedPtr<FGameplayTag>& InDamageType) { DamageType = InDamageType; }
 	
 protected:
 	UPROPERTY()
@@ -110,6 +120,20 @@ protected:
 	
 	UPROPERTY()
 	bool bIsCriticalHit = false;
+
+	UPROPERTY()
+	bool bIsSuccessfulDebuff = false;
+
+	UPROPERTY()
+	float DebuffDamage = 0.f;
+
+	UPROPERTY()
+	float DebuffFrequency = 0.f;
+
+	UPROPERTY()
+	float DebuffDuration = 0.f;
+
+	TSharedPtr<FGameplayTag> DamageType = nullptr;
 };
 
 template<>
