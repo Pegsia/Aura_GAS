@@ -68,8 +68,9 @@ public:
 
 	void RefillVitalAttributes();
 private:
-	//
+	// Handle PostGameplay Attribute
 	void HandleIncomingDamage(const FEffectProperties& Props);
+	void HandleDebuff(const FEffectProperties& Props);
 	void HandleIncomingXP(const FEffectProperties& Props);
 	
 	// Store Effect Properties when a GameplayEffect is applied
@@ -80,7 +81,6 @@ private:
 	// for Refill Vital Attributes
 	bool bRestoreHealth = false;
 	bool bRestoreMana = false;
-
 	
 /* ---------------------------------------------------------------
 	FGameplayAttributeData and Corresponding Boiler Plate

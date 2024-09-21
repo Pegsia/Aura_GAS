@@ -69,7 +69,7 @@ public:
 	static bool IsFriend(const AActor* FirstActor, const AActor* SecondActor);
 	
 	/* ------------------------------------------------------------
-	 * AuraGameplayEffectContextHandle
+	 * Aura Gameplay Effect Context Handle
 	 * ------------------------------------------------------------*/ 	
 	/* Getter */
 	UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|GameplayEffects")
