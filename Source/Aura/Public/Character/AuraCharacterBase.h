@@ -9,6 +9,7 @@
 #include "CharacterClassInfo.h"
 #include "AuraCharacterBase.generated.h"
 
+class UAuraDebuffNiagaraComponent;
 class UNiagaraSystem;
 class UAbilitySystemComponent;
 class UAttributeSet;
@@ -33,20 +34,25 @@ public:
 	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
 	virtual TArray<FTaggedMontage> GetAttackMontages_Implementation() override;
 	virtual FTaggedMontage GetTaggedMontageByMontageTag_Implementation(const FGameplayTag& Tag) override;
-	virtual void CharacterDeath() override;
+	virtual void CharacterDeath(const FVector& ImpulseVector) override;
 	virtual bool IsDead_Implementation() const override;
 	virtual AActor* GetAvatar_Implementation() override;
 	virtual UNiagaraSystem* GetBloodEffect_Implementation() const override;
 	virtual int32 GetMinionCount_Implementation() const override;
 	virtual void IncrementMinionCount_Implementation(int32 Amount) override;
 	virtual ECharacterClass GetCharacterClass_Implementation() override;
+	virtual FOnASCRegisteredSignature& GetOnAscRegisteredDelegate() override;
+	virtual FOnDeathSignature& GetOnDeathDelegate() override;
 	//~ End ICombatInterface
+
+	FOnASCRegisteredSignature OnASCRegisteredDelegate;
+	FOnDeathSignature OnDeathDelegate;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Combat", meta = (TitleProperty = "MontageTag"))
 	TArray<FTaggedMontage> AttackMontageArray;
 	
 	UFUNCTION(NetMulticast, Reliable)
-	virtual void MulticastHandleCharacterDeath();
+	virtual void MulticastHandleCharacterDeath(const FVector& ImpulseVector);
 	
 protected:
 	virtual void BeginPlay() override;
@@ -118,6 +124,10 @@ protected:
 
 	// Minions
 	int32 MinionCount = 0;
+
+	// Debuff
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat")
+	TObjectPtr<UAuraDebuffNiagaraComponent> BurnDebuffNiagaraComponent;
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Ability")

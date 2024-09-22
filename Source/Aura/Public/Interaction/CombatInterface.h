@@ -8,8 +8,12 @@
 #include "UObject/Interface.h"
 #include "CombatInterface.generated.h"
 
+class UAbilitySystemComponent;
 class UNiagaraSystem;
 class UAnimMontage;
+
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnASCRegisteredSignature, UAbilitySystemComponent*);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDeathSignature, AActor*, DeadActor);
 
 USTRUCT(BlueprintType)
 struct FTaggedMontage
@@ -66,7 +70,7 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	FTaggedMontage GetTaggedMontageByMontageTag(const FGameplayTag& Tag);
 	
-	virtual void CharacterDeath() = 0;
+	virtual void CharacterDeath(const FVector& ImpulseVector) = 0;
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	bool IsDead() const;
@@ -82,4 +86,8 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void IncrementMinionCount(int32 Amount);
+
+	virtual FOnASCRegisteredSignature& GetOnAscRegisteredDelegate() = 0;
+	virtual FOnDeathSignature& GetOnDeathDelegate() = 0;
+
 };

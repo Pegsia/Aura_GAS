@@ -12,6 +12,7 @@
 #include "AuraUserWidget.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Debuff/AuraDebuffNiagaraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 AAuraEnemy::AAuraEnemy()
@@ -70,7 +71,8 @@ void AAuraEnemy::BeginPlay()
 void AAuraEnemy::InitialAbilityActorInfo()
 {
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
-	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();	
+	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
+	OnASCRegisteredDelegate.Broadcast(AbilitySystemComponent);
 }
 
 void AAuraEnemy::InitEffects()
@@ -135,10 +137,10 @@ AActor* AAuraEnemy::GetCombatTarget_Implementation() const
 	return CombatTarget;
 }
 
-void AAuraEnemy::CharacterDeath()
+void AAuraEnemy::CharacterDeath(const FVector& ImpulseVector)
 {
 	HealthBarComponent->DestroyComponent();
 	AuraAIController->GetBrainComponent()->StopLogic(TEXT("Died"));
 	SetLifeSpan(EnemyLifeSpan);
-	Super::CharacterDeath();
+	Super::CharacterDeath(ImpulseVector);
 }

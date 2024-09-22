@@ -78,6 +78,8 @@ void AAuraCharacter::InitialAbilityActorInfo()
 	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
 	AttributeSet = AuraPlayerState->GetAttributeSet();
 	
+	OnASCRegisteredDelegate.Broadcast(AbilitySystemComponent);
+	
 	AuraPlayerState->OnLevelChangeDelegate.AddLambda(
 		[this](int32 Value)
 		{

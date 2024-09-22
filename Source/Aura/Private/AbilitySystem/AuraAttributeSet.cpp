@@ -124,7 +124,7 @@ void UAuraAttributeSet::HandleIncomingDamage(const FEffectProperties& Props)
 		{
 			if(TScriptInterface<ICombatInterface> CombatInterface = Props.TargetAvatarActor)
 			{
-				CombatInterface->CharacterDeath();
+				CombatInterface->CharacterDeath(UAuraAbilitySystemLibrary::GetDeathImpulse(Props.EffectContextHandle));
 			}
 			SendXPEvent(Props);
 		}
@@ -173,13 +173,13 @@ void UAuraAttributeSet::HandleDebuff(const FEffectProperties& Props)
 	// Miscellaneous
 	DebuffEffect->StackingType = EGameplayEffectStackingType::AggregateByTarget;
 	DebuffEffect->StackLimitCount = 1;
-	DebuffEffect->InheritableGameplayEffectTags.AddTag(FAuraGameplayTags::Get().DamageTypesToDebuffs[DamageType]);
+	DebuffEffect->InheritableOwnedTagsContainer.AddTag(FAuraGameplayTags::Get().DamageTypesToDebuffs[DamageType]);
 
 	if(const FGameplayEffectSpec* DebuffSpec = new FGameplayEffectSpec(DebuffEffect, DebuffContextHandle, 1.f))
 	{
 		FAuraGameplayEffectContext* AuraContext = static_cast<FAuraGameplayEffectContext*>(DebuffSpec->GetContext().Get());
-		const TSharedPtr<FGameplayTag> DebuffType = MakeShareable(new FGameplayTag(DamageType));
-		AuraContext->SetDamageType(DebuffType);
+		const TSharedPtr<FGameplayTag> SharedDamageType = MakeShareable(new FGameplayTag(DamageType));
+		AuraContext->SetDamageType(SharedDamageType);
 		Props.TargetASC->ApplyGameplayEffectSpecToSelf(*DebuffSpec);
 	}
 }

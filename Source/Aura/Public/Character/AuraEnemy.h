@@ -35,7 +35,7 @@ public:
 
 	//~ Begin ICombatInterface
 	virtual int32 GetPlayerLevel_Implementation() override { return Level; }
-	virtual void CharacterDeath() override;
+	virtual void CharacterDeath(const FVector& ImpulseVector) override;
 	//~ End ICombatInterface
 
 	// OverlayWidgetController Signature

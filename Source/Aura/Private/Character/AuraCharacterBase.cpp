@@ -7,6 +7,7 @@
 #include "Aura/Aura.h"
 #include "AuraAbilitySystemLibrary.h"
 #include "AuraGameplayTags.h"
+#include "Debuff/AuraDebuffNiagaraComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 AAuraCharacterBase::AAuraCharacterBase()
@@ -22,6 +23,10 @@ AAuraCharacterBase::AAuraCharacterBase()
 	Weapon = CreateDefaultSubobject<USkeletalMeshComponent>("MeshComponent");
 	Weapon->SetupAttachment(GetMesh(), WeaponSocketName);
 	Weapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	BurnDebuffNiagaraComponent = CreateDefaultSubobject<UAuraDebuffNiagaraComponent>("DebuffNiagara");
+	BurnDebuffNiagaraComponent->SetupAttachment(GetRootComponent());
+	BurnDebuffNiagaraComponent->DebuffTag = FAuraGameplayTags::Get().Debuff_Burn;
 }
 
 void AAuraCharacterBase::BeginPlay()
@@ -48,15 +53,14 @@ void AAuraCharacterBase::InitAuraStartupAbilities() const
 	AuraASC->AddCharacterStartupPassiveAbilities(StartupPassiveAbilities);
 }
 
-void AAuraCharacterBase::CharacterDeath()
+void AAuraCharacterBase::CharacterDeath(const FVector& ImpulseVector)
 {
 	// Server
 	Weapon->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld, true));
-	MulticastHandleCharacterDeath();
+	MulticastHandleCharacterDeath(ImpulseVector);
 }
 
-
-void AAuraCharacterBase::MulticastHandleCharacterDeath_Implementation()
+void AAuraCharacterBase::MulticastHandleCharacterDeath_Implementation(const FVector& ImpulseVector)
 {
 	UGameplayStatics::PlaySoundAtLocation(this, DeathSound, GetActorLocation());
 	
@@ -65,15 +69,19 @@ void AAuraCharacterBase::MulticastHandleCharacterDeath_Implementation()
 	Weapon->SetSimulatePhysics(true);
 	Weapon->SetEnableGravity(true);
 	Weapon->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+	Weapon->AddImpulse(ImpulseVector * 0.1f,  NAME_None, true);
 	
 	GetMesh()->SetSimulatePhysics(true);
 	GetMesh()->SetEnableGravity(true);
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
 	GetMesh()->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
+	GetMesh()->AddImpulse(ImpulseVector, NAME_None, true);
 	
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	Dissolve();
+
+	OnDeathDelegate.Broadcast(this);
 }
 
 void AAuraCharacterBase::Dissolve()
@@ -154,6 +162,16 @@ void AAuraCharacterBase::IncrementMinionCount_Implementation(int32 Amount)
 ECharacterClass AAuraCharacterBase::GetCharacterClass_Implementation()
 {
 	return CharacterClass;
+}
+
+FOnASCRegisteredSignature& AAuraCharacterBase::GetOnAscRegisteredDelegate()
+{
+	return OnASCRegisteredDelegate;
+}
+
+FOnDeathSignature& AAuraCharacterBase::GetOnDeathDelegate()
+{
+	return OnDeathDelegate;
 }
 
 UAnimMontage* AAuraCharacterBase::GetHitReactMontage_Implementation()

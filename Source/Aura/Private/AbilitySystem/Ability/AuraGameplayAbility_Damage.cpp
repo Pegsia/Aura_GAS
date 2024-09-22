@@ -59,6 +59,7 @@ FDamageEffectProperties UAuraGameplayAbility_Damage::SetDamageEffectProperties(c
 	DamageEffectProperties.DebuffDamage = DebuffDamage;
 	DamageEffectProperties.DebuffFrequency = DebuffFrequency;
 	DamageEffectProperties.DebuffDuration = DebuffDuration;
+	DamageEffectProperties.DeathImpulseMagnitude = DeathImpulseMagnitude;
 	return DamageEffectProperties;
 }
 

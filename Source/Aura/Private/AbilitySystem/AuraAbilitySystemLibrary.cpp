@@ -145,6 +145,7 @@ FGameplayEffectContextHandle UAuraAbilitySystemLibrary::ApplyDamageEffect(const 
 	const FAuraGameplayTags& AuraTag = FAuraGameplayTags::Get();
 	FGameplayEffectContextHandle EffectContextHandle = DamageEffectProps.SourceASC->MakeEffectContext();
 	EffectContextHandle.AddSourceObject(DamageEffectProps.SourceASC->GetAvatarActor());
+	SetDeathImpulse(EffectContextHandle, DamageEffectProps.DeathImpulse);
 	FGameplayEffectSpecHandle EffectSpecHandle = DamageEffectProps.SourceASC->MakeOutgoingSpec(DamageEffectProps.DamageEffectClass, DamageEffectProps.AbilityLevel, EffectContextHandle);
 	
 	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(EffectSpecHandle, DamageEffectProps.DamageType, DamageEffectProps.BaseDamage);
@@ -248,6 +249,15 @@ FGameplayTag UAuraAbilitySystemLibrary::GetDamageType(const FGameplayEffectConte
 	return FGameplayTag();
 }
 
+FVector UAuraAbilitySystemLibrary::GetDeathImpulse(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	if(const FAuraGameplayEffectContext* AuraEffectContext = static_cast<const FAuraGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		return AuraEffectContext->GetDeathImpulse();
+	}
+	return FVector::ZeroVector;
+}
+
 void UAuraAbilitySystemLibrary::SetIsBlockedHit(FGameplayEffectContextHandle& EffectContextHandle, bool bInIsBlockedHit)
 {
 	if(FAuraGameplayEffectContext* AuraGameplayEffectContext = static_cast<FAuraGameplayEffectContext*>(EffectContextHandle.Get()))
@@ -303,6 +313,14 @@ void UAuraAbilitySystemLibrary::SetDamageType(FGameplayEffectContextHandle& Effe
 	{
 		const TSharedPtr<FGameplayTag> DamageType = MakeShared<FGameplayTag>(InDamageType);
 		AuraEffectContext->SetDamageType(DamageType);
+	}
+}
+
+void UAuraAbilitySystemLibrary::SetDeathImpulse(FGameplayEffectContextHandle& EffectContextHandle, const FVector& InDeathImpulse)
+{
+	if(FAuraGameplayEffectContext* AuraEffectContext = static_cast<FAuraGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		AuraEffectContext->SetDeathImpulse(InDeathImpulse);
 	}
 }
 
