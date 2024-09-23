@@ -119,6 +119,11 @@ void UAuraAttributeSet::HandleIncomingDamage(const FEffectProperties& Props)
 			FGameplayTagContainer TagContainer;
 			TagContainer.AddTag(FAuraGameplayTags::Get().Effects_HitReact);
 			Props.TargetASC->TryActivateAbilitiesByTag(TagContainer);
+			const FVector& KnockBackVector = UAuraAbilitySystemLibrary::GetKnockBackVector(Props.EffectContextHandle);
+			if(!KnockBackVector.IsNearlyZero(1.f))
+			{
+				Props.TargetCharacter->LaunchCharacter(KnockBackVector, true, true);
+			}
 		}
 		else // Death
 		{

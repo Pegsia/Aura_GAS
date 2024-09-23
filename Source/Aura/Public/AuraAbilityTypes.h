@@ -77,6 +77,15 @@ struct FDamageEffectProperties
 
 	UPROPERTY()
 	FVector DeathImpulse = FVector::ZeroVector;
+
+	UPROPERTY()
+	float KnockBackChance = 0.f;
+
+	UPROPERTY()
+	float KnockBackMagnitude = 0.f;
+
+	UPROPERTY()
+	FVector KnockBackVector = FVector::ZeroVector;
 };
 
 USTRUCT(BlueprintType)
@@ -112,6 +121,7 @@ public:
 	float GetDebuffDuration() const { return DebuffDuration; }
 	TSharedPtr<FGameplayTag> GetDamageType() const { return DamageType; }
 	FVector GetDeathImpulse() const { return DeathImpulse; }
+	FVector GetKnockBackVector() const { return KnockBackVector; }
 
 	void SetIsBlockedHit(const bool& bInIsBlockedHit) { bIsBlockedHit = bInIsBlockedHit; }
 	void SetIsCriticalHit(const bool& bInIsCriticalHit) { bIsCriticalHit = bInIsCriticalHit; }
@@ -121,6 +131,7 @@ public:
 	void SetDebuffDuration(const float& InDebuffDuration) { DebuffDuration = InDebuffDuration; }
 	void SetDamageType(const TSharedPtr<FGameplayTag>& InDamageType) { DamageType = InDamageType; }
 	void SetDeathImpulse(const FVector& InDeathImpulse) { DeathImpulse = InDeathImpulse; }
+	void SetKnockBackVector(const FVector& InKnockBackVector) { KnockBackVector = InKnockBackVector; }
 	
 protected:
 	UPROPERTY()
@@ -145,6 +156,9 @@ protected:
 
 	UPROPERTY()
 	FVector DeathImpulse = FVector::ZeroVector;
+
+	UPROPERTY()
+	FVector KnockBackVector = FVector::ZeroVector;
 };
 
 template<>

@@ -34,7 +34,7 @@ void UAuraGameplayAbility_ProjectileSpell::ActivateAbility(const FGameplayAbilit
 void UAuraGameplayAbility_ProjectileSpell::TargetDataReceived(const FGameplayAbilityTargetDataHandle& DataHandle)
 {
 	// Get Hit Location
-	FireBoltHitLocation =  UAbilitySystemBlueprintLibrary::GetHitResultFromTargetData(DataHandle, 0).Location;
+	FireBoltHitLocation = UAbilitySystemBlueprintLibrary::GetHitResultFromTargetData(DataHandle, 0).Location;
 	ICombatInterface::Execute_SetFacingWarpTarget(DamageAbilityProperties.AvatarActor, FireBoltHitLocation);
 	
 	UAbilityTask_PlayMontageAndWait* PlayMontageAndWaitTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, FName(), DamageAbilityProperties.AttackMontage);

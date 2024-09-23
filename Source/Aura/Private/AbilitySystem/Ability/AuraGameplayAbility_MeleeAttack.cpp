@@ -53,8 +53,9 @@ void UAuraGameplayAbility_MeleeAttack::MeleeEventReceived(FGameplayEventData Pay
 	for(AActor* OtherActor : OverlappedActors)
 	{
 		if(!UAuraAbilitySystemLibrary::IsFriend(OtherActor, DamageAbilityProperties.AvatarActor))
-		{			
-			ApplyAllTypeOfDamage(OtherActor);
+		{
+			UAuraAbilitySystemLibrary::ApplyDamageEffect(SetDamageEffectProperties(OtherActor));
+			// ApplyAllTypeOfDamage(OtherActor);
 			bHasHitTarget = true;
 		}
 	}

@@ -28,10 +28,7 @@ protected:
 	void TargetDataReceived(const FGameplayAbilityTargetDataHandle& DataHandle);
 
 	UFUNCTION()
-	void FireBoltEventReceived(FGameplayEventData Payload);
+	virtual void FireBoltEventReceived(FGameplayEventData Payload);
 
 	FVector FireBoltHitLocation{};
-	
-	UPROPERTY(EditDefaultsOnly, Category = "Projectile")
-	int32 NumProjectiles = 5;
 };

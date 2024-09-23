@@ -60,6 +60,16 @@ FDamageEffectProperties UAuraGameplayAbility_Damage::SetDamageEffectProperties(c
 	DamageEffectProperties.DebuffFrequency = DebuffFrequency;
 	DamageEffectProperties.DebuffDuration = DebuffDuration;
 	DamageEffectProperties.DeathImpulseMagnitude = DeathImpulseMagnitude;
+	DamageEffectProperties.KnockBackChance = KnockBackChance;
+	DamageEffectProperties.KnockBackMagnitude = KnockBackMagnitude;
+	if (IsValid(TargetActor))
+	{
+		FRotator Rotation = (TargetActor->GetActorLocation() - GetAvatarActorFromActorInfo()->GetActorLocation()).Rotation();
+		Rotation.Pitch = 45.f;
+		const FVector ToTarget = Rotation.Vector();
+		DamageEffectProperties.DeathImpulse = ToTarget * DeathImpulseMagnitude;
+		DamageEffectProperties.KnockBackVector = ToTarget * KnockBackMagnitude;
+	}
 	return DamageEffectProperties;
 }
 
