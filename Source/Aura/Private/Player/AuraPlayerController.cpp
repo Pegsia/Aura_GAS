@@ -115,7 +115,7 @@ void AAuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 		bAutoRunning = false;
 	}
 
-	if (!GetAuraASC()) return;	
+	if (GetAuraASC()) GetAuraASC()->AbilityInputPressed(InputTag);	
 }
 
 void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
@@ -158,7 +158,7 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 	}
 }
 
-void AAuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag) // tick
+void AAuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag) // Tick
 {
 	// Not Moving
 	if (!InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB))

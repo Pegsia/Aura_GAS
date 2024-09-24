@@ -37,10 +37,10 @@ protected:
 	TObjectPtr<USceneComponent> HomingTargetSceneComponent;
 
 	UPROPERTY(EditDefaultsOnly, Category = "FireBolt", meta = (EditCondition = "bLaunchHomingProjectiles"))
-	float MinHomingAcceleration = 2000.f;
+	float MinHomingAcceleration = 6500.f;
 
 	UPROPERTY(EditDefaultsOnly, Category = "FireBolt", meta = (EditCondition = "bLaunchHomingProjectiles"))
-	float MaxHomingAcceleration = 3200.f;
+	float MaxHomingAcceleration = 7200.f;
 	
 	//~ Begin AuraGameplayAbility Interface
 	virtual FString GetCurrentLevelDescription(const int32& AbilityLevel) override;
