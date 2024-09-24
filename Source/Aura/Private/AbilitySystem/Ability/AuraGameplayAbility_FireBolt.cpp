@@ -3,47 +3,65 @@
 
 #include "AbilitySystem/Ability/AuraGameplayAbility_FireBolt.h"
 
-#include "Kismet/KismetSystemLibrary.h"
+#include "AuraAbilitySystemLibrary.h"
+#include "AuraProjectile.h"
+#include "GameFramework/ProjectileMovementComponent.h"
 
-void UAuraGameplayAbility_FireBolt::FireBoltEventReceived(FGameplayEventData Payload)
+void UAuraGameplayAbility_FireBolt::ProjectileEventReceived(FGameplayEventData Payload)
 {
 	ProjectileNumber = FMath::Min(GetAbilityLevel(), MaxProjectileNumber);
-	if(ProjectileNumber > 1) SpawnProjectiles(FireBoltHitLocation, nullptr);
-	else SpawnProjectile(FireBoltHitLocation);	
+	SpawnProjectiles(ProjectileHitResult.Location, ProjectileHitResult.GetActor());
 }
 
-void UAuraGameplayAbility_FireBolt::SpawnProjectiles(const FVector& ProjectileTargetLocation, AActor* HomingTarget, bool bOverridePitch, float PitchOverride)
+void UAuraGameplayAbility_FireBolt::SpawnProjectiles(const FVector& ProjectileTargetLocation, AActor* HomingTarget)
 {
 	if (!GetAvatarActorFromActorInfo()->HasAuthority()) return;
 	
 	if (GetAvatarActorFromActorInfo()->Implements<UCombatInterface>())
 	{
-		SetDamageAbilityProperties();
 		const FVector SpawnLocation = ICombatInterface::Execute_GetCombatSocketLocation(GetAvatarActorFromActorInfo(), DamageAbilityProperties.AttackSocketTag);
 		FRotator SpawnRotation = (ProjectileTargetLocation - SpawnLocation).Rotation();
 		if(bOverridePitch) SpawnRotation.Pitch = PitchOverride;
 
 		const FVector ForwardVector = SpawnRotation.Vector();
-		const FVector LeftVector = ForwardVector.RotateAngleAxis(-ProjectileSpread / 2.f, FVector::UpVector);
-		const FVector RightVector = ForwardVector.RotateAngleAxis(ProjectileSpread / 2.f, FVector::UpVector);		
 
-		const float DeltaSpread = ProjectileSpread / (ProjectileNumber - 1);
-		for(int i = 0; i < ProjectileNumber; ++i)
+		const TArray<FRotator> Rotators = UAuraAbilitySystemLibrary::EvenlySpacedRotators(ForwardVector, ProjectileSpread, ProjectileNumber);
+
+		// Spawn Projectiles for all Rotation
+		for(const FRotator& Rotator : Rotators)
 		{
-			const FVector Direction = LeftVector.RotateAngleAxis(DeltaSpread * i, FVector::UpVector);
-			const FVector Start = SpawnLocation + FVector(0,0,5);
-			UKismetSystemLibrary::DrawDebugArrow(
-				GetAvatarActorFromActorInfo(),
-				Start,
-				Start + Direction * 75.f,
-				1,
-				FLinearColor::Red,
-				120,
-				1);
+			FTransform SpawnTransform;
+			SpawnTransform.SetLocation(SpawnLocation);
+			SpawnTransform.SetRotation(Rotator.Quaternion());
+
+			// Spawn Projectile Deferred
+			AAuraProjectile* Projectile = GetWorld()->SpawnActorDeferred<AAuraProjectile>(
+				ProjectileClass,
+				SpawnTransform,
+				GetOwningActorFromActorInfo(),
+				Cast<APawn>(GetAvatarActorFromActorInfo()),
+				ESpawnActorCollisionHandlingMethod::AlwaysSpawn
+				);
+		
+			Projectile->DamageEffectProperties = SetDamageEffectProperties();
+
+			// Homing Target is Combat Character
+			if(HomingTarget && HomingTarget->Implements<UCombatInterface>())
+			{
+				Projectile->MovementComponent->HomingTargetComponent = HomingTarget->GetRootComponent();
+			}
+			else
+			{
+				// HomingTargetComponent is Weak Pointer, mark HomingTargetSceneComponent as UPROPERTY(), let UE Handles GC
+				HomingTargetSceneComponent = NewObject<USceneComponent>(USceneComponent::StaticClass());
+				HomingTargetSceneComponent->SetWorldLocation(ProjectileTargetLocation);
+				Projectile->MovementComponent->HomingTargetComponent = HomingTargetSceneComponent;			
+			}
+			Projectile->MovementComponent->HomingAccelerationMagnitude = FMath::FRandRange(MinHomingAcceleration, MaxHomingAcceleration);
+			Projectile->MovementComponent->bIsHomingProjectile = bLaunchHomingProjectiles;
+			
+			Projectile->FinishSpawning(SpawnTransform);
 		}
-		UKismetSystemLibrary::DrawDebugArrow(GetAvatarActorFromActorInfo(), SpawnLocation, SpawnLocation + ForwardVector * 100.f, 1, FLinearColor::White, 120, 1);
-		UKismetSystemLibrary::DrawDebugArrow(GetAvatarActorFromActorInfo(), SpawnLocation, SpawnLocation + LeftVector * 100.f, 1, FLinearColor::Gray, 120, 1);
-		UKismetSystemLibrary::DrawDebugArrow(GetAvatarActorFromActorInfo(), SpawnLocation, SpawnLocation + RightVector * 100.f, 1, FLinearColor::Gray, 120, 1);
 	}
 }
 
@@ -63,7 +81,7 @@ FString UAuraGameplayAbility_FireBolt::GetCurrentLevelDescription(const int32& A
 			"<Small>Level: </><Level>%d</>\n"
 			// ManaCost
 			"<Small>ManaCost: </><ManaCost>%.1f</>\n"
-			// ManaCost
+			// Cooldown
 			"<Small>Cooldown: </><Cooldown>%.1f</>\n\n"
 			// Description
 			"<Default>Launches %s of fire, exploding on impact and dealing: </>"

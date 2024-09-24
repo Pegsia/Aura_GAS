@@ -34,14 +34,14 @@ void UAuraGameplayAbility_ProjectileSpell::ActivateAbility(const FGameplayAbilit
 void UAuraGameplayAbility_ProjectileSpell::TargetDataReceived(const FGameplayAbilityTargetDataHandle& DataHandle)
 {
 	// Get Hit Location
-	FireBoltHitLocation = UAbilitySystemBlueprintLibrary::GetHitResultFromTargetData(DataHandle, 0).Location;
-	ICombatInterface::Execute_SetFacingWarpTarget(DamageAbilityProperties.AvatarActor, FireBoltHitLocation);
+	ProjectileHitResult = UAbilitySystemBlueprintLibrary::GetHitResultFromTargetData(DataHandle, 0);
+	ICombatInterface::Execute_SetFacingWarpTarget(DamageAbilityProperties.AvatarActor, ProjectileHitResult.Location);
 	
 	UAbilityTask_PlayMontageAndWait* PlayMontageAndWaitTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, FName(), DamageAbilityProperties.AttackMontage);
 	UAbilityTask_WaitGameplayEvent* GameplayEventTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, DamageAbilityProperties.AttackMontageTag);
 
 	GameplayEventTask->OnlyTriggerOnce = true;
-	GameplayEventTask->EventReceived.AddDynamic(this, &UAuraGameplayAbility_ProjectileSpell::FireBoltEventReceived);
+	GameplayEventTask->EventReceived.AddDynamic(this, &UAuraGameplayAbility_ProjectileSpell::ProjectileEventReceived);
 	PlayMontageAndWaitTask->OnCancelled.AddDynamic(this, &UAuraGameplayAbility_ProjectileSpell::MontageEndAbility);
 	PlayMontageAndWaitTask->OnCompleted.AddDynamic(this, &UAuraGameplayAbility_ProjectileSpell::MontageEndAbility);
 	PlayMontageAndWaitTask->OnInterrupted.AddDynamic(this, &UAuraGameplayAbility_ProjectileSpell::MontageEndAbility);
@@ -50,13 +50,13 @@ void UAuraGameplayAbility_ProjectileSpell::TargetDataReceived(const FGameplayAbi
 	GameplayEventTask->Activate();
 }
 
-void UAuraGameplayAbility_ProjectileSpell::FireBoltEventReceived(FGameplayEventData Payload)
+void UAuraGameplayAbility_ProjectileSpell::ProjectileEventReceived(FGameplayEventData Payload)
 {
 	// Montage AttackTag Received
-	SpawnProjectile(FireBoltHitLocation);
+	SpawnProjectile(ProjectileHitResult.Location);
 }
 
-void UAuraGameplayAbility_ProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocation, bool bOverridePitch, float PitchOverride)
+void UAuraGameplayAbility_ProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocation)
 {
 	// Only on Server
 	if (!GetAvatarActorFromActorInfo()->HasAuthority()) return;
@@ -65,14 +65,11 @@ void UAuraGameplayAbility_ProjectileSpell::SpawnProjectile(const FVector& Projec
 	{
 		const FVector SpawnLocation = ICombatInterface::Execute_GetCombatSocketLocation(GetAvatarActorFromActorInfo(), DamageAbilityProperties.AttackSocketTag);
 		FRotator SpawnRotation = (ProjectileTargetLocation - SpawnLocation).Rotation();
-		if(bOverridePitch)
-		{
-			SpawnRotation.Pitch = PitchOverride;
-		}
+		if(bOverridePitch) SpawnRotation.Pitch = PitchOverride;
 		
 		FTransform SpawnTransform;
 		SpawnTransform.SetLocation(SpawnLocation);
-		SpawnTransform.SetRotation(SpawnRotation.Quaternion());		
+		SpawnTransform.SetRotation(SpawnRotation.Quaternion());
 
 		// Spawn Projectile Deferred
 		AAuraProjectile* Projectile = GetWorld()->SpawnActorDeferred<AAuraProjectile>(
@@ -83,7 +80,7 @@ void UAuraGameplayAbility_ProjectileSpell::SpawnProjectile(const FVector& Projec
 			ESpawnActorCollisionHandlingMethod::AlwaysSpawn
 			);
 		
-		Projectile->DamageEffectProperties = SetDamageEffectProperties();		
+		Projectile->DamageEffectProperties = SetDamageEffectProperties();	
 		Projectile->FinishSpawning(SpawnTransform);
 	}
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);

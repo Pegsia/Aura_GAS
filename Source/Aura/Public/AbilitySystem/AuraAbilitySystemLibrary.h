@@ -67,7 +67,14 @@ public:
 	
 	UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|GameplayMechanics")
 	static bool IsFriend(const AActor* FirstActor, const AActor* SecondActor);
-	
+
+	// Projectiles
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayMechanics")
+	static TArray<FRotator> EvenlySpacedRotators(const FVector& ForwardVector, const float& Spread, const int32& NumRotators, const FVector& Axis = FVector::UpVector);
+
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayMechanics")
+	static TArray<FVector> EvenlySpacedVectors(const FVector& ForwardVector, const float& Spread, const int32& NumVectors, const FVector& Axis = FVector::UpVector);
+
 	/* ------------------------------------------------------------
 	 * Aura Gameplay Effect Context Handle
 	 * ------------------------------------------------------------*/ 	

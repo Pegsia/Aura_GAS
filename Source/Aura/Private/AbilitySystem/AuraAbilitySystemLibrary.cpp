@@ -146,7 +146,11 @@ FGameplayEffectContextHandle UAuraAbilitySystemLibrary::ApplyDamageEffect(const 
 	FGameplayEffectContextHandle EffectContextHandle = DamageEffectProps.SourceASC->MakeEffectContext();
 	EffectContextHandle.AddSourceObject(DamageEffectProps.SourceASC->GetAvatarActor());
 	SetDeathImpulse(EffectContextHandle, DamageEffectProps.DeathImpulse);
-	SetKnockBackVector(EffectContextHandle, DamageEffectProps.KnockBackVector);
+	
+	const bool bKnockBack = FMath::RandRange(1, 100) < DamageEffectProps.KnockBackChance;
+	if(bKnockBack) SetKnockBackVector(EffectContextHandle, DamageEffectProps.KnockBackVector);
+	else SetKnockBackVector(EffectContextHandle, FVector::ZeroVector);
+	
 	FGameplayEffectSpecHandle EffectSpecHandle = DamageEffectProps.SourceASC->MakeOutgoingSpec(DamageEffectProps.DamageEffectClass, DamageEffectProps.AbilityLevel, EffectContextHandle);
 	
 	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(EffectSpecHandle, DamageEffectProps.DamageType, DamageEffectProps.BaseDamage);
@@ -184,6 +188,42 @@ bool UAuraAbilitySystemLibrary::IsFriend(const AActor* FirstActor, const AActor*
 	const bool bBothPlayers = FirstActor->ActorHasTag(ACTOR_TAG_PLAYER) && SecondActor->ActorHasTag(ACTOR_TAG_PLAYER);
 	const bool bBothEnemies = FirstActor->ActorHasTag(ACTOR_TAG_ENEMY)  && SecondActor->ActorHasTag(ACTOR_TAG_ENEMY);
 	return bBothPlayers || bBothEnemies;
+}
+
+TArray<FRotator> UAuraAbilitySystemLibrary::EvenlySpacedRotators(const FVector& ForwardVector, const float& Spread,	const int32& NumRotators, const FVector& Axis)
+{
+	TArray<FRotator> Rotators;
+	if(NumRotators <= 1) Rotators.Emplace(ForwardVector.Rotation());
+	else
+	{
+		const FVector LeftVector = ForwardVector.RotateAngleAxis(-Spread / 2.f, Axis);
+		
+		const float DeltaSpread = Spread / (NumRotators - 1);
+		for(int i = 0; i < NumRotators; ++i)
+		{
+			const FVector Direction = LeftVector.RotateAngleAxis(DeltaSpread * i, Axis);
+			Rotators.Emplace(Direction.Rotation());
+		}
+	}
+	return Rotators;
+}
+
+TArray<FVector> UAuraAbilitySystemLibrary::EvenlySpacedVectors(const FVector& ForwardVector, const float& Spread, const int32& NumVectors, const FVector& Axis)
+{
+	TArray<FVector> Vectors;
+	if(NumVectors <= 1) Vectors.Emplace(ForwardVector);
+	else
+	{
+		const FVector LeftVector = ForwardVector.RotateAngleAxis(-Spread / 2.f, Axis);
+		
+		const float DeltaSpread = Spread / (NumVectors - 1);
+		for(int i = 0; i < NumVectors; ++i)
+		{
+			const FVector Direction = LeftVector.RotateAngleAxis(DeltaSpread * i, Axis);
+			Vectors.Emplace(Direction);
+		}
+	}
+	return Vectors;
 }
 
 bool UAuraAbilitySystemLibrary::IsBlockedHit(const FGameplayEffectContextHandle& EffectContextHandle)

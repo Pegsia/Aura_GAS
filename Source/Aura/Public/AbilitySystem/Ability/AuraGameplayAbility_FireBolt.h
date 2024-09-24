@@ -16,12 +16,12 @@ class AURA_API UAuraGameplayAbility_FireBolt : public UAuraGameplayAbility_Proje
 
 protected:
 	
-	virtual void FireBoltEventReceived(FGameplayEventData Payload) override;
+	virtual void ProjectileEventReceived(FGameplayEventData Payload) override;
 	
 	UFUNCTION(BlueprintCallable)
-	void SpawnProjectiles(const FVector& ProjectileTargetLocation, AActor* HomingTarget, bool bOverridePitch = false, float PitchOverride = 0.f);
+	void SpawnProjectiles(const FVector& ProjectileTargetLocation, AActor* HomingTarget);
 
-	UPROPERTY(VisibleAnywhere, Category = "FireBolt")
+	UPROPERTY(EditDefaultsOnly, Category = "FireBolt")
 	int32 ProjectileNumber = 1;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "FireBolt")
@@ -29,6 +29,18 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "FireBolt")
 	float ProjectileSpread = 90.f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "FireBolt")
+	bool bLaunchHomingProjectiles = true;
+	
+	UPROPERTY()
+	TObjectPtr<USceneComponent> HomingTargetSceneComponent;
+
+	UPROPERTY(EditDefaultsOnly, Category = "FireBolt", meta = (EditCondition = "bLaunchHomingProjectiles"))
+	float MinHomingAcceleration = 2000.f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "FireBolt", meta = (EditCondition = "bLaunchHomingProjectiles"))
+	float MaxHomingAcceleration = 3200.f;
 	
 	//~ Begin AuraGameplayAbility Interface
 	virtual FString GetCurrentLevelDescription(const int32& AbilityLevel) override;

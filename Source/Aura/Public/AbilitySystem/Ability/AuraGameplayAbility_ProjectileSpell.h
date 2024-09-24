@@ -19,16 +19,22 @@ protected:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 
 	UFUNCTION(BlueprintCallable)
-	void SpawnProjectile(const FVector& ProjectileTargetLocation, bool bOverridePitch = false, float PitchOverride = 0.f);
-
+	void SpawnProjectile(const FVector& ProjectileTargetLocation);
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Projectile")
 	TSubclassOf<AAuraProjectile> ProjectileClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Projectile")
+	bool bOverridePitch = false;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Projectile", meta = (EditCondition = "bOverridePitch"))
+	float PitchOverride = 0.f;
 
 	UFUNCTION()
 	void TargetDataReceived(const FGameplayAbilityTargetDataHandle& DataHandle);
 
 	UFUNCTION()
-	virtual void FireBoltEventReceived(FGameplayEventData Payload);
+	virtual void ProjectileEventReceived(FGameplayEventData Payload);
 
-	FVector FireBoltHitLocation{};
+	FHitResult ProjectileHitResult;
 };
