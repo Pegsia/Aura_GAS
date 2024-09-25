@@ -83,5 +83,5 @@ void UAuraGameplayAbility_ProjectileSpell::SpawnProjectile(const FVector& Projec
 		Projectile->DamageEffectProperties = SetDamageEffectProperties();	
 		Projectile->FinishSpawning(SpawnTransform);
 	}
-	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
+	CancelAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true);
 }

@@ -57,6 +57,9 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	FVector GetCombatSocketLocation(const FGameplayTag& SocketTag);
 
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	USkeletalMeshComponent* GetWeapon();
+	
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void SetFacingWarpTarget(const FVector& FacingTarget);
 

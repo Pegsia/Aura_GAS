@@ -75,5 +75,5 @@ FDamageEffectProperties UAuraGameplayAbility_Damage::SetDamageEffectProperties(c
 
 void UAuraGameplayAbility_Damage::MontageEndAbility()
 {
-	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
+	CancelAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true);
 }

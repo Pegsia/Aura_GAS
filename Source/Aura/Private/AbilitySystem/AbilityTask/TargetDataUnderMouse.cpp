@@ -4,6 +4,7 @@
 #include "AbilitySystem/AbilityTask/TargetDataUnderMouse.h"
 #include "AbilitySystemComponent.h"
 #include "Abilities/GameplayAbilityTargetTypes.h"
+#include "Aura/Aura.h"
 
 UTargetDataUnderMouse* UTargetDataUnderMouse::CreateTargetDataUnderMouse(UGameplayAbility* OwningAbility)
 {
@@ -13,8 +14,7 @@ UTargetDataUnderMouse* UTargetDataUnderMouse::CreateTargetDataUnderMouse(UGamepl
 
 void UTargetDataUnderMouse::Activate()
 {
-	const bool bLocallyControlled = Ability->IsLocallyControlled();
-	if (bLocallyControlled)
+	if (Ability->IsLocallyControlled())
 	{
 		SendMouseTargetData();
 	}
@@ -36,15 +36,15 @@ void UTargetDataUnderMouse::Activate()
 	}	
 }
 
-void UTargetDataUnderMouse::SendMouseTargetData()
+void UTargetDataUnderMouse::SendMouseTargetData() const
 {
 	//To be called on server when a new prediction key is received from the client(In an RPC).
 	FScopedPredictionWindow ScopedPrediction(AbilitySystemComponent.Get());
 
 	APlayerController* PC = Ability->GetCurrentActorInfo()->PlayerController.Get();
 	FHitResult CursorHit;
-	PC->GetHitResultUnderCursor(ECC_Visibility, false, CursorHit);
-
+	PC->GetHitResultUnderCursor(ECC_CursorTarget, false, CursorHit);
+	
 	FGameplayAbilityTargetDataHandle DataHandle;
 	FGameplayAbilityTargetData_SingleTargetHit* Data = new FGameplayAbilityTargetData_SingleTargetHit();
 	Data->HitResult = CursorHit;
@@ -65,7 +65,7 @@ void UTargetDataUnderMouse::SendMouseTargetData()
 	}
 }
 
-void UTargetDataUnderMouse::OnTargetDataReplicatedCallBack(const FGameplayAbilityTargetDataHandle& DataHandle, FGameplayTag ActivationTag)
+void UTargetDataUnderMouse::OnTargetDataReplicatedCallBack(const FGameplayAbilityTargetDataHandle& DataHandle, FGameplayTag ActivationTag) const
 {
 	// 收到了来自客户端的广播，消耗掉存储的TargetData
 	// CachedData->TargetData.Clear();

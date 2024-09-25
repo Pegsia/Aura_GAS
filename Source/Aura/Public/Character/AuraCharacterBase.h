@@ -31,6 +31,7 @@ public:
 
 	//~ Begin ICombatInterface	
 	virtual FVector GetCombatSocketLocation_Implementation(const FGameplayTag& SocketTag) override;
+	virtual USkeletalMeshComponent* GetWeapon_Implementation() override;
 	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
 	virtual TArray<FTaggedMontage> GetAttackMontages_Implementation() override;
 	virtual FTaggedMontage GetTaggedMontageByMontageTag_Implementation(const FGameplayTag& Tag) override;
