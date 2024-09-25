@@ -38,7 +38,6 @@ protected:
 	//~ End APlayerController Interface
 
 private:
-
 	// Input Context
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputMappingContext> AuraContext;
@@ -71,14 +70,15 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<UAuraAbilitySystemComponent> AuraAbilitySystemComponent;
-
+	
+	// Can still be nullptr if we call this too early
 	UAuraAbilitySystemComponent* GetAuraASC();
 
 	// Click To Move
 	FVector CachedDestination = FVector::ZeroVector;
 	float FollowTime = 0.f;
 	float ShortPressThreshold = 0.5f;
-	float bTargeting = false;
+	bool bTargeting = false;
 
 	// Auto Run
 	bool bAutoRunning = false;

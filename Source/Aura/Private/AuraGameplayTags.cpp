@@ -119,7 +119,12 @@ void FAuraGameplayTags::AddAllTags(UGameplayTagsManager& Manager)
 	AddTag(Montage_Attack_2, "Montage.Attack.2", "Attack Type 2");
 	AddTag(Montage_Attack_3, "Montage.Attack.3", "Attack Type 3");
 	AddTag(Montage_Attack_4, "Montage.Attack.4", "Attack Type 4");
-	
+
+	// Player Block
+	AddTag(Player_Block_CursorTrace, "Player.Block.CursorTrace", "Block Tracing Under Cursor");
+	AddTag(Player_Block_InputHeld, "Player.Block.InputHeld", "Block Input Held Callback");
+	AddTag(Player_Block_InputPressed, "Player.Block.InputPressed", "Block Input Pressed Callback");
+	AddTag(Player_Block_InputReleased, "Player.Block.InputReleased", "Block Input Released Callback");
 }
 
 void FAuraGameplayTags::AddTag(FGameplayTag& OutTag, const ANSICHAR* TagName, const ANSICHAR* TagComment)

@@ -82,6 +82,13 @@ void AAuraPlayerController::AutoRun()
 
 void AAuraPlayerController::CursorTrace()
 {
+	if(GetAuraASC() && GetAuraASC()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Player_Block_CursorTrace))
+	{
+		if(LastEnemyActor) { LastEnemyActor->UnHighLightActor(); LastEnemyActor = nullptr;}
+		if(ThisEnemyActor) { ThisEnemyActor->UnHighLightActor(); ThisEnemyActor = nullptr;}
+		return;
+	}
+	
 	if (!GetHitResultUnderCursor(ECC_Visibility, false, CursorHit)) return;
 
 	// IEnemyInterface
@@ -108,6 +115,8 @@ void AAuraPlayerController::SetupInputComponent()
 
 void AAuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 {
+	if(GetAuraASC() && GetAuraASC()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Player_Block_InputPressed)) return;
+	
 	// 点击时判断是否正在攻击敌人
 	if (InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB))
 	{
@@ -115,26 +124,30 @@ void AAuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 		bAutoRunning = false;
 	}
 
-	if (GetAuraASC()) GetAuraASC()->AbilityInputPressed(InputTag);	
+	GetAuraASC()->AbilityInputPressed(InputTag);	
 }
 
 void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 {
+	if(GetAuraASC() && GetAuraASC()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Player_Block_InputReleased)) return;
+	
 	// Not Moving
 	if (!InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB))
 	{
-		if (GetAuraASC()) GetAuraASC()->AbilityInputReleased(InputTag);
+		GetAuraASC()->AbilityInputReleased(InputTag);
 		return;
 	}
 
-	if (GetAuraASC()) GetAuraASC()->AbilityInputReleased(InputTag);
+	GetAuraASC()->AbilityInputReleased(InputTag);
 
 	if (!bTargeting && !bShiftDown) // Not Targeting 
 	{
 		// Auto Running
+		if(GetAuraASC()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Player_Block_InputPressed)) return;
+		
 		const APawn* ControlledPawn = GetPawn();
 		if (FollowTime <= ShortPressThreshold && ControlledPawn)
-		{
+		{			
 			UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ClickNiagaraSystem, CachedDestination);
 			
 			// Need a NavMesh
@@ -160,16 +173,18 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 
 void AAuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag) // Tick
 {
+	if(GetAuraASC() && GetAuraASC()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Player_Block_InputHeld)) return;
+	
 	// Not Moving
 	if (!InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB))
 	{
-		if (GetAuraASC()) GetAuraASC()->AbilityInputHeld(InputTag);
+		GetAuraASC()->AbilityInputHeld(InputTag);
 		return;
 	}
 
 	if (bTargeting || bShiftDown) // Targeting || ShiftDown
 	{
-		if (GetAuraASC()) GetAuraASC()->AbilityInputHeld(InputTag);
+		GetAuraASC()->AbilityInputHeld(InputTag);
 	}
 	else           
 	{
@@ -193,6 +208,8 @@ void AAuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag) // Tick
 
 void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
 {
+	if(GetAuraASC() && GetAuraASC()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Player_Block_InputHeld)) return;
+	
 	bAutoRunning = false;
 	const FVector2D InputActionVector = InputActionValue.Get<FVector2D>();
 
@@ -213,5 +230,5 @@ UAuraAbilitySystemComponent* AAuraPlayerController::GetAuraASC()
 	{
 		AuraAbilitySystemComponent = Cast<UAuraAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetPawn<APawn>()));
 	}
-	return AuraAbilitySystemComponent; // Can still be nullptr if we call this too early
+	return AuraAbilitySystemComponent;
 }
