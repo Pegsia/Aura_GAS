@@ -214,6 +214,9 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 		DamageValue *= (100.f - ResistanceValue) / 100.f;		
 		Damage += DamageValue;
 	}
+
+	// Prevent further calc, otherwise Damage Can sometimes be SourceCriticalHitDamage in Line 236
+	if(Damage == 0) return;
 	
 	// if block half the damage
 	const bool bTargetBlocked = FMath::RandRange(1, 100) < TargetBlockChance;

@@ -27,6 +27,15 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void GetAdditionalTargets(TArray<AActor*>& AdditionalTargets);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void FirstTargetDead(AActor* TargetActor);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void AdditionalTargetDead(AActor* TargetActor);
+
+	UFUNCTION(BlueprintCallable)
+	void CommitCooldownAndEndAbility();
 protected:
 	UPROPERTY(BlueprintReadWrite, Category = "Beam")
 	FVector MouseHitLocation;

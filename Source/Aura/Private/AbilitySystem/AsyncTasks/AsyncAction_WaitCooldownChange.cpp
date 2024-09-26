@@ -16,7 +16,7 @@ UAsyncAction_WaitCooldownChange* UAsyncAction_WaitCooldownChange::WaitForCooldow
 	InAbilitySystemComponent->RegisterGameplayTagEvent(InCooldownTag, EGameplayTagEventType::NewOrRemoved).AddUObject(
 		WaitCooldownChangeObject, &UAsyncAction_WaitCooldownChange::OnCoolDownTagChanged);
 
-	// Cooldown has been applied
+	// Cooldown has been applied, 追踪GE总能捕捉到实现
 	InAbilitySystemComponent->OnActiveGameplayEffectAddedDelegateToSelf.AddUObject(
 		WaitCooldownChangeObject, &UAsyncAction_WaitCooldownChange::OnActiveGameplayEffectAdded);
 	

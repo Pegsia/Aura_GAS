@@ -7,6 +7,7 @@
 #include "AuraGameplayTags.h"
 #include "GameFramework/Character.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "AbilitySystemComponent.h"
 
 void UAuraGameplayAbility_BeamSpell::StoreMouseDataInfo(const FHitResult& HitResult)
 {
@@ -56,6 +57,14 @@ void UAuraGameplayAbility_BeamSpell::TraceFirstTarget(const FVector& BeamTarget)
 			MouseHitLocation = HitResult.Location;
 			MouseHitActor = HitResult.GetActor();
 		}
+
+		if(TScriptInterface<ICombatInterface> FirstCombatInterface = MouseHitActor)
+		{
+			if(!FirstCombatInterface->GetOnDeathDelegate().IsAlreadyBound(this, &UAuraGameplayAbility_BeamSpell::FirstTargetDead))
+			{
+				FirstCombatInterface->GetOnDeathDelegate().AddDynamic(this, &UAuraGameplayAbility_BeamSpell::FirstTargetDead);
+			}
+		}
 	}
 }
 
@@ -74,5 +83,24 @@ void UAuraGameplayAbility_BeamSpell::GetAdditionalTargets(TArray<AActor*>& Addit
 		AdditionalRadius.GetValueAtLevel(GetAbilityLevel()));
 
 	// Find AdditionalTargetNumber Closest Combat Target
-	UAuraAbilitySystemLibrary::GetClosestTargets(Origin, AdditionalTargetNumber, OverlappingActors, AdditionalTargets);
+	int32 TargetNumber = FMath::Min(AdditionalTargetNumber, GetAbilityLevel() - 1);
+	UAuraAbilitySystemLibrary::GetClosestTargets(Origin, TargetNumber, OverlappingActors, AdditionalTargets);
+
+	for (AActor* Target : AdditionalTargets)
+	{
+		if (TScriptInterface<ICombatInterface> AdditionalCombatInterface = Target)
+		{
+			if (!AdditionalCombatInterface->GetOnDeathDelegate().IsAlreadyBound(this, &UAuraGameplayAbility_BeamSpell::AdditionalTargetDead))
+			{
+				AdditionalCombatInterface->GetOnDeathDelegate().AddDynamic(this, &UAuraGameplayAbility_BeamSpell::AdditionalTargetDead);
+			}
+		}
+	}
+}
+
+void UAuraGameplayAbility_BeamSpell::CommitCooldownAndEndAbility()
+{
+	CommitAbilityCooldown(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, false);
+	CurrentActorInfo->AbilitySystemComponent->NotifyAbilityCommit(this);
+	CancelAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true);
 }

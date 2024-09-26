@@ -77,3 +77,8 @@ void UAuraGameplayAbility_Damage::MontageEndAbility()
 {
 	CancelAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true);
 }
+
+float UAuraGameplayAbility_Damage::GetDamageAmountAtAbilityLevel() const
+{
+	return DamageAmount.GetValueAtLevel(GetAbilityLevel());
+}
