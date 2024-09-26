@@ -163,7 +163,7 @@ FGameplayEffectContextHandle UAuraAbilitySystemLibrary::ApplyDamageEffect(const 
 	return EffectContextHandle;
 }
 
-void UAuraAbilitySystemLibrary::GetLivePlayersWithinRadius(const UObject* WorldContextObject, TArray<AActor*>& OutOverlappedActors, const TArray<AActor*> ActorsToIgnore, const FVector& SphereOrigin, float Radius)
+void UAuraAbilitySystemLibrary::GetLivePlayersWithinRadius(const UObject* WorldContextObject, TArray<AActor*>& OutOverlappedActors, const TArray<AActor*>& ActorsToIgnore, const FVector& SphereOrigin, float Radius)
 {
 	FCollisionQueryParams QueryParams;
 	QueryParams.AddIgnoredActors(ActorsToIgnore);
@@ -180,6 +180,22 @@ void UAuraAbilitySystemLibrary::GetLivePlayersWithinRadius(const UObject* WorldC
 				OutOverlappedActors.AddUnique(ICombatInterface::Execute_GetAvatar(Overlap.GetActor()));
 			}			
 		}
+	}
+}
+
+void UAuraAbilitySystemLibrary::GetClosestTargets(const FVector& Origin, const int32& MaxTargets, const TArray<AActor*>& Targets, TArray<AActor*>& OutClosestTargets)
+{
+	if(Targets.IsEmpty() || MaxTargets == 0) return;
+	
+	TArray<AActor*> SortedActors = Targets;
+	Algo::Sort(SortedActors, [Origin](const AActor* ActorA, const AActor* ActorB)
+	{
+		return FVector::DistSquared(ActorA->GetActorLocation(), Origin) < FVector::DistSquared(ActorB->GetActorLocation(), Origin);
+	});
+	
+	for (int32 i = 0; i < FMath::Min(Targets.Num(), MaxTargets); ++i)
+	{
+		OutClosestTargets.Add(SortedActors[i]);
 	}
 }
 

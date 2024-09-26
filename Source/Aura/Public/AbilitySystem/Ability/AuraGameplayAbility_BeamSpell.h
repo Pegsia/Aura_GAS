@@ -20,7 +20,13 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	void StoreOwnerPlayerProperties();
-	
+
+	// Sphere trace to find first hit target 
+	UFUNCTION(BlueprintCallable)
+	void TraceFirstTarget(const FVector& BeamTarget);
+
+	UFUNCTION(BlueprintCallable)
+	void GetAdditionalTargets(TArray<AActor*>& AdditionalTargets);
 protected:
 	UPROPERTY(BlueprintReadWrite, Category = "Beam")
 	FVector MouseHitLocation;
@@ -33,4 +39,10 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, Category = "Beam")
 	TObjectPtr<ACharacter> OwnerCharacter;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Beam")
+	FScalableFloat AdditionalRadius;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Beam")
+	int32 AdditionalTargetNumber = 5;
 };
