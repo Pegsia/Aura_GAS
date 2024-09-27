@@ -48,11 +48,10 @@ public:
 	// Effects
 	UPROPERTY(BlueprintReadOnly, Category = "Combat")
 	bool bHitReacting = false;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat")
-	float BaseWalkSpeed = 250.f;
 	
 	void HitReactTagChanged(const FGameplayTag CallBackTag, int32 TagCount);
+
+	virtual void StunTagChanged(const FGameplayTag CallbackTag, int32 TagCount) override;
 
 	UPROPERTY(BlueprintReadWrite, Category = "Combat")
 	TObjectPtr<AActor> CombatTarget;
@@ -64,9 +63,13 @@ public:
 	// Behavior
 	UPROPERTY(VisibleAnywhere)
 	FName HitReactingKey = "HitReacting";
-
+	
+	UPROPERTY(VisibleAnywhere)
+	FName StunnedKey = "Stunned";
+	
 	UPROPERTY(VisibleAnywhere)
 	FName RangedAttackerKey = "RangedAttacker";
+	
 protected:
 	//~ Begin AuraCharacterBase Interface
 	virtual void InitialAbilityActorInfo() override;

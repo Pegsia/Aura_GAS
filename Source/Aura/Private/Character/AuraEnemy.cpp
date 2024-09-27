@@ -39,6 +39,8 @@ AAuraEnemy::AAuraEnemy()
 	Tags.Emplace(ACTOR_TAG_ENEMY);
 
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+
+	BaseWalkSpeed = 250.f;
 }
 
 void AAuraEnemy::PossessedBy(AController* NewController)
@@ -77,8 +79,13 @@ void AAuraEnemy::InitialAbilityActorInfo()
 
 void AAuraEnemy::InitEffects()
 {
-	AbilitySystemComponent->RegisterGameplayTagEvent(FAuraGameplayTags::Get().Effects_HitReact, EGameplayTagEventType::NewOrRemoved).AddUObject(
+	const FAuraGameplayTags& AuraTags = FAuraGameplayTags::Get();
+	AbilitySystemComponent->RegisterGameplayTagEvent(AuraTags.Effects_HitReact, EGameplayTagEventType::NewOrRemoved).AddUObject(
 		this, &AAuraEnemy::HitReactTagChanged
+	);
+
+	AbilitySystemComponent->RegisterGameplayTagEvent(AuraTags.Debuff_Stun, EGameplayTagEventType::NewOrRemoved).AddUObject(
+		this, &AAuraEnemy::StunTagChanged
 	);
 }
 
@@ -88,6 +95,13 @@ void AAuraEnemy::HitReactTagChanged(const FGameplayTag CallBackTag, int32 TagCou
 	GetCharacterMovement()->MaxWalkSpeed = bHitReacting ? 0.f : BaseWalkSpeed;
 	if(!HasAuthority()) return;
 	AuraAIController->GetBlackboardComponent()->SetValueAsBool(HitReactingKey, bHitReacting);
+}
+
+void AAuraEnemy::StunTagChanged(const FGameplayTag CallbackTag, int32 TagCount)
+{
+	Super::StunTagChanged(CallbackTag, TagCount);
+	if(!HasAuthority()) return;
+	AuraAIController->GetBlackboardComponent()->SetValueAsBool(StunnedKey, bIsStunned);
 }
 
 void AAuraEnemy::InitHealthBar()

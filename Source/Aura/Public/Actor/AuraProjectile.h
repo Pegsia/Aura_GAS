@@ -22,14 +22,15 @@ public:
 	UPROPERTY(BlueprintReadWrite, meta = (ExposeOnSpawn = true))
 	FDamageEffectProperties DamageEffectProperties;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UProjectileMovementComponent> MovementComponent;
 	
 protected:
-	virtual void BeginPlay() override;
-	void OnHit();
+	virtual void BeginPlay() override;	
 	virtual void Destroyed() override;
 
+	void OnHit();
+	
 	UFUNCTION()
 	void OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 private:

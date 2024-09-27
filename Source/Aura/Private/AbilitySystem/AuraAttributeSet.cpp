@@ -149,7 +149,6 @@ void UAuraAttributeSet::HandleIncomingDamage(const FEffectProperties& Props)
 
 void UAuraAttributeSet::HandleDebuff(const FEffectProperties& Props)
 {
-	// TODO: Make Effect Context
 	// Make Gameplay Effect, Set Effect Props
 	// Make Mutable Effect Spec
 	FGameplayEffectContextHandle DebuffContextHandle = Props.SourceASC->MakeEffectContext();
@@ -180,7 +179,17 @@ void UAuraAttributeSet::HandleDebuff(const FEffectProperties& Props)
 	// Miscellaneous
 	DebuffEffect->StackingType = EGameplayEffectStackingType::AggregateByTarget;
 	DebuffEffect->StackLimitCount = 1;
-	DebuffEffect->InheritableOwnedTagsContainer.AddTag(FAuraGameplayTags::Get().DamageTypesToDebuffs[DamageType]);
+
+	const FAuraGameplayTags& AuraTags = FAuraGameplayTags::Get();
+	const FGameplayTag& DebuffTag = AuraTags.DamageTypesToDebuffs[DamageType];
+	DebuffEffect->InheritableOwnedTagsContainer.AddTag(DebuffTag);
+	if(DebuffTag.MatchesTagExact(AuraTags.Debuff_Stun)) // Block Input
+	{
+		DebuffEffect->InheritableOwnedTagsContainer.AddTag(AuraTags.Player_Block_CursorTrace);
+		DebuffEffect->InheritableOwnedTagsContainer.AddTag(AuraTags.Player_Block_InputHeld);
+		DebuffEffect->InheritableOwnedTagsContainer.AddTag(AuraTags.Player_Block_InputPressed);
+		DebuffEffect->InheritableOwnedTagsContainer.AddTag(AuraTags.Player_Block_InputReleased);
+	}
 
 	if(const FGameplayEffectSpec* DebuffSpec = new FGameplayEffectSpec(DebuffEffect, DebuffContextHandle, 1.f))
 	{

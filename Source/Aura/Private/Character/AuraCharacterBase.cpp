@@ -8,7 +8,9 @@
 #include "AuraAbilitySystemLibrary.h"
 #include "AuraGameplayTags.h"
 #include "Debuff/AuraDebuffNiagaraComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Net/UnrealNetwork.h"
 
 AAuraCharacterBase::AAuraCharacterBase()
 {
@@ -98,6 +100,16 @@ void AAuraCharacterBase::Dissolve()
 		Weapon->SetMaterial(0, WeaponMaterialInstanceDynamic);
 		StartWeaponDissolveTimeLine(WeaponMaterialInstanceDynamic);
 	}
+}
+
+void AAuraCharacterBase::StunTagChanged(const FGameplayTag CallbackTag, int32 TagCount)
+{
+	bIsStunned = TagCount > 0;
+	GetCharacterMovement()->MaxWalkSpeed = bIsStunned ? 0.f : BaseWalkSpeed;
+}
+
+void AAuraCharacterBase::OnRep_Stunned()
+{
 }
 
 FTaggedMontage AAuraCharacterBase::GetTaggedMontageByMontageTag_Implementation(const FGameplayTag& Tag)
@@ -192,4 +204,10 @@ TArray<FTaggedMontage> AAuraCharacterBase::GetAttackMontages_Implementation()
 UAbilitySystemComponent* AAuraCharacterBase::GetAbilitySystemComponent() const
 {
 	return AbilitySystemComponent;
+}
+
+void AAuraCharacterBase::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(AAuraCharacterBase, bIsStunned);
 }

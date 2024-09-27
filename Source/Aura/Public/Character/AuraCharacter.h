@@ -40,6 +40,8 @@ public:
 	//~ End ICombatInterface
 
 protected:
+	virtual void OnRep_Stunned() override;
+	
 	UPROPERTY(VisibleAnywhere, Category = "Component")
 	TObjectPtr<UCameraComponent> CameraComponent;
 

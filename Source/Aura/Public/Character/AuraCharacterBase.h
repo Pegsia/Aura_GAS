@@ -130,6 +130,17 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat")
 	TObjectPtr<UAuraDebuffNiagaraComponent> BurnDebuffNiagaraComponent;
 
+	// Effects
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat")
+	float BaseWalkSpeed = 600.f;
+	
+	UPROPERTY(ReplicatedUsing = "OnRep_Stunned", BlueprintReadOnly, Category = "Combat")
+	bool bIsStunned;
+
+	virtual void StunTagChanged(const FGameplayTag CallbackTag, int32 TagCount);
+
+	UFUNCTION()
+	virtual void OnRep_Stunned();
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Ability")
 	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;

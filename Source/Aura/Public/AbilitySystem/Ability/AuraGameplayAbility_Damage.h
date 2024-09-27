@@ -21,6 +21,10 @@ public:
 
 	UFUNCTION(BlueprintPure, BlueprintCallable)
 	float GetDamageAmountAtAbilityLevel() const;
+
+	// For Debuffs
+	UFUNCTION(BlueprintCallable)
+	FDamageEffectProperties SetDamageEffectProperties(const AActor* TargetActor = nullptr) const;
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")
 	FGameplayTag DamageType;
@@ -50,7 +54,7 @@ protected:
 	float KnockBackChance = 20.f;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")
-	float KnockBackMagnitude = 60.f;
+	float KnockBackMagnitude = 600.f;
 	
 	UFUNCTION(BlueprintPure)
 	FTaggedMontage GetRandomTaggedMontageFromArray(const TArray<FTaggedMontage>& TaggedMontagesArray) const;
@@ -58,9 +62,6 @@ protected:
 	// For Async Tasks
 	FDamageAbilityProperties DamageAbilityProperties;
 	bool SetDamageAbilityProperties();
-
-	// For Debuffs
-	FDamageEffectProperties SetDamageEffectProperties(const AActor* TargetActor = nullptr) const;
 	
 	UFUNCTION()
 	void MontageEndAbility();
