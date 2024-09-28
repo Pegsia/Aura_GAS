@@ -40,6 +40,7 @@ public:
 	//~ End ICombatInterface
 
 protected:
+	virtual void OnRep_Burned() override;
 	virtual void OnRep_Stunned() override;
 	
 	UPROPERTY(VisibleAnywhere, Category = "Component")

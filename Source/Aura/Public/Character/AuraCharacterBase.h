@@ -44,6 +44,8 @@ public:
 	virtual ECharacterClass GetCharacterClass_Implementation() override;
 	virtual FOnASCRegisteredSignature& GetOnAscRegisteredDelegate() override;
 	virtual FOnDeathSignature& GetOnDeathDelegate() override;
+	virtual bool GetIsShocked_Implementation() const override;
+	virtual void SetIsShocked_Implementation(bool InIsShocked) override;
 	//~ End ICombatInterface
 
 	FOnASCRegisteredSignature OnASCRegisteredDelegate;
@@ -127,20 +129,32 @@ protected:
 	int32 MinionCount = 0;
 
 	// Debuff
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Debuff")
 	TObjectPtr<UAuraDebuffNiagaraComponent> BurnDebuffNiagaraComponent;
 
-	// Effects
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat")
-	float BaseWalkSpeed = 600.f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Debuff")
+	TObjectPtr<UAuraDebuffNiagaraComponent> StunDebuffNiagaraComponent;
 	
-	UPROPERTY(ReplicatedUsing = "OnRep_Stunned", BlueprintReadOnly, Category = "Combat")
-	bool bIsStunned;
+	// Effects
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Debuff")
+	float BaseWalkSpeed = 600.f;
+
+	UPROPERTY(ReplicatedUsing = "OnRep_Burned", BlueprintReadOnly, Category = "Debuff")
+	bool bIsBurned = false;
+
+	UFUNCTION()
+	virtual void OnRep_Burned();
+	
+	UPROPERTY(ReplicatedUsing = "OnRep_Stunned", BlueprintReadOnly, Category = "Debuff")
+	bool bIsStunned = false;
 
 	virtual void StunTagChanged(const FGameplayTag CallbackTag, int32 TagCount);
 
 	UFUNCTION()
 	virtual void OnRep_Stunned();
+
+	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Debuff")
+	bool bIsShocked = false;
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Ability")
 	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;

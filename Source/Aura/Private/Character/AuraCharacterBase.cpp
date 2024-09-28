@@ -29,6 +29,10 @@ AAuraCharacterBase::AAuraCharacterBase()
 	BurnDebuffNiagaraComponent = CreateDefaultSubobject<UAuraDebuffNiagaraComponent>("DebuffNiagara");
 	BurnDebuffNiagaraComponent->SetupAttachment(GetRootComponent());
 	BurnDebuffNiagaraComponent->DebuffTag = FAuraGameplayTags::Get().Debuff_Burn;
+
+	StunDebuffNiagaraComponent = CreateDefaultSubobject<UAuraDebuffNiagaraComponent>("StunDebuffNiagara");
+	StunDebuffNiagaraComponent->SetupAttachment(GetRootComponent());
+	StunDebuffNiagaraComponent->DebuffTag = FAuraGameplayTags::Get().Debuff_Stun;
 }
 
 void AAuraCharacterBase::BeginPlay()
@@ -100,6 +104,10 @@ void AAuraCharacterBase::Dissolve()
 		Weapon->SetMaterial(0, WeaponMaterialInstanceDynamic);
 		StartWeaponDissolveTimeLine(WeaponMaterialInstanceDynamic);
 	}
+}
+
+void AAuraCharacterBase::OnRep_Burned()
+{
 }
 
 void AAuraCharacterBase::StunTagChanged(const FGameplayTag CallbackTag, int32 TagCount)
@@ -191,6 +199,16 @@ FOnDeathSignature& AAuraCharacterBase::GetOnDeathDelegate()
 	return OnDeathDelegate;
 }
 
+bool AAuraCharacterBase::GetIsShocked_Implementation() const
+{
+	return bIsShocked;
+}
+
+void AAuraCharacterBase::SetIsShocked_Implementation(bool InIsShocked)
+{
+	bIsShocked = InIsShocked;
+}
+
 UAnimMontage* AAuraCharacterBase::GetHitReactMontage_Implementation()
 {
 	return HitReactMontage;
@@ -210,4 +228,6 @@ void AAuraCharacterBase::GetLifetimeReplicatedProps(TArray<class FLifetimeProper
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(AAuraCharacterBase, bIsStunned);
+	DOREPLIFETIME(AAuraCharacterBase, bIsBurned);
+	DOREPLIFETIME(AAuraCharacterBase, bIsShocked);
 }

@@ -14,6 +14,7 @@
 #include "MotionWarpingComponent.h"
 #include "Aura/Aura.h"
 #include "NiagaraComponent.h"
+#include "Debuff/AuraDebuffNiagaraComponent.h"
 
 AAuraCharacter::AAuraCharacter()
 {
@@ -116,6 +117,18 @@ int32 AAuraCharacter::GetPlayerLevel_Implementation() // ExecCalc, MMC
 	return GetAuraPSChecked()->GetPlayerLevel();
 }
 
+void AAuraCharacter::OnRep_Burned()
+{
+	if(bIsBurned)
+	{
+		BurnDebuffNiagaraComponent->Activate();
+	}
+	else
+	{
+		BurnDebuffNiagaraComponent->Deactivate();
+	}
+}
+
 void AAuraCharacter::OnRep_Stunned()
 {
 	if(UAuraAbilitySystemComponent* AuraASC = Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent))
@@ -129,10 +142,12 @@ void AAuraCharacter::OnRep_Stunned()
 		if(bIsStunned)
 		{
 			AuraASC->AddLooseGameplayTags(BlockedTags);
+			StunDebuffNiagaraComponent->Activate();
 		}
 		else
 		{
 			AuraASC->RemoveLooseGameplayTags(BlockedTags);
+			StunDebuffNiagaraComponent->Deactivate();
 		}
 	}
 }

@@ -36,6 +36,8 @@ AAuraProjectile::AAuraProjectile()
 void AAuraProjectile::BeginPlay()
 {
 	Super::BeginPlay();
+
+	SetReplicatingMovement(true);
 	SetLifeSpan(LifeSpan);
 
 	SphereComponent->IgnoreActorWhenMoving(GetInstigator(), true); // ignoreInstigator

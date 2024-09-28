@@ -96,4 +96,11 @@ public:
 	virtual FOnASCRegisteredSignature& GetOnAscRegisteredDelegate() = 0;
 	virtual FOnDeathSignature& GetOnDeathDelegate() = 0;
 
+	// Debuff
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	bool GetIsShocked() const;
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void SetIsShocked(bool InIsShocked);
+
 };
