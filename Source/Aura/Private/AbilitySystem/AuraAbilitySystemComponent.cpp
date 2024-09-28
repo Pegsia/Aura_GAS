@@ -244,7 +244,7 @@ void UAuraAbilitySystemComponent::ClientUpdateAbilityStatus_Implementation(const
 
 void UAuraAbilitySystemComponent::ServerEquipAbility_Implementation(const FGameplayTag& AbilityTag,	const FGameplayTag& InputTag)
 {
-	// TODO: Find Current Ability State and Input Tag, Reset State and Input Tag
+	// Find Current Ability State and Input Tag, Reset State and Input Tag
 	// If this **Selected Spell Button** Ability a valid ability
 	if(FGameplayAbilitySpec* AbilitySpec = GetSpecFormAbilityTag(AbilityTag))
 	{

@@ -11,6 +11,7 @@ DECLARE_MULTICAST_DELEGATE(FAbilityGivenSignature);
 DECLARE_DELEGATE_OneParam(FForEachAbilitySignature, const FGameplayAbilitySpec&);
 DECLARE_MULTICAST_DELEGATE_ThreeParams(FAbilityStatusChangedSignature, const FGameplayTag& /*Ability Tag*/, const FGameplayTag& /*Status Tag*/, int32 /*AbilityLevel*/);
 DECLARE_MULTICAST_DELEGATE_FourParams(FAbilityEquipSignature, const FGameplayTag& /*Ability Tag*/, const FGameplayTag& /*Status Tag*/, const FGameplayTag& /*Slot*/, const FGameplayTag& /*Previous Slot*/);
+DECLARE_MULTICAST_DELEGATE_OneParam(FDeactivatePassiveAbilitySignature, const FGameplayTag& /*Ability Tag*/)
 
 UCLASS()
 class AURA_API UAuraAbilitySystemComponent : public UAbilitySystemComponent
@@ -22,6 +23,7 @@ public:
 	FAbilityGivenSignature AbilityGivenDelegate;	   // Spells Globe
 	FAbilityStatusChangedSignature AbilityStatusChangedDelegate; // Spell Menu
 	FAbilityEquipSignature AbilityEquipSignature; // Spell Menu
+	FDeactivatePassiveAbilitySignature DeactivatePassiveAbilityDelegate; // AuraGA_Passive
 	
 	void AbilityActorInfoSet();
 	

@@ -84,7 +84,7 @@ void FAuraGameplayTags::AddAllTags(UGameplayTagsManager& Manager)
 	// Effects
 	AddTag(Effects_HitReact, "Effects.HitReact", "Enemies React to Hit");
 
-	// Abilities
+	// Offensive Abilities
 	AddTag(Abilities_None, "Abilities.None", "None Ability Tag");
 	AddTag(Abilities_Attack, "Abilities.Attack", "Attack Ability Tag");
 	AddTag(Abilities_Summon, "Abilities.Summon", "Summon Ability Tag");
@@ -93,6 +93,11 @@ void FAuraGameplayTags::AddAllTags(UGameplayTagsManager& Manager)
 	AddTag(Abilities_Fire_FireBolt, "Abilities.Fire.FireBolt", "FireBolt Ability Tag");
 
 	AddTag(Abilities_Lightning_Electrocute, "Abilities.Lightning.Electrocute", "Electrocute Ability Tag");
+
+	// Passive Abilities
+	AddTag(Abilities_Passive_LifeSiphon, "Abilities.Passive.LifeSiphon", "Life Siphon");
+	AddTag(Abilities_Passive_ManaSiphon, "Abilities.Passive.ManaSiphon", "Mana Siphon");
+	AddTag(Abilities_Passive_HaloOfProtection, "Abilities.Passive.HaloOfProtection", "Halo Of Protection");
 	
 	// Abilities Cooldown
 	AddTag(Cooldown_Fire_FireBolt, "Cooldown.Fire.FireBolt", "FireBolt Cooldown Tag");

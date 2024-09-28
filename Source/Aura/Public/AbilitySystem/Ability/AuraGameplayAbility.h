@@ -25,4 +25,7 @@ public:
 
 	float GetManaCost(const int32& AbilityLevel) const;
 	float GetCooldown(const int32& AbilityLevel) const;
+
+	UFUNCTION()
+	void InternalEndAbility();
 };

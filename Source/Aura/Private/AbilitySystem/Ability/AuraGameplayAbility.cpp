@@ -45,3 +45,8 @@ float UAuraGameplayAbility::GetCooldown(const int32& AbilityLevel) const
 	}
 	return Cooldown;
 }
+
+void UAuraGameplayAbility::InternalEndAbility()
+{
+	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, true);
+}

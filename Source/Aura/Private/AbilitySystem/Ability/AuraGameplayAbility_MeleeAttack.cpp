@@ -22,10 +22,10 @@ void UAuraGameplayAbility_MeleeAttack::ActivateAbility(const FGameplayAbilitySpe
 		UAbilityTask_WaitGameplayEvent* GameplayEventTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, DamageAbilityProperties.AttackMontageTag);
 
 		GameplayEventTask->OnlyTriggerOnce = true;
-		GameplayEventTask->EventReceived.AddDynamic(this, &ThisClass::MeleeEventReceived);
-		PlayMontageAndWaitTask->OnCancelled.AddDynamic(this, &ThisClass::MontageEndAbility);
-		PlayMontageAndWaitTask->OnCompleted.AddDynamic(this, &ThisClass::MontageEndAbility);
-		PlayMontageAndWaitTask->OnInterrupted.AddDynamic(this, &ThisClass::MontageEndAbility);
+		GameplayEventTask->EventReceived.AddDynamic(this, &UAuraGameplayAbility_MeleeAttack::MeleeEventReceived);
+		PlayMontageAndWaitTask->OnCancelled.AddDynamic(this, &UAuraGameplayAbility_MeleeAttack::InternalEndAbility);
+		PlayMontageAndWaitTask->OnCompleted.AddDynamic(this, &UAuraGameplayAbility_MeleeAttack::InternalEndAbility);
+		PlayMontageAndWaitTask->OnInterrupted.AddDynamic(this, &UAuraGameplayAbility_MeleeAttack::InternalEndAbility);
 		
 		PlayMontageAndWaitTask->Activate();
 		GameplayEventTask->Activate();
@@ -70,6 +70,6 @@ void UAuraGameplayAbility_MeleeAttack::MeleeEventReceived(FGameplayEventData Pay
 		CueParameters.AggregatedSourceTags.AddTag(DamageAbilityProperties.AttackMontageTag);
 		AbilitySystemComponent->ExecuteGameplayCue(MeleeImpactCueTag, CueParameters);
 	}
-	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);	
+	InternalEndAbility();
 }
 

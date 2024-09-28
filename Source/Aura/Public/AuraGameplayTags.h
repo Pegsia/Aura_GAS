@@ -77,7 +77,7 @@ public:
 	// Effect
 	FGameplayTag Effects_HitReact;
 
-	// Abilities
+	// Offensive Abilities
 	FGameplayTag Abilities_None;
 	FGameplayTag Abilities_Attack;
 	FGameplayTag Abilities_Summon;
@@ -86,6 +86,11 @@ public:
 	FGameplayTag Abilities_Fire_FireBolt;
 
 	FGameplayTag Abilities_Lightning_Electrocute;
+
+	// Passive Abilities
+	FGameplayTag Abilities_Passive_LifeSiphon;
+	FGameplayTag Abilities_Passive_ManaSiphon;
+	FGameplayTag Abilities_Passive_HaloOfProtection;
 
 	// Abilities Cooldown
 	FGameplayTag Cooldown_Fire_FireBolt;

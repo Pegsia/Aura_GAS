@@ -42,9 +42,9 @@ void UAuraGameplayAbility_ProjectileSpell::TargetDataReceived(const FGameplayAbi
 
 	GameplayEventTask->OnlyTriggerOnce = true;
 	GameplayEventTask->EventReceived.AddDynamic(this, &UAuraGameplayAbility_ProjectileSpell::ProjectileEventReceived);
-	PlayMontageAndWaitTask->OnCancelled.AddDynamic(this, &UAuraGameplayAbility_ProjectileSpell::MontageEndAbility);
-	PlayMontageAndWaitTask->OnCompleted.AddDynamic(this, &UAuraGameplayAbility_ProjectileSpell::MontageEndAbility);
-	PlayMontageAndWaitTask->OnInterrupted.AddDynamic(this, &UAuraGameplayAbility_ProjectileSpell::MontageEndAbility);
+	PlayMontageAndWaitTask->OnCancelled.AddDynamic(this, &UAuraGameplayAbility_ProjectileSpell::InternalEndAbility);
+	PlayMontageAndWaitTask->OnCompleted.AddDynamic(this, &UAuraGameplayAbility_ProjectileSpell::InternalEndAbility);
+	PlayMontageAndWaitTask->OnInterrupted.AddDynamic(this, &UAuraGameplayAbility_ProjectileSpell::InternalEndAbility);
 		
 	PlayMontageAndWaitTask->Activate();
 	GameplayEventTask->Activate();
@@ -83,5 +83,5 @@ void UAuraGameplayAbility_ProjectileSpell::SpawnProjectile(const FVector& Projec
 		Projectile->DamageEffectProperties = SetDamageEffectProperties();	
 		Projectile->FinishSpawning(SpawnTransform);
 	}
-	CancelAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true);
+	InternalEndAbility();
 }

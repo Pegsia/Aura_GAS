@@ -62,7 +62,4 @@ protected:
 	// For Async Tasks
 	FDamageAbilityProperties DamageAbilityProperties;
 	bool SetDamageAbilityProperties();
-	
-	UFUNCTION()
-	void MontageEndAbility();
 };
