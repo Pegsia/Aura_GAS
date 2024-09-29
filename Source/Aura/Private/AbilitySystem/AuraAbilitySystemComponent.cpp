@@ -118,6 +118,7 @@ void UAuraAbilitySystemComponent::AbilityInputPressed(const FGameplayTag& InputT
 {
 	if (!InputTag.IsValid()) return;
 
+	ABILITYLIST_SCOPE_LOCK();
 	for (FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
 	{
 		if (AbilitySpec.DynamicAbilityTags.HasTagExact(InputTag))
@@ -137,6 +138,7 @@ void UAuraAbilitySystemComponent::AbilityInputHeld(const FGameplayTag& InputTag)
 {
 	if (!InputTag.IsValid()) return;
 
+	ABILITYLIST_SCOPE_LOCK();
 	for (FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
 	{
 		if (AbilitySpec.DynamicAbilityTags.HasTagExact(InputTag))
@@ -154,6 +156,7 @@ void UAuraAbilitySystemComponent::AbilityInputReleased(const FGameplayTag& Input
 {
 	if (!InputTag.IsValid()) return;
 
+	ABILITYLIST_SCOPE_LOCK();
 	for (FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
 	{
 		if (AbilitySpec.DynamicAbilityTags.HasTagExact(InputTag) && AbilitySpec.IsActive())
@@ -162,6 +165,17 @@ void UAuraAbilitySystemComponent::AbilityInputReleased(const FGameplayTag& Input
 			InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputReleased, AbilitySpec.Handle, AbilitySpec.ActivationInfo.GetActivationPredictionKey());
 		}
 	}
+}
+
+bool UAuraAbilitySystemComponent::IsPassiveAbility(const FGameplayTag& AbilityTag) const
+{
+	const UAbilityInfo* AbilityInfo = UAuraAbilitySystemLibrary::GetAbilityInfo(GetAvatarActor());
+	return AbilityInfo->FindAbilityInfoByAbilityTag(AbilityTag).AbilityTypeTag.MatchesTagExact(FAuraGameplayTags::Get().Abilities_Type_Passive);
+}
+
+bool UAuraAbilitySystemComponent::AbilityHasEquipped(const FGameplayAbilitySpec& Spec) const
+{
+	return Spec.DynamicAbilityTags.HasTag(FGameplayTag::RequestGameplayTag(FName("InputTag")));
 }
 
 void UAuraAbilitySystemComponent::UpdateAttribute(const FGameplayTag& AttributeTag)
@@ -188,6 +202,21 @@ FGameplayAbilitySpec* UAuraAbilitySystemComponent::GetSpecFormAbilityTag(const F
 			{
 				return &Spec;
 			}
+		}
+	}
+	return nullptr;
+}
+
+FGameplayAbilitySpec* UAuraAbilitySystemComponent::GetSpecFormInputTag(const FGameplayTag& InputTag)
+{
+	if(!InputTag.IsValid()) return nullptr;
+	
+	ABILITYLIST_SCOPE_LOCK();
+	for(FGameplayAbilitySpec& Spec : GetActivatableAbilities())
+	{
+		if(Spec.DynamicAbilityTags.HasTagExact(InputTag))
+		{
+			return &Spec;
 		}
 	}
 	return nullptr;
@@ -242,39 +271,73 @@ void UAuraAbilitySystemComponent::ClientUpdateAbilityStatus_Implementation(const
 	AbilityStatusChangedDelegate.Broadcast(AbilityTag, StatusTag, AbilityLevel);
 }
 
-void UAuraAbilitySystemComponent::ServerEquipAbility_Implementation(const FGameplayTag& AbilityTag,	const FGameplayTag& InputTag)
+void UAuraAbilitySystemComponent::ServerEquipAbility_Implementation(const FGameplayTag& NewAbilityTag,	const FGameplayTag& NewInputTag)
 {
-	// Find Current Ability State and Input Tag, Reset State and Input Tag
-	// If this **Selected Spell Button** Ability a valid ability
-	if(FGameplayAbilitySpec* AbilitySpec = GetSpecFormAbilityTag(AbilityTag))
+	/* Remove OldAbility, Equip NewAbility 
+	   (1). Update Input Tag (2). Update Ability State */
+	
+	// New Ability is Activatable, i.e. we have already given the ability, we do this in UpdateAbilityStatuses
+	if(FGameplayAbilitySpec* NewAbilitySpec = GetSpecFormAbilityTag(NewAbilityTag))
 	{
 		const FAuraGameplayTags& AuraTags = FAuraGameplayTags::Get();
-		const FGameplayTag& PreviousAbilityInput = GetInputTagFromSpec(*AbilitySpec); 
-		const FGameplayTag& PreviousAbilityState = GetAbilityStatusTagFromSpec(*AbilitySpec);
-		
-		// Is Available For Equip
-		if(PreviousAbilityState.MatchesTagExact(AuraTags.Abilities_Status_Equipped) || PreviousAbilityState.MatchesTagExact(AuraTags.Abilities_Status_Unlocked))
+		const FGameplayTag& OldInputTag = GetInputTagFromSpec(*NewAbilitySpec); // We are replacing New Ability, So the New Ability Previous Input Tag is "Old"
+		const FGameplayTag& NewAbilityState = GetAbilityStatusTagFromSpec(*NewAbilitySpec);
+
+		// New Ability Is Available For Equip
+		if(NewAbilityState.MatchesTagExact(AuraTags.Abilities_Status_Equipped) || NewAbilityState.MatchesTagExact(AuraTags.Abilities_Status_Unlocked))
 		{
-			// Clear **Selected Spell Slot**
-			ClearSelectedSlot(InputTag);
-			// Clear **Selected Spell Button** just in case if we have already equipped it
-			ClearAbilitySlot(*AbilitySpec);
-			AbilitySpec->DynamicAbilityTags.AddTag(InputTag);
-			if(PreviousAbilityState.MatchesTagExact(AuraTags.Abilities_Status_Unlocked))
+			// Old Ability Slot is not Empty. 1. Remove Old Slot Input Tag. 2. Deactivate Old Ability if it's Passive
+			if(FGameplayAbilitySpec* OldAbilitySpec = GetSpecFormInputTag(NewInputTag))
 			{
-				AbilitySpec->DynamicAbilityTags.RemoveTag(AuraTags.Abilities_Status_Unlocked);
-				AbilitySpec->DynamicAbilityTags.AddTag(AuraTags.Abilities_Status_Equipped);
+				// We are replacing the same ability, do nothing
+				if(NewAbilitySpec == OldAbilitySpec)
+				{
+					ClientEquipAbility(NewAbilityTag, NewAbilityState, NewInputTag, OldInputTag);
+					return;
+				}
+
+				const FGameplayTag& OldAbilityTag = GetAbilityTagFromSpec(*OldAbilitySpec);
+				if(IsPassiveAbility(OldAbilityTag))
+				{
+					NetMulticastActivatePassiveEffect(OldAbilityTag, false);
+					DeactivatePassiveAbilityDelegate.Broadcast(OldAbilityTag); // Step 2.
+				}
+				OldAbilitySpec->DynamicAbilityTags.RemoveTag(NewInputTag); // Step 1. Current slot is old, but we are equipping it, so it's NewInputTag 
 			}
-			MarkAbilitySpecDirty(*AbilitySpec);
-			ClientEquipAbility(AbilityTag, AuraTags.Abilities_Status_Equipped, InputTag, PreviousAbilityInput);
+
+			// New Ability has not been Equipped. 1. Update Input Tag 2. Update Ability State
+			if(!AbilityHasEquipped(*NewAbilitySpec))
+			{
+				NewAbilitySpec->DynamicAbilityTags.RemoveTag(AuraTags.Abilities_Status_Unlocked); // Step 2.
+				NewAbilitySpec->DynamicAbilityTags.AddTag(AuraTags.Abilities_Status_Equipped);
+				
+				if(IsPassiveAbility(NewAbilityTag))
+				{
+					if(TryActivateAbility(NewAbilitySpec->Handle))
+					{
+						NetMulticastActivatePassiveEffect(NewAbilityTag, true);
+					}					
+				}
+			}
+			else // New Ability is Equipped. Remove OldInputTag
+			{
+				NewAbilitySpec->DynamicAbilityTags.RemoveTag(OldInputTag);
+			}			
+			NewAbilitySpec->DynamicAbilityTags.AddTag(NewInputTag);
+			MarkAbilitySpecDirty(*NewAbilitySpec);
 		}
-	}
-	
+		ClientEquipAbility(NewAbilityTag, AuraTags.Abilities_Status_Equipped, NewInputTag, OldInputTag);
+	}	
 }
 
 void UAuraAbilitySystemComponent::ClientEquipAbility_Implementation(const FGameplayTag& AbilityTag,	const FGameplayTag& StateTag, const FGameplayTag& Slot, const FGameplayTag& PreviousSlot)
 {
 	AbilityEquipSignature.Broadcast(AbilityTag, StateTag, Slot, PreviousSlot);
+}
+
+void UAuraAbilitySystemComponent::NetMulticastActivatePassiveEffect_Implementation(const FGameplayTag& AbilityTag,	const bool bActivate)
+{
+	ActivatePassiveEffectDelegate.Broadcast(AbilityTag, bActivate);
 }
 
 void UAuraAbilitySystemComponent::ClearSelectedSlot(const FGameplayTag& Slot)
@@ -293,7 +356,6 @@ void UAuraAbilitySystemComponent::ClearAbilitySlot(FGameplayAbilitySpec& Ability
 {
 	const FGameplayTag& Slot = GetInputTagFromSpec(AbilitySpec);
 	AbilitySpec.DynamicAbilityTags.RemoveTag(Slot);
-	MarkAbilitySpecDirty(AbilitySpec);
 }
 
 void UAuraAbilitySystemComponent::ServerUpdateAttribute_Implementation(const FGameplayTag& AttributeTag)

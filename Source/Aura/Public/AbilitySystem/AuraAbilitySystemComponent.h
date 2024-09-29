@@ -12,6 +12,7 @@ DECLARE_DELEGATE_OneParam(FForEachAbilitySignature, const FGameplayAbilitySpec&)
 DECLARE_MULTICAST_DELEGATE_ThreeParams(FAbilityStatusChangedSignature, const FGameplayTag& /*Ability Tag*/, const FGameplayTag& /*Status Tag*/, int32 /*AbilityLevel*/);
 DECLARE_MULTICAST_DELEGATE_FourParams(FAbilityEquipSignature, const FGameplayTag& /*Ability Tag*/, const FGameplayTag& /*Status Tag*/, const FGameplayTag& /*Slot*/, const FGameplayTag& /*Previous Slot*/);
 DECLARE_MULTICAST_DELEGATE_OneParam(FDeactivatePassiveAbilitySignature, const FGameplayTag& /*Ability Tag*/)
+DECLARE_MULTICAST_DELEGATE_TwoParams(FActivatePassiveEffectSignature, const FGameplayTag& /*Ability Tag*/, bool /*bActivate*/)
 
 UCLASS()
 class AURA_API UAuraAbilitySystemComponent : public UAbilitySystemComponent
@@ -24,6 +25,7 @@ public:
 	FAbilityStatusChangedSignature AbilityStatusChangedDelegate; // Spell Menu
 	FAbilityEquipSignature AbilityEquipSignature; // Spell Menu
 	FDeactivatePassiveAbilitySignature DeactivatePassiveAbilityDelegate; // AuraGA_Passive
+	FActivatePassiveEffectSignature ActivatePassiveEffectDelegate;
 	
 	void AbilityActorInfoSet();
 	
@@ -40,7 +42,10 @@ public:
 	// Utility Functions
 	static FGameplayTag GetAbilityTagFromSpec(const FGameplayAbilitySpec& Spec);
 	static FGameplayTag GetAbilityStatusTagFromSpec(const FGameplayAbilitySpec& Spec);
-	static FGameplayTag GetInputTagFromSpec(const FGameplayAbilitySpec& Spec);	
+	static FGameplayTag GetInputTagFromSpec(const FGameplayAbilitySpec& Spec);
+
+	bool IsPassiveAbility(const FGameplayTag& AbilityTag) const;
+	bool AbilityHasEquipped(const FGameplayAbilitySpec& Spec) const;
 	
 	// Input Ability
 	void AbilityInputPressed(const FGameplayTag& InputTag);
@@ -53,6 +58,7 @@ public:
 	// Ability Update
 	// Loop through Activatable Abilities Check if we already have this ability
 	FGameplayAbilitySpec* GetSpecFormAbilityTag(const FGameplayTag& AbilityTag);
+	FGameplayAbilitySpec* GetSpecFormInputTag(const FGameplayTag& InputTag);
 	void UpdateAbilityStatuses(int32 Level);
 
 	// Spell Menu Widget Controller
@@ -61,7 +67,7 @@ public:
 
 	// Spell Row Button pressed, Equip Ability
 	UFUNCTION(Server, Reliable)
-	void ServerEquipAbility(const FGameplayTag& AbilityTag, const FGameplayTag& InputTag);
+	void ServerEquipAbility(const FGameplayTag& NewAbilityTag, const FGameplayTag& NewInputTag);
 
 	// Spell Menu Descriptions
 	bool GetDescriptionsByAbilityTag(const FGameplayTag& AbilityTag, FString& OutCurrentLevelDescription, FString& OutNextLevelDescription);
@@ -71,7 +77,10 @@ protected:
 
 	UFUNCTION(Server, Reliable)
 	void ServerUpdateAttribute(const FGameplayTag& AttributeTag);
-	
+
+	UFUNCTION(NetMulticast, Unreliable)
+	void NetMulticastActivatePassiveEffect(const FGameplayTag& AbilityTag, const bool bActivate);
+		
 	UFUNCTION(Client, Reliable)
 	void ClientEffectApplied(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveEffectHandle);
 

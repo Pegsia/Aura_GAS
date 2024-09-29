@@ -44,16 +44,21 @@ void AAuraPlayerState::SetLevel(int32 InLevel)
 void AAuraPlayerState::AddToXP(int32 InXP)
 {
 	XP += InXP;
+	bool bLeveledUp = false;
 	while(LevelUpInfo->CanLevelUp(Level, XP))
 	{
+		bLeveledUp = true;
 		const int32 AttributePointsToReward = LevelUpInfo->LevelUpInformation[Level].AttributePointReward;
 		const int32 SpellPointsToReward = LevelUpInfo->LevelUpInformation[Level].SpellPointReward;
 		AddToAttributePoints(AttributePointsToReward);
-		AddToSpellPoints(SpellPointsToReward);
-		GetAuraAS()->RefillVitalAttributes();
-		AddToLevel(1);
-		GetAuraASC()->UpdateAbilityStatuses(Level);
+		AddToSpellPoints(SpellPointsToReward);		
+		AddToLevel(1);		
 	}
+	if(bLeveledUp) // Don't do this in while loop, when leveling up multiply times ABILITYLIST_SCOPE_LOCK will prevent as adding abilities
+	{
+		GetAuraAS()->RefillVitalAttributes();
+		GetAuraASC()->UpdateAbilityStatuses(Level);
+	}	
 	OnXPChangeDelegate.Broadcast(XP);
 }
 

@@ -9,6 +9,7 @@
 #include "CharacterClassInfo.h"
 #include "AuraCharacterBase.generated.h"
 
+class UAuraPassiveNiagaraComponent;
 class UAuraDebuffNiagaraComponent;
 class UNiagaraSystem;
 class UAbilitySystemComponent;
@@ -164,5 +165,16 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	TObjectPtr<UAnimMontage> HitReactMontage;
+
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<USceneComponent> EffectAttachComponent; // Root for UAuraPassiveNiagaraComponent
 	
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UAuraPassiveNiagaraComponent> HaloOfProtectionNiagaraComponent;
+	
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UAuraPassiveNiagaraComponent> LifeSiphonNiagaraComponent;
+	
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UAuraPassiveNiagaraComponent> ManaSiphonNiagaraComponent;	
 };
