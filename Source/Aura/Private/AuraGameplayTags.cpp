@@ -18,6 +18,9 @@ void FAuraGameplayTags::InitializeNativeGameplayTags()
 void FAuraGameplayTags::AddAllTags(UGameplayTagsManager& Manager)
 {
 	// Attribute
+	AddTag(Attributes_Vital_Health, "Attributes.Vital.Health", "Health");
+	AddTag(Attributes_Vital_Mana, "Attributes.Vital.Mana", "Mana");
+	
 	AddTag(Attributes_Primary_Strength, "Attributes.Primary.Strength", "Increases physical damage");
 	AddTag(Attributes_Primary_Intelligence, "Attributes.Primary.Intelligence", "Increases magical damage");
 	AddTag(Attributes_Primary_Resilience, "Attributes.Primary.Resilience", "Increases armor and armor penetration");
@@ -98,6 +101,9 @@ void FAuraGameplayTags::AddAllTags(UGameplayTagsManager& Manager)
 	AddTag(Abilities_Passive_LifeSiphon, "Abilities.Passive.LifeSiphon", "Life Siphon");
 	AddTag(Abilities_Passive_ManaSiphon, "Abilities.Passive.ManaSiphon", "Mana Siphon");
 	AddTag(Abilities_Passive_HaloOfProtection, "Abilities.Passive.HaloOfProtection", "Halo Of Protection");
+
+	PassiveAbilityToAttributes.Emplace(Abilities_Passive_LifeSiphon, Attributes_Vital_Health);
+	PassiveAbilityToAttributes.Emplace(Abilities_Passive_ManaSiphon, Attributes_Vital_Mana);
 	
 	// Abilities Cooldown
 	AddTag(Cooldown_Fire_FireBolt, "Cooldown.Fire.FireBolt", "FireBolt Cooldown Tag");

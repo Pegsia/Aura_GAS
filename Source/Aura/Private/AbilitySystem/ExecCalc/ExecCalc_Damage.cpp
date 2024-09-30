@@ -234,7 +234,12 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	const bool bSourceCriticalHit = FMath::RandRange(1, 100) < EffectiveCriticalHitChance;
 	UAuraAbilitySystemLibrary::SetIsCriticalHit(EffectContextHandle, bSourceCriticalHit);
 	Damage = bSourceCriticalHit ? Damage * 2 + SourceCriticalHitDamage : Damage;
-	
+
+	if(TargetASC->HasMatchingGameplayTag(AuraTags.Abilities_Passive_HaloOfProtection))
+	{
+		// GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Damage Before: %f"), Damage));
+		Damage *= 0.8;		
+	}
 	FGameplayModifierEvaluatedData EvaluatedData(UAuraAttributeSet::GetIncomingDamageAttribute(), EGameplayModOp::Additive, Damage); //FGameplayAttribute(FProperty *NewProperty);
 	OutExecutionOutput.AddOutputModifier(EvaluatedData);
 }

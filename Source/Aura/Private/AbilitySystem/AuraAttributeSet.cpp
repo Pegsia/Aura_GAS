@@ -19,6 +19,9 @@ UAuraAttributeSet::UAuraAttributeSet()
 
 	// Used in AttributeMenuWidgetController to Broadcast Attributes
 	// Primary Attributes
+	TagsToAttributesFuncPtr.Emplace(GameplayTags.Attributes_Vital_Health, GetHealthAttribute);
+	TagsToAttributesFuncPtr.Emplace(GameplayTags.Attributes_Vital_Mana, GetManaAttribute);
+	
 	TagsToAttributesFuncPtr.Emplace(GameplayTags.Attributes_Primary_Strength, GetStrengthAttribute);
 	TagsToAttributesFuncPtr.Emplace(GameplayTags.Attributes_Primary_Intelligence, GetIntelligenceAttribute);
 	TagsToAttributesFuncPtr.Emplace(GameplayTags.Attributes_Primary_Resilience, GetResilienceAttribute);
@@ -86,11 +89,12 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 	// Change Base Value
 	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
 	{
-		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("%f Health Changed on %s, Health: %f"), Data.EvaluatedData.Magnitude, *Props.TargetAvatarActor->GetName(), GetHealth()));
+		// GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("%f Health Changed on %s, Health: %f"), Data.EvaluatedData.Magnitude, *Props.TargetAvatarActor->GetName(), GetHealth()));
 		SetHealth(FMath::Clamp(GetHealth(), 0.f, GetMaxHealth()));
 	}
 	if (Data.EvaluatedData.Attribute == GetManaAttribute())
 	{
+		// GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("%f Mana Changed on %s, Mana: %f"), Data.EvaluatedData.Magnitude, *Props.TargetAvatarActor->GetName(), GetMana()));
 		SetMana(FMath::Clamp(GetMana(), 0.f, GetMaxMana()));
 	}	
 	if (Data.EvaluatedData.Attribute == GetIncomingDamageAttribute())  // SERVER, IncomingDamage is NOT REPLICATED
@@ -109,6 +113,7 @@ void UAuraAttributeSet::HandleIncomingDamage(const FEffectProperties& Props)
 	SetIncomingDamage(0.f);
 	if (LocalIncomingDamage > 0.f)
 	{
+		// GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, FString::Printf(TEXT("Damage Taken: %f"), LocalIncomingDamage));
 		const float NewHealth = GetHealth() - LocalIncomingDamage;
 		SetHealth(FMath::Clamp(NewHealth, 0, GetMaxHealth()));
 			
@@ -139,6 +144,8 @@ void UAuraAttributeSet::HandleIncomingDamage(const FEffectProperties& Props)
 			SendXPEvent(Props);
 		}
 
+		HandlePassiveEffect(Props, LocalIncomingDamage);
+		
 		const bool bBlockedHit = UAuraAbilitySystemLibrary::IsBlockedHit(Props.EffectContextHandle);
 		const bool bCriticalHit = UAuraAbilitySystemLibrary::IsCriticalHit(Props.EffectContextHandle);
 		ShowFloatingDamage(Props, LocalIncomingDamage, bBlockedHit, bCriticalHit);
@@ -146,6 +153,37 @@ void UAuraAttributeSet::HandleIncomingDamage(const FEffectProperties& Props)
 		if(UAuraAbilitySystemLibrary::IsSuccessfulDebuff(Props.EffectContextHandle))
 		{
 			HandleDebuff(Props);
+		}
+	}
+}
+
+void UAuraAttributeSet::HandlePassiveEffect(const FEffectProperties& Props, const float& LocalIncomingDamage)
+{
+	const FAuraGameplayTags& AuraTags = FAuraGameplayTags::Get();
+	for(const TTuple<FGameplayTag, FGameplayTag>& Pair : AuraTags.PassiveAbilityToAttributes)
+	{		
+		const FGameplayTag& PassiveAbilityTag = Pair.Key;
+		const FGameplayTag& AttributesTag = Pair.Value;
+		if(!Props.SourceASC->HasMatchingGameplayTag(PassiveAbilityTag)) continue;
+
+		FGameplayEffectContextHandle PassiveContextHandle = Props.SourceASC->MakeEffectContext();
+		PassiveContextHandle.AddSourceObject(Props.SourceAvatarActor);
+		
+		const FString PassiveEffectName = FString::Printf(TEXT("PassiveEffect_%s"), *PassiveAbilityTag.ToString());
+		UGameplayEffect* PassiveEffect = NewObject<UGameplayEffect>(GetTransientPackage(), FName(PassiveEffectName));
+
+		PassiveEffect->DurationPolicy = EGameplayEffectDurationType::Instant;
+		
+		FGameplayModifierInfo PassiveModInfo;
+		PassiveModInfo.ModifierMagnitude = FScalableFloat(LocalIncomingDamage * 0.2);
+		PassiveModInfo.ModifierOp = EGameplayModOp::Additive;
+		const TStaticFuncPtr<FGameplayAttribute()> AttributeFuncPtr = *TagsToAttributesFuncPtr.Find(AttributesTag);
+		PassiveModInfo.Attribute = AttributeFuncPtr();
+		int32 PassiveEffectIndex = PassiveEffect->Modifiers.Emplace(PassiveModInfo);
+
+		if(const FGameplayEffectSpec* PassiveSpec = new FGameplayEffectSpec(PassiveEffect, PassiveContextHandle, 1.f))
+		{
+			Props.SourceASC->ApplyGameplayEffectSpecToSelf(*PassiveSpec);
 		}
 	}
 }

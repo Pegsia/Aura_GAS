@@ -18,6 +18,9 @@ public:
 	static void InitializeNativeGameplayTags();
 	
 	// Attributes
+	FGameplayTag Attributes_Vital_Health;
+	FGameplayTag Attributes_Vital_Mana;
+	
 	FGameplayTag Attributes_Primary_Strength;
 	FGameplayTag Attributes_Primary_Intelligence;
 	FGameplayTag Attributes_Primary_Resilience;
@@ -92,6 +95,8 @@ public:
 	FGameplayTag Abilities_Passive_ManaSiphon;
 	FGameplayTag Abilities_Passive_HaloOfProtection;
 
+	TMap<FGameplayTag, FGameplayTag> PassiveAbilityToAttributes;
+	
 	// Abilities Cooldown
 	FGameplayTag Cooldown_Fire_FireBolt;
 	FGameplayTag Cooldown_Lightning_Electrocute;

@@ -70,6 +70,7 @@ public:
 private:
 	// Handle PostGameplay Attribute
 	void HandleIncomingDamage(const FEffectProperties& Props);
+	void HandlePassiveEffect(const FEffectProperties& Props, const float& LocalIncomingDamage);
 	void HandleDebuff(const FEffectProperties& Props);
 	void HandleIncomingXP(const FEffectProperties& Props);
 	
@@ -81,7 +82,6 @@ private:
 	// for Refill Vital Attributes
 	bool bRestoreHealth = false;
 	bool bRestoreMana = false;
-	
 /* ---------------------------------------------------------------
 	FGameplayAttributeData and Corresponding Boiler Plate
 -----------------------------------------------------------------*/
