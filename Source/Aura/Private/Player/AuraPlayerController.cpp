@@ -14,6 +14,7 @@
 #include "GameFramework/Character.h"
 #include "DamageTextComponent.h"
 #include "NiagaraFunctionLibrary.h"
+#include "AuraMagicCircleActor.h"
 
 AAuraPlayerController::AAuraPlayerController()
 {
@@ -48,6 +49,31 @@ void AAuraPlayerController::PlayerTick(float DeltaTime)
 	
 	AutoRun();
 	CursorTrace();
+	SetMagicCircleLocation();
+}
+
+void AAuraPlayerController::ShowMagicCircle()
+{
+	if(!IsValid(MagicCircle))
+	{
+		MagicCircle = GetWorld()->SpawnActor<AAuraMagicCircleActor>(MagicCircleClass);
+	}
+}
+
+void AAuraPlayerController::HideMagicCircle()
+{
+	if(IsValid(MagicCircle))
+	{
+		MagicCircle->Destroy();
+	}
+}
+
+void AAuraPlayerController::SetMagicCircleLocation()
+{
+	if(IsValid(MagicCircle))
+	{
+		MagicCircle->SetActorLocation(CursorHit.Location);
+	}
 }
 
 void AAuraPlayerController::ShowDamageNumber_Implementation(float DamageAmount, ACharacter* TargetCharacter, bool bBlockedHit, bool bCriticalHit)
