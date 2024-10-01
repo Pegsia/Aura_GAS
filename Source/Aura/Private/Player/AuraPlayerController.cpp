@@ -52,11 +52,16 @@ void AAuraPlayerController::PlayerTick(float DeltaTime)
 	SetMagicCircleLocation();
 }
 
-void AAuraPlayerController::ShowMagicCircle()
+void AAuraPlayerController::ShowMagicCircle(UMaterialInterface* DecalMaterial)
 {
 	if(!IsValid(MagicCircle))
 	{
 		MagicCircle = GetWorld()->SpawnActor<AAuraMagicCircleActor>(MagicCircleClass);
+		bShowMouseCursor = false;
+		if(DecalMaterial)
+		{
+			MagicCircle->SetMaticCircleMaterial(DecalMaterial);
+		}
 	}
 }
 
@@ -64,6 +69,7 @@ void AAuraPlayerController::HideMagicCircle()
 {
 	if(IsValid(MagicCircle))
 	{
+		bShowMouseCursor = true;
 		MagicCircle->Destroy();
 	}
 }

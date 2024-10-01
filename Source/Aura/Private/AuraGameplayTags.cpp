@@ -96,7 +96,9 @@ void FAuraGameplayTags::AddAllTags(UGameplayTagsManager& Manager)
 	AddTag(Abilities_Fire_FireBolt, "Abilities.Fire.FireBolt", "FireBolt Ability Tag");
 
 	AddTag(Abilities_Lightning_Electrocute, "Abilities.Lightning.Electrocute", "Electrocute Ability Tag");
-
+	
+	AddTag(Abilities_Arcane_ArcaneShards, "Abilities.Arcane.ArcaneShards", "Arcane Shards Ability Tag");
+	
 	// Passive Abilities
 	AddTag(Abilities_Passive_LifeSiphon, "Abilities.Passive.LifeSiphon", "Life Siphon");
 	AddTag(Abilities_Passive_ManaSiphon, "Abilities.Passive.ManaSiphon", "Mana Siphon");

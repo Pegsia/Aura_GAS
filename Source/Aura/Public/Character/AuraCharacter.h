@@ -7,6 +7,7 @@
 #include "Character/AuraCharacterBase.h"
 #include "AuraCharacter.generated.h"
 
+class AAuraPlayerController;
 class UCameraComponent;
 class USpringArmComponent;
 class UMotionWarpingComponent;
@@ -33,6 +34,8 @@ public:
 	virtual void AddToAttributePoints_Implementation(int32 InAttributePoints) override;
 	virtual int32 GetSpellPoint_Implementation() override;
 	virtual void AddToSpellPoints_Implementation(int32 InSpellPoints) override;
+	virtual void ShowMagicCircle_Implementation(UMaterialInterface* DecalMaterial) override;
+	virtual void HideMagicCircle_Implementation() override;
 	//~ End IPlayerInterface
 	
 	//~ Begin ICombatInterface
@@ -67,4 +70,5 @@ private:
 	void MulticastLevelUpVFX() const;
 
 	AAuraPlayerState* GetAuraPSChecked() const;
+	AAuraPlayerController* GetAuraPCChecked() const;
 };

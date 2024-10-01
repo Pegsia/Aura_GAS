@@ -14,6 +14,7 @@ class AURA_API AAuraMagicCircleActor : public AActor
 public:	
 	AAuraMagicCircleActor();
 
+	void SetMaticCircleMaterial(UMaterialInterface* DecalMaterial);
 protected:
 	virtual void BeginPlay() override;
 

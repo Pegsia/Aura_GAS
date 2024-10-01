@@ -18,3 +18,7 @@ void AAuraMagicCircleActor::BeginPlay()
 	
 }
 
+void AAuraMagicCircleActor::SetMaticCircleMaterial(UMaterialInterface* DecalMaterial)
+{
+	MagicCircleDecal->SetDecalMaterial(DecalMaterial);
+}

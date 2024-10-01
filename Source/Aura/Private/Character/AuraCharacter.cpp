@@ -184,6 +184,16 @@ void AAuraCharacter::AddToSpellPoints_Implementation(int32 InSpellPoints)
 	GetAuraPSChecked()->AddToSpellPoints(InSpellPoints);
 }
 
+void AAuraCharacter::ShowMagicCircle_Implementation(UMaterialInterface* DecalMaterial)
+{
+	GetAuraPCChecked()->ShowMagicCircle(DecalMaterial);
+}
+
+void AAuraCharacter::HideMagicCircle_Implementation()
+{
+	GetAuraPCChecked()->HideMagicCircle();
+}
+
 int32 AAuraCharacter::GetXP_Implementation() const
 {
 	return GetAuraPSChecked()->GetXP();
@@ -192,4 +202,9 @@ int32 AAuraCharacter::GetXP_Implementation() const
 AAuraPlayerState* AAuraCharacter::GetAuraPSChecked() const
 {
 	return GetPlayerStateChecked<AAuraPlayerState>();
+}
+
+AAuraPlayerController* AAuraCharacter::GetAuraPCChecked() const
+{
+	return CastChecked<AAuraPlayerController>(GetController());
 }
