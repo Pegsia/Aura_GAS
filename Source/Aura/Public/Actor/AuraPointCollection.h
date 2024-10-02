@@ -18,7 +18,7 @@ public:
 	AAuraPointCollection();
 
 	UFUNCTION(BlueprintPure)
-	TArray<USceneComponent*> GetGroundPoints(const FVector& GroundLocation, int32 NumPoints, float YawOverride = 0.f);
+	TArray<USceneComponent*> GetGroundPoints(int32 NumPoints, float YawOverride = 0.f);
 protected:
 	virtual void BeginPlay() override;
 
