@@ -86,6 +86,18 @@ struct FDamageEffectProperties
 
 	UPROPERTY()
 	FVector KnockBackVector = FVector::ZeroVector;
+
+	UPROPERTY()
+	bool bIsRadialDamage = false;
+
+	UPROPERTY()
+	FVector RadialDamageOrigin = FVector::ZeroVector;
+
+	UPROPERTY()
+	float RadialDamageInnerRadius = 0.f;
+
+	UPROPERTY()
+	float RadialDamageOuterRadius = 0.f;
 };
 
 USTRUCT(BlueprintType)
@@ -122,6 +134,10 @@ public:
 	TSharedPtr<FGameplayTag> GetDamageType() const { return DamageType; }
 	FVector GetDeathImpulse() const { return DeathImpulse; }
 	FVector GetKnockBackVector() const { return KnockBackVector; }
+	bool GetIsRadialDamage() const { return bIsRadialDamage; }
+	FVector GetRadialDamageOrigin() const { return RadialDamageOrigin; }
+	float GetRadialDamageInnerRadius() const {return RadialDamageInnerRadius; }
+	float GetRadialDamageOuterRadius() const {return RadialDamageOuterRadius; }
 
 	void SetIsBlockedHit(const bool& bInIsBlockedHit) { bIsBlockedHit = bInIsBlockedHit; }
 	void SetIsCriticalHit(const bool& bInIsCriticalHit) { bIsCriticalHit = bInIsCriticalHit; }
@@ -132,6 +148,10 @@ public:
 	void SetDamageType(const TSharedPtr<FGameplayTag>& InDamageType) { DamageType = InDamageType; }
 	void SetDeathImpulse(const FVector& InDeathImpulse) { DeathImpulse = InDeathImpulse; }
 	void SetKnockBackVector(const FVector& InKnockBackVector) { KnockBackVector = InKnockBackVector; }
+	void SetIsRadialDamage(const bool& bInIsRadialDamage) { bIsRadialDamage = bInIsRadialDamage; }
+	void SetRadialDamageOrigin(const FVector& InRadialOrigin) { RadialDamageOrigin = InRadialOrigin; }
+	void SetRadialDamageInnerRadius(const float& InRadialDamageInnerRadius) { RadialDamageInnerRadius = InRadialDamageInnerRadius; }
+	void SetRadialDamageOuterRadius(const float& InRadialDamageOuterRadius) { RadialDamageOuterRadius = InRadialDamageOuterRadius; }
 	
 protected:
 	UPROPERTY()
@@ -159,6 +179,18 @@ protected:
 
 	UPROPERTY()
 	FVector KnockBackVector = FVector::ZeroVector;
+	
+	UPROPERTY()
+	bool bIsRadialDamage = false;
+
+	UPROPERTY()
+	FVector RadialDamageOrigin = FVector::ZeroVector;
+
+	UPROPERTY()
+	float RadialDamageInnerRadius = 0.f;
+
+	UPROPERTY()
+	float RadialDamageOuterRadius = 0.f;
 };
 
 template<>

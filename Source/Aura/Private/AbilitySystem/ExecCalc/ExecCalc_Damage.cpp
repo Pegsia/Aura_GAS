@@ -205,13 +205,19 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 		checkf(GetDamageStatic().TagsToCaptureDef.Contains(ResistanceTag), TEXT("Tags To Capture Def doesn't contain Tag:[%s] in ExecCala_Damage"), *ResistanceTag.ToString());
 
 		float DamageValue = EffectSpec.GetSetByCallerMagnitude(DamageTypeTag, false);
-		if(DamageValue == 0) continue;
+		if(DamageValue <= 0.f) continue;
 		
 		float ResistanceValue = 0.f;
 		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(GetDamageStatic().TagsToCaptureDef[ResistanceTag], EvaluateParameters, ResistanceValue);
 		ResistanceValue = FMath::Clamp(ResistanceValue, 0.f, 100.f);
 		
-		DamageValue *= (100.f - ResistanceValue) / 100.f;		
+		DamageValue *= (100.f - ResistanceValue) / 100.f;
+
+		if(UAuraAbilitySystemLibrary::GetIsRadialDamage(EffectContextHandle))
+		{
+			CalculateRadialDamageReduction(TargetAvatar, EffectContextHandle, DamageValue);
+		}
+		
 		Damage += DamageValue;
 	}
 
@@ -244,4 +250,57 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	OutExecutionOutput.AddOutputModifier(EvaluatedData);
 }
 
+void UExecCalc_Damage::CalculateRadialDamageReduction(const AActor* TargetActor, const FGameplayEffectContextHandle& EffectContextHandle, float& OutRadialDamage) const
+{
+	FVector TargetLocation = TargetActor->GetActorLocation();
+	const FVector OriginLocation = UAuraAbilitySystemLibrary::GetRadialDamageOrigin(EffectContextHandle);
+	TargetLocation.Z = OriginLocation.Z; // Ignore Z
 
+	// Use SquareDistance instead Sqrt
+	const float SquareDistance = FVector::DistSquared(TargetLocation, OriginLocation);
+	const float SquareInnerRadius = FMath::Square(UAuraAbilitySystemLibrary::GetRadialDamageInnerRadius(EffectContextHandle));
+	const float SquareOuterRadius = FMath::Square(UAuraAbilitySystemLibrary::GetRadialDamageOuterRadius(EffectContextHandle));
+
+	if(SquareDistance > SquareInnerRadius)
+	{
+		const TRange<float> DistanceRange(SquareInnerRadius, SquareOuterRadius);
+		const TRange<float> FallOffRange(1.f, 0.f);
+		// Pct = FMath::Clamp<float>(GetRangePct(DistanceRange, SquareDistance), 0, 1);
+		// FMath::Lerp<float>(FallOffRange.GetLowerBoundValue(), FallOffRange.GetUpperBoundValue(), Pct);
+		const float DamageScale = FMath::GetMappedRangeValueClamped(DistanceRange, FallOffRange, SquareDistance);
+		OutRadialDamage *= DamageScale;
+	}
+}
+
+
+// 1. override TakeDamage in AuraCharacterBase. 
+// 2. create delegate OnDamageDelegate, broadcast damage received in TakeDamage 
+// 3. Bind lambda to OnDamageDelegate on the Victim here. 
+// 4. Call UGameplayStatics::ApplyRadialDamageWithFalloff to cause damage (this will result in TakeDamage being called
+//		on the Victim, which will then broadcast OnDamageDelegate)
+// 5. In Lambda, set DamageTypeValue to the damage received from the broadcast
+
+// if(UAuraAbilitySystemLibrary::GetIsRadialDamage(EffectContextHandle))
+// {
+// 	if(TScriptInterface<ICombatInterface> TargetCombatInterface = TargetAvatar)
+// 	{
+// 		TargetCombatInterface->GetOnDamageTakenDelegate().AddLambda([&](float DamageAmount)
+// 		{
+// 			DamageValue = DamageAmount;
+// 			TargetCombatInterface->GetOnDamageTakenDelegate().Clear();
+// 		});
+// 	}
+// 	
+// 	UGameplayStatics::ApplyRadialDamageWithFalloff(
+// 			TargetAvatar,
+// 			DamageValue,
+// 			0.f,
+// 			UAuraAbilitySystemLibrary::GetRadialDamageOrigin(EffectContextHandle),
+// 			UAuraAbilitySystemLibrary::GetRadialDamageInnerRadius(EffectContextHandle),
+// 			UAuraAbilitySystemLibrary::GetRadialDamageOuterRadius(EffectContextHandle),
+// 			1.f,
+// 			UDamageType::StaticClass(),
+// 			TArray<AActor*>(),
+// 			SourceAvatar);
+// 			
+// }

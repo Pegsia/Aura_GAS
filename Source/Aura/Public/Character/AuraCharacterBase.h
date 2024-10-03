@@ -25,6 +25,10 @@ class AURA_API AAuraCharacterBase : public ACharacter, public IAbilitySystemInte
 public:
 	AAuraCharacterBase();
 
+	//~ Begin AActor Interface
+	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+	//~ End AActor Interface
+	
 	//~ Begin IAbilitySystemInterface
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	//~ End IAbilitySystemInterface
@@ -45,12 +49,14 @@ public:
 	virtual ECharacterClass GetCharacterClass_Implementation() override;
 	virtual FOnASCRegisteredSignature& GetOnAscRegisteredDelegate() override;
 	virtual FOnDeathSignature& GetOnDeathDelegate() override;
+	virtual FOnDamageTakenSignature& GetOnDamageTakenDelegate() override;
 	virtual bool GetIsShocked_Implementation() const override;
 	virtual void SetIsShocked_Implementation(bool InIsShocked) override;
 	//~ End ICombatInterface
 
 	FOnASCRegisteredSignature OnASCRegisteredDelegate;
 	FOnDeathSignature OnDeathDelegate;
+	FOnDamageTakenSignature OnDamageTakenDelegate;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Combat", meta = (TitleProperty = "MontageTag"))
 	TArray<FTaggedMontage> AttackMontageArray;

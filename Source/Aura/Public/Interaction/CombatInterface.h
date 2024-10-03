@@ -14,6 +14,7 @@ class UAnimMontage;
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnASCRegisteredSignature, UAbilitySystemComponent*);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDeathSignature, AActor*, DeadActor);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnDamageTakenSignature, float /*DamageAmount*/)
 
 USTRUCT(BlueprintType)
 struct FTaggedMontage
@@ -95,6 +96,7 @@ public:
 	
 	virtual FOnASCRegisteredSignature& GetOnAscRegisteredDelegate() = 0;
 	virtual FOnDeathSignature& GetOnDeathDelegate() = 0;
+	virtual FOnDamageTakenSignature& GetOnDamageTakenDelegate() = 0;
 
 	// Debuff
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)

@@ -24,7 +24,7 @@ public:
 
 	// For Debuffs
 	UFUNCTION(BlueprintCallable)
-	FDamageEffectProperties SetDamageEffectProperties(const AActor* TargetActor = nullptr) const;
+	FDamageEffectProperties SetDamageEffectProperties(const AActor* TargetActor = nullptr, const FVector InRadialDamageOrigin = FVector::ZeroVector) const;
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")
 	FGameplayTag DamageType;
@@ -55,6 +55,15 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")
 	float KnockBackMagnitude = 600.f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Damage")
+	bool bIsRadialDamage = false;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage")
+	float RadialDamageInnerRadius = 0.f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage")
+	float RadialDamageOuterRadius = 0.f;
 	
 	UFUNCTION(BlueprintPure)
 	FTaggedMontage GetRandomTaggedMontageFromArray(const TArray<FTaggedMontage>& TaggedMontagesArray) const;

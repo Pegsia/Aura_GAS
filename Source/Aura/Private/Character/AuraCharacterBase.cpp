@@ -106,6 +106,14 @@ void AAuraCharacterBase::MulticastHandleCharacterDeath_Implementation(const FVec
 	OnDeathDelegate.Broadcast(this);
 }
 
+
+float AAuraCharacterBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,	AActor* DamageCauser)
+{
+	const float DamageTaken = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	OnDamageTakenDelegate.Broadcast(DamageTaken);
+	return DamageTaken;
+}
+
 void AAuraCharacterBase::Dissolve()
 {
 	if(MeshDissolveMaterialInstance)
@@ -213,6 +221,11 @@ FOnASCRegisteredSignature& AAuraCharacterBase::GetOnAscRegisteredDelegate()
 FOnDeathSignature& AAuraCharacterBase::GetOnDeathDelegate()
 {
 	return OnDeathDelegate;
+}
+
+FOnDamageTakenSignature& AAuraCharacterBase::GetOnDamageTakenDelegate()
+{
+	return OnDamageTakenDelegate;
 }
 
 bool AAuraCharacterBase::GetIsShocked_Implementation() const

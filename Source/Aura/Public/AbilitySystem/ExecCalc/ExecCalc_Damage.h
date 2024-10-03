@@ -17,7 +17,9 @@ class AURA_API UExecCalc_Damage : public UGameplayEffectExecutionCalculation
 public:
 	UExecCalc_Damage();
 
+	static void InitializeAuraDamageStaticMap();
+	
 	virtual void Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecutionParams, FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const override;
 
-	static void InitializeAuraDamageStaticMap();
+	void CalculateRadialDamageReduction(const AActor* TargetActor, const FGameplayEffectContextHandle& EffectContextHandle, float& OutRadialDamage) const;
 };

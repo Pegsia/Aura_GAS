@@ -44,7 +44,7 @@ bool UAuraGameplayAbility_Damage::SetDamageAbilityProperties()
 	return false;
 }
 
-FDamageEffectProperties UAuraGameplayAbility_Damage::SetDamageEffectProperties(const AActor* TargetActor) const
+FDamageEffectProperties UAuraGameplayAbility_Damage::SetDamageEffectProperties(const AActor* TargetActor, const FVector InRadialDamageOrigin) const
 {
 	FDamageEffectProperties DamageEffectProperties;
 	DamageEffectProperties.WorldContextObject = GetAvatarActorFromActorInfo();
@@ -70,6 +70,14 @@ FDamageEffectProperties UAuraGameplayAbility_Damage::SetDamageEffectProperties(c
 		DamageEffectProperties.DeathImpulse = ToTarget * DeathImpulseMagnitude;
 		DamageEffectProperties.KnockBackVector = ToTarget * KnockBackMagnitude;
 	}
+	if (bIsRadialDamage)
+	{
+		DamageEffectProperties.bIsRadialDamage = bIsRadialDamage;
+		DamageEffectProperties.RadialDamageOrigin = InRadialDamageOrigin;
+		DamageEffectProperties.RadialDamageInnerRadius = RadialDamageInnerRadius;
+		DamageEffectProperties.RadialDamageOuterRadius = RadialDamageOuterRadius;
+	}
+	
 	return DamageEffectProperties;
 }
 
