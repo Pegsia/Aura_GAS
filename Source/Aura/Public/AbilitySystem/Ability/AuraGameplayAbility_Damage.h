@@ -24,7 +24,16 @@ public:
 
 	// For Debuffs
 	UFUNCTION(BlueprintCallable)
-	FDamageEffectProperties SetDamageEffectProperties(const AActor* TargetActor = nullptr, const FVector InRadialDamageOrigin = FVector::ZeroVector) const;
+	FDamageEffectProperties SetDamageEffectProperties(
+		AActor* TargetActor = nullptr,
+		FVector InRadialDamageOrigin = FVector::ZeroVector,
+		bool bOverrideKnockBackDirection = false,
+		FVector KnockBackDirectionOverride = FVector::ZeroVector,
+		bool bOverrideDeathImpulse = false,
+		FVector DeathImpulseDirectionOverride = FVector::ZeroVector,
+		bool bOverridePitch = false,
+		float PitchOverride = 0.f) const;
+	
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")
 	FGameplayTag DamageType;

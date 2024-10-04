@@ -15,6 +15,7 @@
 #include "DamageTextComponent.h"
 #include "NiagaraFunctionLibrary.h"
 #include "AuraMagicCircleActor.h"
+#include "Aura/Aura.h"
 
 AAuraPlayerController::AAuraPlayerController()
 {
@@ -120,8 +121,9 @@ void AAuraPlayerController::CursorTrace()
 		if(ThisEnemyActor) { ThisEnemyActor->UnHighLightActor(); ThisEnemyActor = nullptr;}
 		return;
 	}
-	
-	if (!GetHitResultUnderCursor(ECC_Visibility, false, CursorHit)) return;
+
+	const ECollisionChannel TraceChannel = IsValid(MagicCircle) ? ECC_ExcludePlayers : ECC_Visibility;
+	if (!GetHitResultUnderCursor(TraceChannel, false, CursorHit)) return;
 
 	// IEnemyInterface
 	LastEnemyActor = ThisEnemyActor;

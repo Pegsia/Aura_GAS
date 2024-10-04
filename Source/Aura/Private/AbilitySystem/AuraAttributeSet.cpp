@@ -223,7 +223,7 @@ void UAuraAttributeSet::HandleDebuff(const FEffectProperties& Props)
 
 	const FAuraGameplayTags& AuraTags = FAuraGameplayTags::Get();
 	const FGameplayTag& DebuffTag = AuraTags.DamageTypesToDebuffs[DamageType];
-	DebuffEffect->InheritableOwnedTagsContainer.AddTag(DebuffTag);
+	DebuffEffect->InheritableOwnedTagsContainer.AddTag(DebuffTag); // Give the GE Debuff Tag to trigger ASC->RegisterGameplayTagEvent
 	if(DebuffTag.MatchesTagExact(AuraTags.Debuff_Stun)) // Block Input
 	{
 		DebuffEffect->InheritableOwnedTagsContainer.AddTag(AuraTags.Player_Block_CursorTrace);
