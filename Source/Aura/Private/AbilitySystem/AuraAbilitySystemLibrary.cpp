@@ -217,9 +217,10 @@ TArray<FRotator> UAuraAbilitySystemLibrary::EvenlySpacedRotators(const FVector& 
 	if(NumRotators <= 1) Rotators.Emplace(ForwardVector.Rotation());
 	else
 	{
-		const FVector LeftVector = ForwardVector.RotateAngleAxis(-Spread / 2.f, Axis);
+		float MutableSpread = FMath::Min<float>(Spread, 360.f);
+		const FVector LeftVector = ForwardVector.RotateAngleAxis(-MutableSpread / 2.f, Axis);
+		const float DeltaSpread = MutableSpread == 360.f ? MutableSpread / NumRotators : MutableSpread / (NumRotators - 1);
 		
-		const float DeltaSpread = Spread / (NumRotators - 1);
 		for(int i = 0; i < NumRotators; ++i)
 		{
 			const FVector Direction = LeftVector.RotateAngleAxis(DeltaSpread * i, Axis);
@@ -235,9 +236,10 @@ TArray<FVector> UAuraAbilitySystemLibrary::EvenlySpacedVectors(const FVector& Fo
 	if(NumVectors <= 1) Vectors.Emplace(ForwardVector);
 	else
 	{
-		const FVector LeftVector = ForwardVector.RotateAngleAxis(-Spread / 2.f, Axis);
+		float MutableSpread = FMath::Min<float>(Spread, 360.f);
+		const FVector LeftVector = ForwardVector.RotateAngleAxis(-MutableSpread / 2.f, Axis);
+		const float DeltaSpread = MutableSpread == 360.f ? MutableSpread / NumVectors : MutableSpread / (NumVectors - 1);
 		
-		const float DeltaSpread = Spread / (NumVectors - 1);
 		for(int i = 0; i < NumVectors; ++i)
 		{
 			const FVector Direction = LeftVector.RotateAngleAxis(DeltaSpread * i, Axis);

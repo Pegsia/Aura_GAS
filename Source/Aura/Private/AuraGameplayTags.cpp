@@ -92,9 +92,10 @@ void FAuraGameplayTags::AddAllTags(UGameplayTagsManager& Manager)
 	AddTag(Abilities_Attack, "Abilities.Attack", "Attack Ability Tag");
 	AddTag(Abilities_Summon, "Abilities.Summon", "Summon Ability Tag");
 	AddTag(Abilities_HitReact, "Abilities.HitReact", "HitReact Ability Tag");
-
+	
 	AddTag(Abilities_Fire_FireBolt, "Abilities.Fire.FireBolt", "FireBolt Ability Tag");
-
+	AddTag(Abilities_Fire_FireBlast, "Abilities.Fire.FireBlast", "FireBlast Ability Tag");
+	
 	AddTag(Abilities_Lightning_Electrocute, "Abilities.Lightning.Electrocute", "Electrocute Ability Tag");
 	
 	AddTag(Abilities_Arcane_ArcaneShards, "Abilities.Arcane.ArcaneShards", "Arcane Shards Ability Tag");

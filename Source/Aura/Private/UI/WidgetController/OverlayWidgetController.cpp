@@ -50,11 +50,11 @@ void UOverlayWidgetController::BindCallBacksToDependencies()
 		});
 
 	// Bind Ability Committed for Cooldown time
-	GetAuraASC()->AbilityCommittedCallbacks.AddLambda(
-		[this](const UGameplayAbility* Ability)
-		{
-			OnAbilityCommittedDelegate.Broadcast(*Ability->GetCooldownTags(), Ability->GetCooldownTimeRemaining());
-		});	
+	// GetAuraASC()->AbilityCommittedCallbacks.AddLambda(
+	// 	[this](const UGameplayAbility* Ability)
+	// 	{
+	// 		OnAbilityCommittedDelegate.Broadcast(*Ability->GetCooldownTags(), Ability->GetCooldownTimeRemaining());
+	// 	});	
 
 	// Bind XP Change
 	GetAuraPS()->OnXPChangeDelegate.AddLambda(
