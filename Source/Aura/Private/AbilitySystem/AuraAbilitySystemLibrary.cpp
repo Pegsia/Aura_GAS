@@ -83,6 +83,13 @@ FActiveGameplayEffectHandle UAuraAbilitySystemLibrary::ApplyEffectToSelf(TSubcla
 	return ActiveEffectHandle;
 }
 
+float UAuraAbilitySystemLibrary::GetEffectTimeRemainingByCooldownTag(const UAbilitySystemComponent* InASC, const FGameplayTag& CooldownTag)
+{
+	FGameplayEffectQuery Query = FGameplayEffectQuery::MakeQuery_MatchAnyOwningTags(CooldownTag.GetSingleTagContainer());
+	TArray<float> TimesRemaining = InASC->GetActiveEffectsTimeRemaining(Query);
+	return FMath::Max(TimesRemaining);
+}
+
 // GetCharacterClassInfo From GameMode
 UCharacterClassInfo* UAuraAbilitySystemLibrary::GetCharacterClassInfo(const UObject* WorldContextObject)
 {
@@ -473,6 +480,46 @@ void UAuraAbilitySystemLibrary::SetRadialDamageOuterRadius(FGameplayEffectContex
 	{
 		AuraEffectContext->SetRadialDamageOuterRadius(InRadialDamageOuterRadius);
 	}
+}
+
+void UAuraAbilitySystemLibrary::SetDamageEffectPropRadialDamage(FDamageEffectProperties& DamageEffectParams, bool InIsRadialDamage, float InnerRadius, float OuterRadius, FVector Origin)
+{
+	DamageEffectParams.bIsRadialDamage = InIsRadialDamage;
+	DamageEffectParams.RadialDamageInnerRadius = InnerRadius;
+	DamageEffectParams.RadialDamageOuterRadius = OuterRadius;
+	DamageEffectParams.RadialDamageOrigin = Origin;
+}
+
+void UAuraAbilitySystemLibrary::SetDamageEffectPropKnockBack(FDamageEffectProperties& DamageEffectParams, FVector KnockBackDirection, float Magnitude, float KnockBackChance)
+{
+	KnockBackDirection.Normalize();
+	DamageEffectParams.KnockBackChance = KnockBackChance;
+	if (Magnitude == 0.f)
+	{
+		DamageEffectParams.KnockBackVector = KnockBackDirection * DamageEffectParams.KnockBackMagnitude;
+	}
+	else
+	{
+		DamageEffectParams.KnockBackVector = KnockBackDirection * Magnitude;
+	}
+}
+
+void UAuraAbilitySystemLibrary::SetDamageEffectPropDeathImpulse(FDamageEffectProperties& DamageEffectParams, FVector ImpulseDirection, float Magnitude)
+{
+	ImpulseDirection.Normalize();
+	if (Magnitude == 0.f)
+	{
+		DamageEffectParams.DeathImpulse = ImpulseDirection * DamageEffectParams.DeathImpulseMagnitude;
+	}
+	else
+	{
+		DamageEffectParams.DeathImpulse = ImpulseDirection * Magnitude;
+	}
+}
+
+void UAuraAbilitySystemLibrary::SetDamageEffectPropTargetASC(FDamageEffectProperties& DamageEffectParams, UAbilitySystemComponent* InASC)
+{
+	DamageEffectParams.TargetASC = InASC;
 }
 
 

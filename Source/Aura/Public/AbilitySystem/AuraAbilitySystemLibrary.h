@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AuraAbilityTypes.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "Data/CharacterClassInfo.h"
 #include "AuraAbilitySystemLibrary.generated.h"
@@ -42,6 +43,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|EffectToSelf")
 	static FActiveGameplayEffectHandle ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level, UAbilitySystemComponent* ASC);
 
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|Abilities")
+	static float GetEffectTimeRemainingByCooldownTag(const UAbilitySystemComponent* InASC, const FGameplayTag& CooldownTag);
+	
 	// Initial Character Or Get RPG CharacterInfo By Character Info 
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|CharacterClassDefault")
 	static UCharacterClassInfo* GetCharacterClassInfo(const UObject* WorldContextObject);
@@ -161,5 +165,17 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|GameplayEffects")
 	static void SetRadialDamageOuterRadius(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, const float& InRadialDamageOuterRadius);
+
+	// FDamageEffectProperties
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|DamageEffectProps")
+	static void SetDamageEffectPropRadialDamage(UPARAM(ref) FDamageEffectProperties& DamageEffectParams, bool InIsRadialDamage, float InnerRadius, float OuterRadius, FVector Origin);
 	
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|DamageEffectProps")
+	static void SetDamageEffectPropKnockBack(UPARAM(ref) FDamageEffectProperties& DamageEffectParams, FVector KnockBackDirection, float Magnitude = 0.f, float KnockBackChance = 0.f);
+
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|DamageEffectProps")
+	static void SetDamageEffectPropDeathImpulse(UPARAM(ref) FDamageEffectProperties& DamageEffectParams, FVector ImpulseDirection, float Magnitude = 0.f);
+
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|DamageEffectProps")
+	static void SetDamageEffectPropTargetASC(UPARAM(ref) FDamageEffectProperties& DamageEffectParams, UAbilitySystemComponent* InASC);
 };

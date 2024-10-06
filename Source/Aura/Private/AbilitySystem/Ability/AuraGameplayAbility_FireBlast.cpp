@@ -29,6 +29,7 @@ TArray<AAuraFireBall*> UAuraGameplayAbility_FireBlast::SpawnFireBalls()
 			ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 
 		FireBall->DamageEffectProperties = SetDamageEffectProperties();
+		FireBall->ExplosionDamageParams = SetDamageEffectProperties();
 		FireBall->FinishSpawning(SpawnTransform);
 
 		FireBalls.Emplace(FireBall);

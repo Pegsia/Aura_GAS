@@ -133,7 +133,9 @@ public:
 	FGameplayTag Player_Block_InputHeld;
 	FGameplayTag Player_Block_InputPressed;
 	FGameplayTag Player_Block_InputReleased;
-	
+
+	// Gameplay Cue
+	FGameplayTag GameplayCue_FireBlast;
 protected:
 	// Copy From Lyra
 	void AddTag(FGameplayTag& OutTag, const ANSICHAR* TagName, const ANSICHAR* TagComment);

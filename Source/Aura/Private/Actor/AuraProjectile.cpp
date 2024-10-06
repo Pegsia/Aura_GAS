@@ -64,8 +64,7 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 {
 	// DedicatedServer模式下Client骨骼运动会错误，导致Server上Projectile成功生成并继续运动，
 	// 但Client立刻与Aura碰撞，由于Server上Projectile没有销毁，于是碰撞后Projectile继续运动并不再产生OverlapEvent
-	if(OtherActor == GetInstigator()) return;
-	if(UAuraAbilitySystemLibrary::IsFriend(OtherActor, GetInstigator())) return;
+	if(!IsValidOverlapped(OtherActor)) return;
 	if(!bHit) OnHit();
 
 	if (HasAuthority())
@@ -86,6 +85,13 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 	{
 		bHit = true;
 	}
+}
+
+bool AAuraProjectile::IsValidOverlapped(const AActor* OtherActor) const
+{
+	if(OtherActor == GetInstigator()) return false;
+	if(UAuraAbilitySystemLibrary::IsFriend(OtherActor, GetInstigator())) return false;
+	return true;
 }
 
 void AAuraProjectile::OnHit()

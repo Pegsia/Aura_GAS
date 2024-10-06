@@ -139,6 +139,9 @@ void FAuraGameplayTags::AddAllTags(UGameplayTagsManager& Manager)
 	AddTag(Player_Block_InputHeld, "Player.Block.InputHeld", "Block Input Held Callback");
 	AddTag(Player_Block_InputPressed, "Player.Block.InputPressed", "Block Input Pressed Callback");
 	AddTag(Player_Block_InputReleased, "Player.Block.InputReleased", "Block Input Released Callback");
+
+	// Gameplay Cue
+	AddTag(GameplayCue_FireBlast, "GameplayCue.FireBlast", "GameplayCue FireBlast");
 }
 
 void FAuraGameplayTags::AddTag(FGameplayTag& OutTag, const ANSICHAR* TagName, const ANSICHAR* TagComment)
