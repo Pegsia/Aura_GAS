@@ -9,8 +9,8 @@
   <component name="ChangeListManager">
     <list default="true" id="052727c3-f804-4d5c-80aa-bfc63be4059f" name="更改" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Aura.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Aura.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Config/DefaultEngine.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEngine.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Assets/Sounds/Music/Music_MainMenu.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Assets/Sounds/Music/Music_MainMenu.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/UI/MainMenu/WBP_MainMenu.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/UI/MainMenu/WBP_MainMenu.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Maps/LoadMenu.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Maps/LoadMenu.umap" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -295,6 +295,7 @@
       <workItem from="1728187917790" duration="2406000" />
       <workItem from="1728200277318" duration="6952000" />
       <workItem from="1728264406729" duration="1783000" />
+      <workItem from="1728349663248" duration="3390000" />
     </task>
     <servers />
   </component>
@@ -351,11 +352,6 @@
           <url>file://$PROJECT_DIR$/../../Epic UE/UE_5.2/Engine/Plugins/Runtime/GameplayAbilities/Source/GameplayAbilities/Private/GameplayEffectExecutionCalculation.cpp</url>
           <line>110</line>
           <option name="timeStamp" value="21" />
-        </line-breakpoint>
-        <line-breakpoint type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/Source/Aura/Private/UI/WidgetController/AuraWidgetController.cpp</url>
-          <line>39</line>
-          <option name="timeStamp" value="26" />
         </line-breakpoint>
         <line-breakpoint type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/../../Epic UE/UE_5.2/Engine/Plugins/Runtime/GameplayAbilities/Source/GameplayAbilities/Public/AbilitySystemComponent.h</url>
