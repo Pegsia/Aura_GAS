@@ -47,13 +47,13 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Damage|Debuff")
 	float DebuffChance = 20.f;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Damage|Debuff")
+	UPROPERTY(EditDefaultsOnly, Category = "Damage|Debuff", meta = (EditCondition = "DebuffChance != 0"))
 	float DebuffDamage = 5.f;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Damage|Debuff")
+	UPROPERTY(EditDefaultsOnly, Category = "Damage|Debuff", meta = (EditCondition = "DebuffChance != 0"))
 	float DebuffFrequency = 1.f;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Damage|Debuff")
+	UPROPERTY(EditDefaultsOnly, Category = "Damage|Debuff", meta = (EditCondition = "DebuffChance != 0"))
 	float DebuffDuration = 5.f;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")
@@ -62,7 +62,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Damage|KnockBack")
 	float KnockBackChance = 20.f;
 	
-	UPROPERTY(EditDefaultsOnly, Category = "Damage|KnockBack")
+	UPROPERTY(EditDefaultsOnly, Category = "Damage|KnockBack", meta = (EditCondition = "KnockBackChance != 0"))
 	float KnockBackMagnitude = 600.f;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Damage|Radial")
