@@ -17,4 +17,9 @@ void AAuraLoadScreenHUD::BeginPlay()
 	LoadScreenWidget = CreateWidget<UAuraLoadScreenWidget>(GetWorld(), LoadScreenWidgetClass);
 	LoadScreenWidget->AddToViewport();
 	LoadScreenWidget->BlueprintInitializeWidget();
+
+	FInputModeUIOnly ModeUIOnly;
+	ModeUIOnly.SetWidgetToFocus(LoadScreenWidget->TakeWidget());
+	GetOwningPlayerController()->SetInputMode(ModeUIOnly);
+	GetOwningPlayerController()->SetShowMouseCursor(true);	
 }
