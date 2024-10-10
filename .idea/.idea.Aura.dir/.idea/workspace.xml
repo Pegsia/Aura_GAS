@@ -9,12 +9,14 @@
   <component name="ChangeListManager">
     <list default="true" id="052727c3-f804-4d5c-80aa-bfc63be4059f" name="更改" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Aura.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Aura.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Aura/Private/Game/AuraGameModeBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Aura/Private/Game/AuraGameModeBase.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Aura/Private/UI/HUD/AuraLoadScreenHUD.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Aura/Private/UI/HUD/AuraLoadScreenHUD.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/UI/Button/WBP_Button.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/UI/Button/WBP_Button.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/UI/LoadMenu/WBP_LoadMenu_WidgetSwitcher.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/UI/LoadMenu/WBP_LoadMenu_WidgetSwitcher.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/UI/LoadMenu/WBP_LoadScreen.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/UI/LoadMenu/WBP_LoadScreen.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/UI/LoadMenu/WBP_LoadSlot_EnterName.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/UI/LoadMenu/WBP_LoadSlot_EnterName.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/UI/LoadMenu/WBP_LoadSlot_Taken.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/UI/LoadMenu/WBP_LoadSlot_Taken.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/UI/Overlay/WBP_Overlay.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/UI/Overlay/WBP_Overlay.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Intermediate/FileSystemMappings.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Developer/RiderLink/Intermediate/FileSystemMappings.ini" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/Aura/Private/UI/ViewModel/MVVM_LoadScreen.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Aura/Private/UI/ViewModel/MVVM_LoadScreen.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Aura/Private/UI/ViewModel/MVVM_LoadSlot.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Aura/Private/UI/ViewModel/MVVM_LoadSlot.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Aura/Public/Game/AuraGameModeBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Aura/Public/Game/AuraGameModeBase.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Aura/Public/Game/AuraSaveGame_LoadSlot.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Aura/Public/Game/AuraSaveGame_LoadSlot.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/Aura/Public/UI/ViewModel/MVVM_LoadScreen.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Aura/Public/UI/ViewModel/MVVM_LoadScreen.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/Aura/Public/UI/ViewModel/MVVM_LoadSlot.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Aura/Public/UI/ViewModel/MVVM_LoadSlot.h" afterDir="false" />
     </list>
@@ -34,11 +36,12 @@
     <setting file="file://$PROJECT_DIR$/Intermediate/Build/Win64/UnrealEditor/Inc/Aura/UHT/AuraAbilitySystemComponent.gen.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Intermediate/Build/Win64/UnrealEditor/Inc/Aura/UHT/CombatInterface.gen.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://E:/GitHub/Aura/Source/Aura/Private/Game/AuraGameModeBase.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://E:/GitHub/Aura/Source/Aura/Private/Game/AuraGameModeBase.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://E:/GitHub/Aura/Source/Aura/Private/Game/AuraGameModeBase.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://E:/GitHub/Aura/Source/Aura/Private/Game/AuraSaveGame_LoadSlot.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://E:/GitHub/Aura/Source/Aura/Private/UI/HUD/AuraLoadScreenHUD.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://E:/GitHub/Aura/Source/Aura/Private/UI/ViewModel/MVVM_LoadScreen.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://E:/GitHub/Aura/Source/Aura/Private/UI/ViewModel/MVVM_LoadSlot.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://E:/GitHub/Aura/Source/Aura/Public/Game/AuraGameModeBase.h" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://E:/GitHub/Aura/Source/Aura/Public/Game/AuraGameModeBase.h" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://E:/GitHub/Aura/Source/Aura/Public/UI/ViewModel/MVVM_LoadScreen.h" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://E:/GitHub/Aura/Source/Aura/Public/UI/ViewModel/MVVM_LoadSlot.h" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../VS2019/Visual Studio Communrity 2019/VC/Tools/MSVC/14.29.30133/include/memory" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
@@ -290,8 +293,18 @@
       <workItem from="1728446079446" duration="833000" />
       <workItem from="1728449123813" duration="5057000" />
       <workItem from="1728468846024" duration="282000" />
-      <workItem from="1728523900601" duration="2858000" />
+      <workItem from="1728523900601" duration="3220000" />
+      <workItem from="1728543947363" duration="7731000" />
     </task>
+    <task id="LOCAL-00001" summary="387 Load Slot Status">
+      <option name="closed" value="true" />
+      <created>1728527559265</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1728527559265</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -320,6 +333,11 @@
         <entry key="MAIN">
           <value>
             <State>
+              <option name="CUSTOM_BOOLEAN_PROPERTIES">
+                <map>
+                  <entry key="Show.Git.Branches" value="true" />
+                </map>
+              </option>
               <option name="FILTERS">
                 <map>
                   <entry key="branch">
@@ -339,6 +357,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+    <MESSAGE value="387 Load Slot Status" />
+    <option name="LAST_COMMIT_MESSAGE" value="387 Load Slot Status" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

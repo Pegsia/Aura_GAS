@@ -8,6 +8,7 @@
 #include "MVVM_LoadSlot.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSetWidgetSwitcherIndexSignature, int32, SwitcherIndex);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSetSelectButtonEnableSignature, bool, ButtonEnable);
 
 UCLASS()
 class AURA_API UMVVM_LoadSlot : public UMVVMViewModelBase
@@ -18,6 +19,9 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FSetWidgetSwitcherIndexSignature SetWidgetSwitcherIndexDelegate;
 
+	UPROPERTY(BlueprintAssignable)
+	FSetSelectButtonEnableSignature SetSelectButtonEnableDelegate;
+	
 	void InitializeSlot() const;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter)

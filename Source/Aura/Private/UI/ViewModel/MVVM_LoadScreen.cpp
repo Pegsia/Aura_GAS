@@ -45,7 +45,31 @@ void UMVVM_LoadScreen::NewSlotButtonPressed(int32 SlotIndex, const FString& Play
 
 void UMVVM_LoadScreen::SelectSlotButtonPressed(int32 SlotIndex)
 {
-	
+	BroadcastSlotSelectedDelegate(true);
+	for(const TTuple<int32, UMVVM_LoadSlot*>& Pair : IndexToLoadSlotViewModelMap)
+	{
+		if(Pair.Key == SlotIndex)
+		{
+			Pair.Value->SetSelectButtonEnableDelegate.Broadcast(false);
+		}
+		else
+		{
+			Pair.Value->SetSelectButtonEnableDelegate.Broadcast(true);
+		}
+	}
+}
+
+void UMVVM_LoadScreen::BroadcastSlotSelectedDelegate(const bool bEnable)
+{
+	SlotSelectedDelegate.Broadcast(bEnable);
+}
+
+void UMVVM_LoadScreen::SetAllSelectedButtonEnable(const bool bEnable)
+{
+	for(const TTuple<int32, UMVVM_LoadSlot*>& Pair : IndexToLoadSlotViewModelMap)
+	{
+		Pair.Value->SetSelectButtonEnableDelegate.Broadcast(bEnable);
+	}
 }
 
 UMVVM_LoadSlot* UMVVM_LoadScreen::GetLoadSlotViewModelByIndex(int32 Index) const
