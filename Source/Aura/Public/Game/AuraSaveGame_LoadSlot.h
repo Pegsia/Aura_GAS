@@ -6,6 +6,14 @@
 #include "GameFramework/SaveGame.h"
 #include "AuraSaveGame_LoadSlot.generated.h"
 
+UENUM(BlueprintType)
+enum ESaveGameSlotStatus
+{
+	Vacant,
+	EnterName,
+	Taken
+};
+
 /**
  * 
  */
@@ -17,4 +25,7 @@ class AURA_API UAuraSaveGame_LoadSlot : public USaveGame
 public:
 	UPROPERTY()
 	FString PlayerName = FString("DefaultName");
+
+	UPROPERTY()
+	TEnumAsByte<ESaveGameSlotStatus> SlotStatus = Vacant;
 };

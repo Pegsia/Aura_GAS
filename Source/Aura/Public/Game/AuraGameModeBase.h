@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
 #include "CharacterClassInfo.h"
+#include "UI/ViewModel/MVVM_LoadSlot.h"
 #include "AuraGameModeBase.generated.h"
 
 class UMVVM_LoadSlot;
@@ -26,8 +27,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Character Class Default")
 	TObjectPtr<UAbilityInfo> AbilityInfo;
 	
-	void SaveGame_LoadSlot(const UMVVM_LoadSlot* LoadSlot);
+	void SaveGame_LoadSlot(const UMVVM_LoadSlot* LoadSlot) const;
 
+	UAuraSaveGame_LoadSlot* LoadSaveGame_LoadSlot(const UMVVM_LoadSlot* LoadSlot) const;
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Save Game")
 	TSubclassOf<USaveGame> SaveGameLoadSlotClass;

@@ -3,9 +3,10 @@
 
 #include "UI/ViewModel/MVVM_LoadSlot.h"
 
-void UMVVM_LoadSlot::InitializeSlot()
+void UMVVM_LoadSlot::InitializeSlot() const
 {
-	SetWidgetSwitcherIndexDelegate.Broadcast(2);
+	const int32 SlotStatus = SaveGame_SlotStatus.GetIntValue();
+	SetWidgetSwitcherIndexDelegate.Broadcast(SlotStatus);
 }
 
 void UMVVM_LoadSlot::SetPlayerName(FString InPlayerName)

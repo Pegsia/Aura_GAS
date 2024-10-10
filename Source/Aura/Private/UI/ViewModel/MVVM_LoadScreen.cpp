@@ -37,6 +37,8 @@ void UMVVM_LoadScreen::NewSlotButtonPressed(int32 SlotIndex, const FString& Play
 
 	UMVVM_LoadSlot* CurrentSlot = IndexToLoadSlotViewModelMap.FindChecked(SlotIndex);
 	CurrentSlot->SetPlayerName(PlayerName);
+	CurrentSlot->SaveGame_SlotStatus = Taken;
+	
 	AuraGameModeBase->SaveGame_LoadSlot(CurrentSlot);
 	CurrentSlot->InitializeSlot();
 }
@@ -49,4 +51,18 @@ void UMVVM_LoadScreen::SelectSlotButtonPressed(int32 SlotIndex)
 UMVVM_LoadSlot* UMVVM_LoadScreen::GetLoadSlotViewModelByIndex(int32 Index) const
 {
 	return IndexToLoadSlotViewModelMap.FindChecked(Index);
+}
+
+void UMVVM_LoadScreen::LoadData()
+{
+	const AAuraGameModeBase* AuraGameModeBase = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(this));
+	for(const TTuple<int32, UMVVM_LoadSlot*>& Pair : IndexToLoadSlotViewModelMap)
+	{
+		UMVVM_LoadSlot* CurrentSlot = Pair.Value;
+		UAuraSaveGame_LoadSlot* SaveGame_LoadSlot = AuraGameModeBase->LoadSaveGame_LoadSlot(CurrentSlot);
+
+		CurrentSlot->SetPlayerName(SaveGame_LoadSlot->PlayerName);
+		CurrentSlot->SaveGame_SlotStatus = SaveGame_LoadSlot->SlotStatus;
+		CurrentSlot->InitializeSlot();
+	}
 }

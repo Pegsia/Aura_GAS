@@ -17,7 +17,8 @@ class AURA_API UMVVM_LoadScreen : public UMVVMViewModelBase
 
 public:
 	void InitializeLoadSlotViewModel();
-
+	void LoadData();
+	
 	UFUNCTION(BlueprintCallable)
 	void NewGameButtonPressed(int32 SlotIndex);
 

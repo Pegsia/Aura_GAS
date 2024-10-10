@@ -18,6 +18,8 @@ void AAuraLoadScreenHUD::BeginPlay()
 	LoadScreenWidget->AddToViewport();
 	LoadScreenWidget->BlueprintInitializeWidget();
 
+	LoadScreenViewModel->LoadData();
+	
 	FInputModeUIOnly ModeUIOnly;
 	ModeUIOnly.SetWidgetToFocus(LoadScreenWidget->TakeWidget());
 	GetOwningPlayerController()->SetInputMode(ModeUIOnly);

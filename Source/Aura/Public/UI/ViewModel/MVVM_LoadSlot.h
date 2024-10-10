@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AuraSaveGame_LoadSlot.h"
 #include "MVVMViewModelBase.h"
 #include "MVVM_LoadSlot.generated.h"
 
@@ -17,7 +18,7 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FSetWidgetSwitcherIndexSignature SetWidgetSwitcherIndexDelegate;
 
-	void InitializeSlot();
+	void InitializeSlot() const;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter)
 	FString PlayerName;
@@ -31,4 +32,7 @@ public:
 
 	UPROPERTY()
 	int32 SaveGame_SlotIndex;
+
+	UPROPERTY()
+	TEnumAsByte<ESaveGameSlotStatus> SaveGame_SlotStatus;
 };
