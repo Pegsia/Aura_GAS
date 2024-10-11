@@ -35,10 +35,16 @@ public:
 	void SelectSlotButtonPressed(int32 SlotIndex);
 
 	UFUNCTION(BlueprintCallable)
+	void DeleteButtonPressed();
+	
+	UFUNCTION(BlueprintCallable)
 	void BroadcastSlotSelectedDelegate(const bool bEnable);
 	
 	UFUNCTION(BlueprintCallable)
 	void SetAllSelectedButtonEnable(const bool bEnable);
+
+	UFUNCTION(BlueprintCallable)
+	void SetAllNewSlotButtonEnable(const bool bEnable);
 	
 	UFUNCTION(BlueprintPure)
 	UMVVM_LoadSlot* GetLoadSlotViewModelByIndex(int32 Index) const;
@@ -58,4 +64,6 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<UMVVM_LoadSlot> LoadSlotViewModel_2;
+
+	TObjectPtr<UMVVM_LoadSlot> SelectedSlot;
 };

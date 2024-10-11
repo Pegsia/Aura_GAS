@@ -21,16 +21,20 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FSetSelectButtonEnableSignature SetSelectButtonEnableDelegate;
+
+	UPROPERTY(BlueprintAssignable)
+	FSetSelectButtonEnableSignature SetNewSlotButtonEnableDelegate;
 	
 	void InitializeSlot() const;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter)
-	FString PlayerName;
-
+	
+	/** Field Notifies */
 	void SetPlayerName(FString InPlayerName);
 	FString GetPlayerName() const;
+	
+	void SetMapName(FString InMapName);
+	FString GetMapName() const;
 
-	/*Save Game*/
+	/** Save Game */
 	UPROPERTY()
 	FString SaveGame_SlotName;
 
@@ -39,4 +43,11 @@ public:
 
 	UPROPERTY()
 	TEnumAsByte<ESaveGameSlotStatus> SaveGame_SlotStatus;
+
+private:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter, meta = (AllowPrivateAccess = "true"))
+	FString PlayerName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter, meta = (AllowPrivateAccess = "true"))
+	FString MapName;
 };

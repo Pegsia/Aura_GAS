@@ -28,14 +28,18 @@ void UMVVM_LoadScreen::InitializeLoadSlotViewModel()
 
 void UMVVM_LoadScreen::NewGameButtonPressed(int32 SlotIndex)
 {
-	IndexToLoadSlotViewModelMap.FindChecked(SlotIndex)->SetWidgetSwitcherIndexDelegate.Broadcast(1);
+	UMVVM_LoadSlot* CurrentSlot = IndexToLoadSlotViewModelMap.FindChecked(SlotIndex);
+	CurrentSlot->SaveGame_SlotStatus = EnterName;
+	CurrentSlot->InitializeSlot();
 }
 
 void UMVVM_LoadScreen::NewSlotButtonPressed(int32 SlotIndex, const FString& PlayerName)
 {
+	BroadcastSlotSelectedDelegate(true);
 	AAuraGameModeBase* AuraGameModeBase = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(this));
 
 	UMVVM_LoadSlot* CurrentSlot = IndexToLoadSlotViewModelMap.FindChecked(SlotIndex);
+	CurrentSlot->SetMapName(AuraGameModeBase->DefaultMapName);
 	CurrentSlot->SetPlayerName(PlayerName);
 	CurrentSlot->SaveGame_SlotStatus = Taken;
 	
@@ -50,12 +54,23 @@ void UMVVM_LoadScreen::SelectSlotButtonPressed(int32 SlotIndex)
 	{
 		if(Pair.Key == SlotIndex)
 		{
+			SelectedSlot = IndexToLoadSlotViewModelMap.FindChecked(SlotIndex);
 			Pair.Value->SetSelectButtonEnableDelegate.Broadcast(false);
 		}
 		else
 		{
 			Pair.Value->SetSelectButtonEnableDelegate.Broadcast(true);
 		}
+	}
+}
+
+void UMVVM_LoadScreen::DeleteButtonPressed()
+{
+	if(IsValid(SelectedSlot))
+	{
+		AAuraGameModeBase::DeleteSaveGame_LoadSlot(SelectedSlot);
+		SelectedSlot->SaveGame_SlotStatus = Vacant;
+		SelectedSlot->InitializeSlot();
 	}
 }
 
@@ -69,6 +84,14 @@ void UMVVM_LoadScreen::SetAllSelectedButtonEnable(const bool bEnable)
 	for(const TTuple<int32, UMVVM_LoadSlot*>& Pair : IndexToLoadSlotViewModelMap)
 	{
 		Pair.Value->SetSelectButtonEnableDelegate.Broadcast(bEnable);
+	}
+}
+
+void UMVVM_LoadScreen::SetAllNewSlotButtonEnable(const bool bEnable)
+{
+	for(const TTuple<int32, UMVVM_LoadSlot*>& Pair : IndexToLoadSlotViewModelMap)
+	{
+		Pair.Value->SetNewSlotButtonEnableDelegate.Broadcast(bEnable);
 	}
 }
 

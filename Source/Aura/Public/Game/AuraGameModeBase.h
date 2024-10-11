@@ -30,6 +30,21 @@ public:
 	void SaveGame_LoadSlot(const UMVVM_LoadSlot* LoadSlot) const;
 
 	UAuraSaveGame_LoadSlot* LoadSaveGame_LoadSlot(const UMVVM_LoadSlot* LoadSlot) const;
+
+	static void DeleteSaveGame_LoadSlot(const UMVVM_LoadSlot* LoadSlot);
+
+	UPROPERTY(EditDefaultsOnly, Category = "Map")
+	FString DefaultMapName;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Map")
+	TSoftObjectPtr<UWorld> DefaultMap;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Map")
+	TMap<FString, TSoftObjectPtr<UWorld>> MapNameToMap;
+	
+protected:
+	virtual void BeginPlay() override;
+	
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Save Game")
 	TSubclassOf<USaveGame> SaveGameLoadSlotClass;
