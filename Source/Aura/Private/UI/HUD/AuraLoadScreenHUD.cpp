@@ -20,8 +20,6 @@ void AAuraLoadScreenHUD::BeginPlay()
 
 	LoadScreenViewModel->LoadData();
 	
-	FInputModeUIOnly ModeUIOnly;
-	ModeUIOnly.SetWidgetToFocus(LoadScreenWidget->TakeWidget());
-	GetOwningPlayerController()->SetInputMode(ModeUIOnly);
+	GetOwningPlayerController()->SetInputMode(FInputModeUIOnly());
 	GetOwningPlayerController()->SetShowMouseCursor(true);	
 }

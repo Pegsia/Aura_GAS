@@ -24,7 +24,10 @@ class AURA_API UAuraSaveGame_LoadSlot : public USaveGame
 
 public:
 	UPROPERTY()
-	FString PlayerName = FString("DefaultName");
+	FString PlayerName = FString("Default Name");
+	
+	UPROPERTY()
+	FString MapName = FString("Default Map Name");
 
 	UPROPERTY()
 	TEnumAsByte<ESaveGameSlotStatus> SlotStatus = Vacant;

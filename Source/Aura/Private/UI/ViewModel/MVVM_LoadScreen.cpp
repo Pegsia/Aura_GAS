@@ -74,6 +74,12 @@ void UMVVM_LoadScreen::DeleteButtonPressed()
 	}
 }
 
+void UMVVM_LoadScreen::PlayButtonPressed()
+{
+	const AAuraGameModeBase* AuraGameModeBase = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(this));
+	AuraGameModeBase->LoadMap(SelectedSlot);
+}
+
 void UMVVM_LoadScreen::BroadcastSlotSelectedDelegate(const bool bEnable)
 {
 	SlotSelectedDelegate.Broadcast(bEnable);
@@ -109,6 +115,7 @@ void UMVVM_LoadScreen::LoadData()
 		UAuraSaveGame_LoadSlot* SaveGame_LoadSlot = AuraGameModeBase->LoadSaveGame_LoadSlot(CurrentSlot);
 
 		CurrentSlot->SetPlayerName(SaveGame_LoadSlot->PlayerName);
+		CurrentSlot->SetMapName(SaveGame_LoadSlot->MapName);
 		CurrentSlot->SaveGame_SlotStatus = SaveGame_LoadSlot->SlotStatus;
 		CurrentSlot->InitializeSlot();
 	}

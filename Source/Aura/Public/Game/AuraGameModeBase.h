@@ -33,6 +33,8 @@ public:
 
 	static void DeleteSaveGame_LoadSlot(const UMVVM_LoadSlot* LoadSlot);
 
+	void LoadMap(const UMVVM_LoadSlot* LoadSlot) const;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Map")
 	FString DefaultMapName;
 
@@ -41,6 +43,8 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Map")
 	TMap<FString, TSoftObjectPtr<UWorld>> MapNameToMap;
+
+	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
 	
 protected:
 	virtual void BeginPlay() override;
