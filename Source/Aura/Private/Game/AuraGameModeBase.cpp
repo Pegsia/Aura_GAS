@@ -3,6 +3,7 @@
 
 #include "Game/AuraGameModeBase.h"
 
+#include "AuraGameInstance.h"
 #include "AuraSaveGame_LoadSlot.h"
 #include "GameFramework/PlayerStart.h"
 #include "Kismet/GameplayStatics.h"
@@ -17,6 +18,8 @@ void AAuraGameModeBase::BeginPlay()
 
 AActor* AAuraGameModeBase::ChoosePlayerStart_Implementation(AController* Player)
 {
+	UAuraGameInstance* AuraGameInstance = Cast<UAuraGameInstance>(GetGameInstance());
+	
 	TArray<AActor*> Actors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerStart::StaticClass(), Actors);
 	if(!Actors.IsEmpty())
@@ -26,7 +29,7 @@ AActor* AAuraGameModeBase::ChoosePlayerStart_Implementation(AController* Player)
 		{
 			if(APlayerStart* PlayerStart = Cast<APlayerStart>(Actor))
 			{
-				if(PlayerStart->PlayerStartTag == FName("Start"))
+				if(PlayerStart->PlayerStartTag == AuraGameInstance->PlayerStartTag)
 				{
 					SelectedActor = Actor;
 					break;
@@ -47,6 +50,7 @@ void AAuraGameModeBase::SaveGame_LoadSlot(const UMVVM_LoadSlot* LoadSlot) const
 	SaveGame_LoadSlot->MapName = LoadSlot->GetMapName();
 	SaveGame_LoadSlot->PlayerName = LoadSlot->GetPlayerName();
 	SaveGame_LoadSlot->SlotStatus = LoadSlot->SaveGame_SlotStatus;
+	SaveGame_LoadSlot->PlayerStartTag = LoadSlot->SaveGame_PlayerStartTag;
 	
 	UGameplayStatics::SaveGameToSlot(SaveGame_LoadSlot, LoadSlot->SaveGame_SlotName, LoadSlot->SaveGame_SlotIndex);
 }

@@ -44,6 +44,9 @@ public:
 	UPROPERTY()
 	TEnumAsByte<ESaveGameSlotStatus> SaveGame_SlotStatus;
 
+	UPROPERTY()
+	FName SaveGame_PlayerStartTag;
+
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter, meta = (AllowPrivateAccess = "true"))
 	FString PlayerName;
