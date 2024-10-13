@@ -36,6 +36,7 @@ public:
 	virtual void AddToSpellPoints_Implementation(int32 InSpellPoints) override;
 	virtual void ShowMagicCircle_Implementation(UMaterialInterface* DecalMaterial) override;
 	virtual void HideMagicCircle_Implementation() override;
+	virtual void SaveProgress_Implementation(const FName& PlayerStartTag) override;
 	//~ End IPlayerInterface
 	
 	//~ Begin ICombatInterface
@@ -69,6 +70,8 @@ private:
 	UFUNCTION(NetMulticast, Unreliable)
 	void MulticastLevelUpVFX() const;
 
+	void LoadProgress();
+	
 	AAuraPlayerState* GetAuraPSChecked() const;
 	AAuraPlayerController* GetAuraPCChecked() const;
 };

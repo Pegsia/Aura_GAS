@@ -8,13 +8,16 @@
 #include "AuraPlayerState.h"
 #include "AuraAbilitySystemComponent.h"
 #include "AuraAttributeSet.h"
+#include "AuraGameModeBase.h"
 #include "AuraGameplayTags.h"
 #include "AuraHUD.h"
 #include "AuraPlayerController.h"
+#include "AuraSaveGame_LoadSlot.h"
 #include "MotionWarpingComponent.h"
 #include "Aura/Aura.h"
 #include "NiagaraComponent.h"
 #include "Debuff/AuraDebuffNiagaraComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 AAuraCharacter::AAuraCharacter()
 {
@@ -55,9 +58,34 @@ void AAuraCharacter::PossessedBy(AController* NewController)
 
 	// Init Ability Actor Info for the Server
 	InitialAbilityActorInfo();
-	InitAuraStartupAbilities(); // Called Before Widget Controller Set
-	// Init Attribute through GameplayEffects in AuraCharacterBase
-	InitialDefaultAttributes(); // 可以只在Server端调用，因为所有变量都是Replicated的，而且ASC复制模式为Mixed	
+	LoadProgress();
+}
+
+void AAuraCharacter::LoadProgress()
+{
+	if(AAuraGameModeBase* AuraGameModeBase = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(this)))
+	{
+		if(UAuraSaveGame_LoadSlot* LoadSlot = AuraGameModeBase->LoadInGameProgressData())
+		{
+			AAuraPlayerState* AuraPlayerState = GetAuraPSChecked();
+			AuraPlayerState->SetLevel(LoadSlot->PlayerLevel);
+			AuraPlayerState->SetXP(LoadSlot->PlayerXP);
+			AuraPlayerState->SetAttributePoints(LoadSlot->AttributePoints);
+			AuraPlayerState->SetSpellPoints(LoadSlot->SpellPoints);
+
+			if(LoadSlot->bInitializingSaveGame) //Create a save game,use default
+			{
+				InitAuraStartupAbilities(); // Called Before Widget Controller Set
+				InitialDefaultAttributes(); // Init Attribute through GameplayEffects in AuraCharacterBase, 可以只在Server端调用，因为所有变量都是Replicated的，而且ASC复制模式为Mixed 
+			}
+			else
+			{
+				
+			}
+			UAuraAttributeSet* AuraAttributeSet = Cast<UAuraAttributeSet>(AttributeSet);
+			
+		}		
+	}
 }
 
 void AAuraCharacter::OnRep_PlayerState()
@@ -161,6 +189,32 @@ void AAuraCharacter::MulticastLevelUpVFX_Implementation() const
 		const FRotator ToCameraRotation = (CameraLocation - NiagaraSystemLocation).Rotation();
 		LevelUpNiagaraComponent->SetWorldRotation(ToCameraRotation);
 		LevelUpNiagaraComponent->Activate(true);
+	}
+}
+
+void AAuraCharacter::SaveProgress_Implementation(const FName& PlayerStartTag)
+{
+	if(AAuraGameModeBase* AuraGameModeBase = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(this)))
+	{
+		if(UAuraSaveGame_LoadSlot* LoadSlot = AuraGameModeBase->LoadInGameProgressData())
+		{
+			LoadSlot->PlayerStartTag = PlayerStartTag;
+
+			AAuraPlayerState* AuraPlayerState = GetAuraPSChecked();
+			LoadSlot->PlayerLevel = AuraPlayerState->GetPlayerLevel();
+			LoadSlot->PlayerXP = AuraPlayerState->GetXP();
+			LoadSlot->AttributePoints = AuraPlayerState->GetAttributePoints();
+			LoadSlot->SpellPoints = AuraPlayerState->GetSpellPoints();
+			
+			UAuraAttributeSet* AuraAttributeSet = Cast<UAuraAttributeSet>(AttributeSet);
+			LoadSlot->Strength = AuraAttributeSet->GetStrength();
+			LoadSlot->Intelligence = AuraAttributeSet->GetIntelligence();
+			LoadSlot->Resilience = AuraAttributeSet->GetResilience();
+			LoadSlot->Vigor = AuraAttributeSet->GetVigor();
+
+			LoadSlot->bInitializingSaveGame = false;
+			AuraGameModeBase->SaveInGameProgressData(LoadSlot);
+		}		
 	}
 }
 

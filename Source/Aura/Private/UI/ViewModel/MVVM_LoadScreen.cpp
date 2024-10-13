@@ -47,7 +47,7 @@ void UMVVM_LoadScreen::NewSlotButtonPressed(int32 SlotIndex, const FString& Play
 	AuraGameModeBase->SaveGame_LoadSlot(CurrentSlot);
 	CurrentSlot->InitializeSlot();
 
-	// For Player Start
+	// For Save In Progress
 	UAuraGameInstance* AuraGameInstance = Cast<UAuraGameInstance>(AuraGameModeBase->GetGameInstance());
 	AuraGameInstance->PlayerStartTag = AuraGameModeBase->DefaultPlayerStartTag;
 	AuraGameInstance->SaveGame_SlotName = CurrentSlot->SaveGame_SlotName;
@@ -84,8 +84,12 @@ void UMVVM_LoadScreen::DeleteButtonPressed()
 void UMVVM_LoadScreen::PlayButtonPressed()
 {
 	const AAuraGameModeBase* AuraGameModeBase = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(this));
+
+	// For Save In Progress
 	UAuraGameInstance* AuraGameInstance = Cast<UAuraGameInstance>(AuraGameModeBase->GetGameInstance());
 	AuraGameInstance->PlayerStartTag = SelectedSlot->SaveGame_PlayerStartTag;
+	AuraGameInstance->SaveGame_SlotName = SelectedSlot->SaveGame_SlotName;
+	AuraGameInstance->SaveGame_SlotIndex = SelectedSlot->SaveGame_SlotIndex;
 	
 	AuraGameModeBase->LoadMap(SelectedSlot);
 }

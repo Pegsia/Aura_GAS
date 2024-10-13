@@ -36,7 +36,9 @@ public:
 	
 	void SetXP(int32 InXP);
 	void SetLevel(int32 InLevel);
-
+	void SetAttributePoints(int32 InAttributePoints);
+	void SetSpellPoints(int32 InSpellPoints);
+	
 	void AddToXP(int32 InXP);
 	void AddToLevel(int32 InLevel);
 	void AddToAttributePoints(int32 InAttributePoints);

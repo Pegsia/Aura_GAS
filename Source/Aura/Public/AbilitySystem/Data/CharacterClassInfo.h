@@ -52,6 +52,9 @@ public:
 	FCharacterClassDefaultInfo GetClassDefaultInfo(const ECharacterClass& CharacterClass) const;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Common Class Defaults")
+	TSubclassOf<UGameplayEffect> PrimaryAttributesSetByCaller;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Common Class Defaults")
 	TSubclassOf<UGameplayEffect> VitalAttributes;
 
 	// Abilities like HitReact, 

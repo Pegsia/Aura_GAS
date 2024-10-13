@@ -3,6 +3,7 @@
 
 #include "Checkpoint/AuraCheckpoint.h"
 
+#include "PlayerInterface.h"
 #include "Aura/Aura.h"
 #include "Components/BoxComponent.h"
 
@@ -32,8 +33,9 @@ void AAuraCheckpoint::BeginPlay()
 
 void AAuraCheckpoint::OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if(OtherActor->ActorHasTag(ACTOR_TAG_PLAYER))
+	if(OtherActor->Implements<UPlayerInterface>())
 	{
+		IPlayerInterface::Execute_SaveProgress(OtherActor, PlayerStartTag);
 		HandleGlowEffect();
 	}
 }

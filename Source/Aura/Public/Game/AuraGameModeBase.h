@@ -30,11 +30,17 @@ public:
 	void SaveGame_LoadSlot(const UMVVM_LoadSlot* LoadSlot) const;
 
 	UAuraSaveGame_LoadSlot* LoadSaveGame_LoadSlot(const UMVVM_LoadSlot* LoadSlot) const;
-
+	UAuraSaveGame_LoadSlot* LoadSaveGame_LoadSlot(const FString& SlotName, const int32 SlotIndex) const;
+	
 	static void DeleteSaveGame_LoadSlot(const UMVVM_LoadSlot* LoadSlot);
 
 	void LoadMap(const UMVVM_LoadSlot* LoadSlot) const;
 
+	// Save InGameProgressData
+	UAuraSaveGame_LoadSlot* LoadInGameProgressData() const;
+
+	void SaveInGameProgressData(UAuraSaveGame_LoadSlot* LoadSlot);
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Map")
 	FString DefaultMapName;
 

@@ -58,11 +58,16 @@ void AAuraGameModeBase::SaveGame_LoadSlot(const UMVVM_LoadSlot* LoadSlot) const
 UAuraSaveGame_LoadSlot* AAuraGameModeBase::LoadSaveGame_LoadSlot(const UMVVM_LoadSlot* LoadSlot) const
 {
 	if(!IsValid(LoadSlot)) return nullptr;
-	
+
+	return LoadSaveGame_LoadSlot(LoadSlot->SaveGame_SlotName, LoadSlot->SaveGame_SlotIndex);
+}
+
+UAuraSaveGame_LoadSlot* AAuraGameModeBase::LoadSaveGame_LoadSlot(const FString& SlotName, const int32 SlotIndex) const
+{
 	UAuraSaveGame_LoadSlot* SaveGame_LoadSlot = nullptr;
-	if(UGameplayStatics::DoesSaveGameExist(LoadSlot->SaveGame_SlotName, LoadSlot->SaveGame_SlotIndex))
+	if(UGameplayStatics::DoesSaveGameExist(SlotName, SlotIndex))
 	{
-		SaveGame_LoadSlot = Cast<UAuraSaveGame_LoadSlot>(UGameplayStatics::LoadGameFromSlot(LoadSlot->SaveGame_SlotName, LoadSlot->SaveGame_SlotIndex));
+		SaveGame_LoadSlot = Cast<UAuraSaveGame_LoadSlot>(UGameplayStatics::LoadGameFromSlot(SlotName, SlotIndex));
 	}
 	else
 	{
@@ -86,4 +91,18 @@ void AAuraGameModeBase::LoadMap(const UMVVM_LoadSlot* LoadSlot) const
 	if(!IsValid(LoadSlot)) return;
 	
 	UGameplayStatics::OpenLevelBySoftObjectPtr(this, MapNameToMap.FindChecked(LoadSlot->GetMapName()));
+}
+
+UAuraSaveGame_LoadSlot* AAuraGameModeBase::LoadInGameProgressData() const
+{
+	UAuraGameInstance* AuraGameInstance = Cast<UAuraGameInstance>(GetGameInstance());
+	return LoadSaveGame_LoadSlot(AuraGameInstance->SaveGame_SlotName, AuraGameInstance->SaveGame_SlotIndex);	
+}
+
+void AAuraGameModeBase::SaveInGameProgressData(UAuraSaveGame_LoadSlot* LoadSlot)
+{
+	UAuraGameInstance* AuraGameInstance = Cast<UAuraGameInstance>(GetGameInstance());
+
+	AuraGameInstance->PlayerStartTag = LoadSlot->PlayerStartTag;
+	UGameplayStatics::SaveGameToSlot(LoadSlot, AuraGameInstance->SaveGame_SlotName, AuraGameInstance->SaveGame_SlotIndex);
 }
