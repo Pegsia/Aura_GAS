@@ -68,7 +68,7 @@ public:
 	FOnAttributeChangedSignature OnXPPercentChangedDelegate;
 
 	UPROPERTY(BlueprintAssignable, Category="GAS|Level")
-	FOnStateChangedSignature OnLevelChangedDelegate;
+	FOnLevelChangedSignature OnLevelChangedDelegate;
 	
 	//~ Begin UAuraWidgetController Interface	
 	virtual void BindCallBacksToDependencies() override;

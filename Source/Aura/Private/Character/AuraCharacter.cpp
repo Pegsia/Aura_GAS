@@ -7,6 +7,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "AuraPlayerState.h"
 #include "AuraAbilitySystemComponent.h"
+#include "AuraAbilitySystemLibrary.h"
 #include "AuraAttributeSet.h"
 #include "AuraGameModeBase.h"
 #include "AuraGameplayTags.h"
@@ -67,12 +68,6 @@ void AAuraCharacter::LoadProgress()
 	{
 		if(UAuraSaveGame_LoadSlot* LoadSlot = AuraGameModeBase->LoadInGameProgressData())
 		{
-			AAuraPlayerState* AuraPlayerState = GetAuraPSChecked();
-			AuraPlayerState->SetLevel(LoadSlot->PlayerLevel);
-			AuraPlayerState->SetXP(LoadSlot->PlayerXP);
-			AuraPlayerState->SetAttributePoints(LoadSlot->AttributePoints);
-			AuraPlayerState->SetSpellPoints(LoadSlot->SpellPoints);
-
 			if(LoadSlot->bInitializingSaveGame) //Create a save game,use default
 			{
 				InitAuraStartupAbilities(); // Called Before Widget Controller Set
@@ -80,10 +75,8 @@ void AAuraCharacter::LoadProgress()
 			}
 			else
 			{
-				
-			}
-			UAuraAttributeSet* AuraAttributeSet = Cast<UAuraAttributeSet>(AttributeSet);
-			
+				InitialStateFromSaveGame(LoadSlot);
+			}			
 		}		
 	}
 }
@@ -115,9 +108,9 @@ void AAuraCharacter::InitialAbilityActorInfo()
 	OnASCRegisteredDelegate.Broadcast(AbilitySystemComponent);
 	
 	AuraPlayerState->OnLevelChangeDelegate.AddLambda(
-		[this](int32 Value)
+		[this](int32 Value, bool bLoading)
 		{
-			MulticastLevelUpVFX();
+			MulticastLevelUpVFX(bLoading);
 		});
 	
 	/**
@@ -133,6 +126,17 @@ void AAuraCharacter::InitialAbilityActorInfo()
 			AuraHUD->InitOverlay(AuraPlayerController, AuraPlayerState, AbilitySystemComponent, AttributeSet);
 		}
 	}	
+}
+
+void AAuraCharacter::InitialStateFromSaveGame(const UAuraSaveGame_LoadSlot* LoadSlot)
+{
+	AAuraPlayerState* AuraPlayerState = GetAuraPSChecked();
+	AuraPlayerState->SetLevel(LoadSlot->PlayerLevel);
+	AuraPlayerState->SetXP(LoadSlot->PlayerXP);
+	AuraPlayerState->SetAttributePoints(LoadSlot->AttributePoints);
+	AuraPlayerState->SetSpellPoints(LoadSlot->SpellPoints);
+
+	UAuraAbilitySystemLibrary::InitializeCharacterDefaultAttributesFromSaveData(this, AbilitySystemComponent, LoadSlot);
 }
 
 void AAuraCharacter::AddToXP_Implementation(int32 InXP) // AuraAS
@@ -180,9 +184,9 @@ void AAuraCharacter::OnRep_Stunned()
 	}
 }
 
-void AAuraCharacter::MulticastLevelUpVFX_Implementation() const
+void AAuraCharacter::MulticastLevelUpVFX_Implementation(bool bLoading) const
 {
-	if(IsValid(LevelUpNiagaraComponent))
+	if(IsValid(LevelUpNiagaraComponent) && !bLoading)
 	{
 		const FVector CameraLocation = CameraComponent->GetComponentLocation();
 		const FVector NiagaraSystemLocation = LevelUpNiagaraComponent->GetComponentLocation();

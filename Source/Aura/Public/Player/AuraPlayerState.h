@@ -14,6 +14,7 @@ class UAttributeSet;
 class UAuraAbilitySystemComponent;
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnPlayerStateChangedSignature, int32 /*StateValue*/);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnPlayerLevelChangedSignature, int32 /*StateValue*/, bool bLoading);
 
 UCLASS()
 class AURA_API AAuraPlayerState : public APlayerState, public IAbilitySystemInterface
@@ -43,9 +44,10 @@ public:
 	void AddToLevel(int32 InLevel);
 	void AddToAttributePoints(int32 InAttributePoints);
 	void AddToSpellPoints(int32 InSpellPoints);
+
+	FOnPlayerLevelChangedSignature OnLevelChangeDelegate; // When loading don't create LevelUp widget
 	
 	FOnPlayerStateChangedSignature OnXPChangeDelegate;
-	FOnPlayerStateChangedSignature OnLevelChangeDelegate;
 	FOnPlayerStateChangedSignature OnAttributePointsChangeDelegate;
 	FOnPlayerStateChangedSignature OnSpellPointsChangeDelegate;
 

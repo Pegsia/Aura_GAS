@@ -7,6 +7,7 @@
 #include "Character/AuraCharacterBase.h"
 #include "AuraCharacter.generated.h"
 
+class UAuraSaveGame_LoadSlot;
 class AAuraPlayerController;
 class UCameraComponent;
 class USpringArmComponent;
@@ -67,8 +68,10 @@ private:
 	virtual void InitialAbilityActorInfo() override;
 	//~ End AuraCharacterBase Interface
 
+	void InitialStateFromSaveGame(const UAuraSaveGame_LoadSlot* LoadSlot);
+	
 	UFUNCTION(NetMulticast, Unreliable)
-	void MulticastLevelUpVFX() const;
+	void MulticastLevelUpVFX(bool bLoading) const;
 
 	void LoadProgress();
 	

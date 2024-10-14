@@ -87,7 +87,7 @@ float UAuraAbilitySystemLibrary::GetEffectTimeRemainingByCooldownTag(const UAbil
 {
 	FGameplayEffectQuery Query = FGameplayEffectQuery::MakeQuery_MatchAnyOwningTags(CooldownTag.GetSingleTagContainer());
 	TArray<float> TimesRemaining = InASC->GetActiveEffectsTimeRemaining(Query);
-	return FMath::Max(TimesRemaining);
+	return FMath::Max<float>(TimesRemaining);
 }
 
 // GetCharacterClassInfo From GameMode
@@ -106,6 +106,27 @@ void UAuraAbilitySystemLibrary::InitializeCharacterDefaultAttributes(const UObje
 		ApplyEffectToSelf(ClassDefaultInfo.PrimaryAttributes, Level, ASC);
 		ApplyEffectToSelf(ClassDefaultInfo.SecondaryAttributes, Level, ASC);
 		ApplyEffectToSelf(ClassInfo->VitalAttributes, Level, ASC);
+	}	
+}
+
+void UAuraAbilitySystemLibrary::InitializeCharacterDefaultAttributesFromSaveData(const UObject* WorldContextObject,	UAbilitySystemComponent* ASC, const UAuraSaveGame_LoadSlot* LoadSlot)
+{
+	if(const UCharacterClassInfo* ClassInfo = GetCharacterClassInfo(WorldContextObject))  // TTuple<ECharacterClass, FCharacterClassDefaultInfo>
+	{
+		const FAuraGameplayTags& AuraGameplayTags = FAuraGameplayTags::Get();
+		
+		FGameplayEffectContextHandle EffectContextHandle = ASC->MakeEffectContext();
+		EffectContextHandle.AddSourceObject(ASC->GetAvatarActor());
+		
+		const FGameplayEffectSpecHandle EffectSpecHandle = ASC->MakeOutgoingSpec(ClassInfo->PrimaryAttributesSetByCaller, 1.f, EffectContextHandle);
+		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(EffectSpecHandle, AuraGameplayTags.Attributes_Primary_Strength, LoadSlot->Strength);
+		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(EffectSpecHandle, AuraGameplayTags.Attributes_Primary_Intelligence, LoadSlot->Intelligence);
+		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(EffectSpecHandle, AuraGameplayTags.Attributes_Primary_Resilience, LoadSlot->Resilience);
+		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(EffectSpecHandle, AuraGameplayTags.Attributes_Primary_Vigor, LoadSlot->Vigor);
+		
+		ASC->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data);
+		ApplyEffectToSelf(ClassInfo->GetClassDefaultInfo(ECharacterClass::HeroAura).SecondaryAttributes, 1.f, ASC);
+		ApplyEffectToSelf(ClassInfo->VitalAttributes, 1.f, ASC);		
 	}	
 }
 

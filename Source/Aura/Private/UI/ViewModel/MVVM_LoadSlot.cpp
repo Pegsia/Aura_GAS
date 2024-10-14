@@ -19,6 +19,16 @@ FString UMVVM_LoadSlot::GetPlayerName() const
 	return PlayerName;
 }
 
+void UMVVM_LoadSlot::SetPlayerLevel(int32 InPlayerLevel)
+{
+	UE_MVVM_SET_PROPERTY_VALUE(PlayerLevel, InPlayerLevel);
+}
+
+int32 UMVVM_LoadSlot::GetPlayerLevel() const
+{
+	return PlayerLevel;
+}
+
 void UMVVM_LoadSlot::SetMapName(FString InMapName)
 {
 	UE_MVVM_SET_PROPERTY_VALUE(MapName, InMapName);

@@ -18,12 +18,12 @@ class AURA_API UAuraInputComponent : public UEnhancedInputComponent
 public:
 	// 按下1时，想触发ASC里有InputTag.1的Ability，就需要将InputAction和GameplayTag联系起来
 	template<class UserClass, typename PressedFuncType, typename ReleasedFuncType, typename HeldFuncType>
-	void BindAbilityActions(const UAuraInputConfig* InputConfig, UserClass* Object, PressedFuncType PressedFunc, ReleasedFuncType ReleasedFunc, HeldFuncType HeldFUnc);
+	void BindAbilityActions(const UAuraInputConfig* InputConfig, UserClass* Object, PressedFuncType PressedFunc, ReleasedFuncType ReleasedFunc, HeldFuncType HeldFunc);
 };
 
-//为所有InputAction绑定三种行为
+//为所有InputAction绑定三种行为，template 中 typename 起到自动推断类型的作用
 template<class UserClass, typename PressedFuncType, typename ReleasedFuncType, typename HeldFuncType>
-void UAuraInputComponent::BindAbilityActions(const UAuraInputConfig* InputConfig, UserClass* Object, PressedFuncType PressedFunc, ReleasedFuncType ReleasedFunc, HeldFuncType HeldFUnc)
+void UAuraInputComponent::BindAbilityActions(const UAuraInputConfig* InputConfig, UserClass* Object, PressedFuncType PressedFunc, ReleasedFuncType ReleasedFunc, HeldFuncType HeldFunc)
 {
 	check(InputConfig);
 
@@ -39,9 +39,9 @@ void UAuraInputComponent::BindAbilityActions(const UAuraInputConfig* InputConfig
 			{
 				BindAction(Action.InputAction, ETriggerEvent::Completed, Object, ReleasedFunc, Action.InputTag);
 			}
-			if (HeldFUnc)
+			if (HeldFunc)
 			{
-				BindAction(Action.InputAction, ETriggerEvent::Triggered, Object, HeldFUnc, Action.InputTag);
+				BindAction(Action.InputAction, ETriggerEvent::Triggered, Object, HeldFunc, Action.InputTag);
 			}
 		}		
 	}
