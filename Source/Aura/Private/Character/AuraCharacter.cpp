@@ -2,6 +2,8 @@
 
 
 #include "Character/AuraCharacter.h"
+
+#include "AbilityInfo.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -62,25 +64,6 @@ void AAuraCharacter::PossessedBy(AController* NewController)
 	LoadProgress();
 }
 
-void AAuraCharacter::LoadProgress()
-{
-	if(AAuraGameModeBase* AuraGameModeBase = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(this)))
-	{
-		if(UAuraSaveGame_LoadSlot* LoadSlot = AuraGameModeBase->LoadInGameProgressData())
-		{
-			if(LoadSlot->bInitializingSaveGame) //Create a save game,use default
-			{
-				InitAuraStartupAbilities(); // Called Before Widget Controller Set
-				InitialDefaultAttributes(); // Init Attribute through GameplayEffects in AuraCharacterBase, 可以只在Server端调用，因为所有变量都是Replicated的，而且ASC复制模式为Mixed 
-			}
-			else
-			{
-				InitialStateFromSaveGame(LoadSlot);
-			}			
-		}		
-	}
-}
-
 void AAuraCharacter::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();
@@ -128,6 +111,26 @@ void AAuraCharacter::InitialAbilityActorInfo()
 	}	
 }
 
+void AAuraCharacter::LoadProgress()
+{
+	if(AAuraGameModeBase* AuraGameModeBase = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(this)))
+	{
+		if(UAuraSaveGame_LoadSlot* LoadSlot = AuraGameModeBase->LoadInGameProgressData())
+		{
+			if(LoadSlot->bInitializingSaveGame) //Create a save game,use default
+			{
+				InitAuraStartupAbilities(); // Called Before Widget Controller Set
+				InitialDefaultAttributes(); // Init Attribute through GameplayEffects in AuraCharacterBase, 可以只在Server端调用，因为所有变量都是Replicated的，而且ASC复制模式为Mixed 
+			}
+			else
+			{
+				GetAuraASCChecked()->AddCharacterLoadedAbilities(LoadSlot);
+				InitialStateFromSaveGame(LoadSlot);
+			}			
+		}		
+	}
+}
+
 void AAuraCharacter::InitialStateFromSaveGame(const UAuraSaveGame_LoadSlot* LoadSlot)
 {
 	AAuraPlayerState* AuraPlayerState = GetAuraPSChecked();
@@ -137,6 +140,61 @@ void AAuraCharacter::InitialStateFromSaveGame(const UAuraSaveGame_LoadSlot* Load
 	AuraPlayerState->SetSpellPoints(LoadSlot->SpellPoints);
 
 	UAuraAbilitySystemLibrary::InitializeCharacterDefaultAttributesFromSaveData(this, AbilitySystemComponent, LoadSlot);
+}
+
+void AAuraCharacter::SaveProgress_Implementation(const FName& PlayerStartTag)
+{
+	/** Server Only */
+	if(AAuraGameModeBase* AuraGameModeBase = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(this)))
+	{
+		if(UAuraSaveGame_LoadSlot* LoadSlot = AuraGameModeBase->LoadInGameProgressData())
+		{
+			LoadSlot->PlayerStartTag = PlayerStartTag;
+
+			/** Player */
+			AAuraPlayerState* AuraPlayerState = GetAuraPSChecked();
+			LoadSlot->PlayerLevel = AuraPlayerState->GetPlayerLevel();
+			LoadSlot->PlayerXP = AuraPlayerState->GetXP();
+			LoadSlot->AttributePoints = AuraPlayerState->GetAttributePoints();
+			LoadSlot->SpellPoints = AuraPlayerState->GetSpellPoints();
+
+			/** Attributes */
+			UAuraAttributeSet* AuraAttributeSet = Cast<UAuraAttributeSet>(AttributeSet);
+			LoadSlot->Strength = AuraAttributeSet->GetStrength();
+			LoadSlot->Intelligence = AuraAttributeSet->GetIntelligence();
+			LoadSlot->Resilience = AuraAttributeSet->GetResilience();
+			LoadSlot->Vigor = AuraAttributeSet->GetVigor();
+
+			LoadSlot->bInitializingSaveGame = false;
+
+			/** Abilities */
+			UAuraAbilitySystemComponent* AuraASC = GetAuraASCChecked();
+			UAbilityInfo* Info = UAuraAbilitySystemLibrary::GetAbilityInfo(this);
+			FForEachAbilitySignature ForEachAbilityDelegate;
+			LoadSlot->SaveGameAbilities.Empty();
+			ForEachAbilityDelegate.BindLambda([this, Info, LoadSlot](const FGameplayAbilitySpec& Spec)
+			{
+				const FGameplayTag AbilityTag = UAuraAbilitySystemComponent::GetAbilityTagFromSpec(Spec);
+				const FGameplayTag AbilityInputTag = UAuraAbilitySystemComponent::GetInputTagFromSpec(Spec);
+				const FGameplayTag AbilityStatusTag = UAuraAbilitySystemComponent::GetAbilityStatusTagFromSpec(Spec);
+				
+				FAuraAbilityInfo AbilityInfo = Info->FindAbilityInfoByAbilityTag(AbilityTag);
+				
+				FSaveGameAbility SaveGameAbility;
+				SaveGameAbility.AbilityClass = AbilityInfo.AbilityClass;
+				SaveGameAbility.AbilityTag = AbilityTag;
+				SaveGameAbility.AbilityInputTag = AbilityInputTag;
+				SaveGameAbility.AbilityStatusTag = AbilityStatusTag;
+				SaveGameAbility.AbilityTypeTag = AbilityInfo.AbilityTypeTag;
+				SaveGameAbility.AbilityLevel = Spec.Level;
+
+				LoadSlot->SaveGameAbilities.AddUnique(SaveGameAbility);
+			});
+			AuraASC->ForEachAbility(ForEachAbilityDelegate);
+			
+			AuraGameModeBase->SaveInGameProgressData(LoadSlot);
+		}		
+	}
 }
 
 void AAuraCharacter::AddToXP_Implementation(int32 InXP) // AuraAS
@@ -196,32 +254,6 @@ void AAuraCharacter::MulticastLevelUpVFX_Implementation(bool bLoading) const
 	}
 }
 
-void AAuraCharacter::SaveProgress_Implementation(const FName& PlayerStartTag)
-{
-	if(AAuraGameModeBase* AuraGameModeBase = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(this)))
-	{
-		if(UAuraSaveGame_LoadSlot* LoadSlot = AuraGameModeBase->LoadInGameProgressData())
-		{
-			LoadSlot->PlayerStartTag = PlayerStartTag;
-
-			AAuraPlayerState* AuraPlayerState = GetAuraPSChecked();
-			LoadSlot->PlayerLevel = AuraPlayerState->GetPlayerLevel();
-			LoadSlot->PlayerXP = AuraPlayerState->GetXP();
-			LoadSlot->AttributePoints = AuraPlayerState->GetAttributePoints();
-			LoadSlot->SpellPoints = AuraPlayerState->GetSpellPoints();
-			
-			UAuraAttributeSet* AuraAttributeSet = Cast<UAuraAttributeSet>(AttributeSet);
-			LoadSlot->Strength = AuraAttributeSet->GetStrength();
-			LoadSlot->Intelligence = AuraAttributeSet->GetIntelligence();
-			LoadSlot->Resilience = AuraAttributeSet->GetResilience();
-			LoadSlot->Vigor = AuraAttributeSet->GetVigor();
-
-			LoadSlot->bInitializingSaveGame = false;
-			AuraGameModeBase->SaveInGameProgressData(LoadSlot);
-		}		
-	}
-}
-
 int32 AAuraCharacter::GetAttributePoint_Implementation()
 {
 	return GetAuraPSChecked()->GetAttributePoints();
@@ -265,4 +297,9 @@ AAuraPlayerState* AAuraCharacter::GetAuraPSChecked() const
 AAuraPlayerController* AAuraCharacter::GetAuraPCChecked() const
 {
 	return CastChecked<AAuraPlayerController>(GetController());
+}
+
+UAuraAbilitySystemComponent* AAuraCharacter::GetAuraASCChecked() const
+{
+	return CastChecked<UAuraAbilitySystemComponent>(GetAbilitySystemComponent());
 }

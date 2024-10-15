@@ -7,6 +7,7 @@
 #include "GameplayTagContainer.h"
 #include "AuraPassiveNiagaraComponent.generated.h"
 
+class UAuraAbilitySystemComponent;
 /**
  * 
  */
@@ -24,4 +25,6 @@ protected:
 	virtual void BeginPlay() override;
 
 	void OnPassiveEffectActivate(const FGameplayTag& AbilityTag, bool bActivate);
+
+	void TryActivateWhenLoadIn(UAuraAbilitySystemComponent* AuraASC);
 };

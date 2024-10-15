@@ -101,6 +101,8 @@ void FAuraGameplayTags::AddAllTags(UGameplayTagsManager& Manager)
 	AddTag(Abilities_Arcane_ArcaneShards, "Abilities.Arcane.ArcaneShards", "Arcane Shards Ability Tag");
 	
 	// Passive Abilities
+	AddTag(Abilities_Passive_ListenForEvents, "Abilities.Passive.ListenForEvents", " XP and Attribute Added Event");
+	
 	AddTag(Abilities_Passive_LifeSiphon, "Abilities.Passive.LifeSiphon", "Life Siphon");
 	AddTag(Abilities_Passive_ManaSiphon, "Abilities.Passive.ManaSiphon", "Mana Siphon");
 	AddTag(Abilities_Passive_HaloOfProtection, "Abilities.Passive.HaloOfProtection", "Halo Of Protection");

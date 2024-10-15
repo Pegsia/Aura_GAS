@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/NoExportTypes.h"
+#include "AuraAbilitySystemComponent.h"
 #include "AuraWidgetController.generated.h"
 
 class UAbilityInfo;
@@ -46,6 +46,8 @@ class AURA_API UAuraWidgetController : public UObject
 	GENERATED_BODY()
 
 public:
+	FForEachAbilitySignature ForEachAbilityDelegate;
+	
 	UFUNCTION(BlueprintCallable)
 	void SetWidgetControllerParams(const FWidgetControllerParams& WCParams);
 	

@@ -6,6 +6,7 @@
 #include "AbilitySystemComponent.h"
 #include "AuraAbilitySystemComponent.generated.h"
 
+class UAuraSaveGame_LoadSlot;
 DECLARE_MULTICAST_DELEGATE_OneParam(FEffectAssetTagsSignature, FGameplayTagContainer& /* Asset Tags*/)
 DECLARE_MULTICAST_DELEGATE(FAbilityGivenSignature);
 DECLARE_DELEGATE_OneParam(FForEachAbilitySignature, const FGameplayAbilitySpec&);
@@ -30,20 +31,23 @@ public:
 	void AbilityActorInfoSet();
 	
 	// Init Ability
+	void AddCharacterLoadedAbilities(const UAuraSaveGame_LoadSlot* SaveGame_LoadSlot);
+	
 	void AddCharacterStartupAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupAbilities);
 	bool bStartupAbilitiesGiven = false;
 
 	void AddCharacterStartupPassiveAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupPassiveAbilities);
 	
 	// loop through Activatable Abilities, Broadcast Ability Tag and Input Tag
-	FForEachAbilitySignature ForEachAbilityDelegate;	
-	void ForEachAbility();
+	void ForEachAbility(const FForEachAbilitySignature& ForEachAbilityDelegate);
 
 	// Utility Functions
 	static FGameplayTag GetAbilityTagFromSpec(const FGameplayAbilitySpec& Spec);
 	static FGameplayTag GetAbilityStatusTagFromSpec(const FGameplayAbilitySpec& Spec);
 	static FGameplayTag GetInputTagFromSpec(const FGameplayAbilitySpec& Spec);
 
+	FGameplayTag GetAbilityStatusTagFromAbilityTag(const FGameplayTag& AbilityTag);
+	
 	bool IsPassiveAbility(const FGameplayTag& AbilityTag) const;
 	bool AbilityHasEquipped(const FGameplayAbilitySpec& Spec) const;
 	

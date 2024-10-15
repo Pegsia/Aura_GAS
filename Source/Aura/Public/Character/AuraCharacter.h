@@ -7,6 +7,7 @@
 #include "Character/AuraCharacterBase.h"
 #include "AuraCharacter.generated.h"
 
+class UAuraAbilitySystemComponent;
 class UAuraSaveGame_LoadSlot;
 class AAuraPlayerController;
 class UCameraComponent;
@@ -77,4 +78,5 @@ private:
 	
 	AAuraPlayerState* GetAuraPSChecked() const;
 	AAuraPlayerController* GetAuraPCChecked() const;
+	UAuraAbilitySystemComponent* GetAuraASCChecked() const;
 };

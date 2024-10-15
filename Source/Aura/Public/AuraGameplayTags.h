@@ -94,6 +94,8 @@ public:
 	FGameplayTag Abilities_Arcane_ArcaneShards;
 	
 	// Passive Abilities
+	FGameplayTag Abilities_Passive_ListenForEvents;
+	
 	FGameplayTag Abilities_Passive_LifeSiphon;
 	FGameplayTag Abilities_Passive_ManaSiphon;
 	FGameplayTag Abilities_Passive_HaloOfProtection;
@@ -136,6 +138,7 @@ public:
 
 	// Gameplay Cue
 	FGameplayTag GameplayCue_FireBlast;
+	
 protected:
 	// Copy From Lyra
 	void AddTag(FGameplayTag& OutTag, const ANSICHAR* TagName, const ANSICHAR* TagComment);

@@ -4,7 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/SaveGame.h"
+#include "GameplayTagContainer.h"
+
 #include "AuraSaveGame_LoadSlot.generated.h"
+
+class UGameplayAbility;
 
 UENUM(BlueprintType)
 enum ESaveGameSlotStatus
@@ -12,6 +16,35 @@ enum ESaveGameSlotStatus
 	Vacant,
 	EnterName,
 	Taken
+};
+
+USTRUCT(BlueprintType)
+struct FSaveGameAbility
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	TSubclassOf<UGameplayAbility> AbilityClass;
+
+	UPROPERTY()
+	FGameplayTag AbilityTag;
+
+	UPROPERTY()
+	FGameplayTag AbilityInputTag;
+	
+	UPROPERTY()
+	FGameplayTag AbilityStatusTag;
+
+	UPROPERTY()
+	FGameplayTag AbilityTypeTag;
+
+	UPROPERTY()
+	int32 AbilityLevel;
+
+	FORCEINLINE bool operator==(const FSaveGameAbility& Other) const
+	{
+		return AbilityTag == Other.AbilityTag;
+	}
 };
 
 /**
@@ -63,4 +96,8 @@ public:
 
 	UPROPERTY()
 	int32 Vigor = 0;
+
+	/** Abilities */
+	UPROPERTY()
+	TArray<FSaveGameAbility> SaveGameAbilities;
 };

@@ -8,6 +8,7 @@
 #include "AuraAbilitySystemLibrary.h"
 #include "AuraGameplayAbility.h"
 #include "AuraGameplayTags.h"
+#include "AuraSaveGame_LoadSlot.h"
 #include "PlayerInterface.h"
 #include "Aura/AuraLogChannels.h"
 
@@ -24,6 +25,26 @@ void UAuraAbilitySystemComponent::ClientEffectApplied_Implementation(UAbilitySys
 	EffectSpec.GetAllAssetTags(AssetTagContainer);
 
 	EffectAssetTagsDelegate.Broadcast(AssetTagContainer);
+}
+
+void UAuraAbilitySystemComponent::AddCharacterLoadedAbilities(const UAuraSaveGame_LoadSlot* SaveGame_LoadSlot)
+{
+	const FAuraGameplayTags& AuraGameplayTags = FAuraGameplayTags::Get();
+	for(const FSaveGameAbility& Ability : SaveGame_LoadSlot->SaveGameAbilities)
+	{
+		const TSubclassOf<UGameplayAbility> LoadedAbilityClass = Ability.AbilityClass;
+		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(LoadedAbilityClass, Ability.AbilityLevel);
+
+		AbilitySpec.DynamicAbilityTags.AddTag(Ability.AbilityInputTag);
+		AbilitySpec.DynamicAbilityTags.AddTag(Ability.AbilityStatusTag);
+		GiveAbility(AbilitySpec);
+		if(Ability.AbilityStatusTag.MatchesTagExact(AuraGameplayTags.Abilities_Status_Equipped))
+		{
+			TryActivateAbility(AbilitySpec.Handle); // Don't just give and activate 
+		}
+	}
+	bStartupAbilitiesGiven = true;
+	AbilityGivenDelegate.Broadcast();	
 }
 
 void UAuraAbilitySystemComponent::AddCharacterStartupAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupAbilities)
@@ -47,6 +68,7 @@ void UAuraAbilitySystemComponent::AddCharacterStartupPassiveAbilities(const TArr
 	for (TSubclassOf<UGameplayAbility> AbilityClass : StartupPassiveAbilities)
 	{
 		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
+		AbilitySpec.DynamicAbilityTags.AddTag(FAuraGameplayTags::Get().Abilities_Status_Equipped);
 		GiveAbilityAndActivateOnce(AbilitySpec);
 	}
 }
@@ -63,7 +85,7 @@ void UAuraAbilitySystemComponent::OnRep_ActivateAbilities()
 	}	
 }
 
-void UAuraAbilitySystemComponent::ForEachAbility()
+void UAuraAbilitySystemComponent::ForEachAbility(const FForEachAbilitySignature& ForEachAbilityDelegate)
 {
 	ABILITYLIST_SCOPE_LOCK(); // Lock Abilities Array
 	for(const FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
@@ -98,6 +120,15 @@ FGameplayTag UAuraAbilitySystemComponent::GetAbilityStatusTagFromSpec(const FGam
 		{
 			return Tag;
 		}
+	}
+	return FGameplayTag();
+}
+
+FGameplayTag UAuraAbilitySystemComponent::GetAbilityStatusTagFromAbilityTag(const FGameplayTag& AbilityTag)
+{
+	if(FGameplayAbilitySpec* AbilitySpec = GetSpecFormAbilityTag(AbilityTag))
+	{
+		return GetAbilityStatusTagFromSpec(*AbilitySpec);
 	}
 	return FGameplayTag();
 }
