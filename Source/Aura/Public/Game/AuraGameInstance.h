@@ -23,4 +23,11 @@ public:
 
 	UPROPERTY()
 	int32 SaveGame_SlotIndex;
+
+	// Use PlayerLastTransform for Player Start 
+	UPROPERTY()
+	bool bInitializeGame = true;
+	
+	UPROPERTY()
+	FTransform PlayerLastTransform;
 };

@@ -91,6 +91,11 @@ void UMVVM_LoadScreen::PlayButtonPressed()
 	AuraGameInstance->PlayerStartTag = SelectedSlot->SaveGame_PlayerStartTag;
 	AuraGameInstance->SaveGame_SlotName = SelectedSlot->SaveGame_SlotName;
 	AuraGameInstance->SaveGame_SlotIndex = SelectedSlot->SaveGame_SlotIndex;
+
+	// Use PlayerLastTransform for Player Start 
+	UAuraSaveGame_LoadSlot* SaveGame_LoadSlot = AuraGameModeBase->LoadSaveGame_LoadSlot(SelectedSlot);
+	AuraGameInstance->bInitializeGame = SaveGame_LoadSlot->bInitializingSaveGame;
+	AuraGameInstance->PlayerLastTransform = SaveGame_LoadSlot->PlayerLastTransform;
 	
 	AuraGameModeBase->LoadMap(SelectedSlot);
 }

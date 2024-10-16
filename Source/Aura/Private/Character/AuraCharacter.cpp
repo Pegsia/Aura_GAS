@@ -126,8 +126,9 @@ void AAuraCharacter::LoadProgress()
 			{
 				GetAuraASCChecked()->AddCharacterLoadedAbilities(LoadSlot);
 				InitialStateFromSaveGame(LoadSlot);
+				AuraGameModeBase->LoadWorldState(GetWorld()); // Load Actors
 			}			
-		}		
+		}
 	}
 }
 
@@ -158,6 +159,9 @@ void AAuraCharacter::SaveProgress_Implementation(const FName& PlayerStartTag)
 			LoadSlot->AttributePoints = AuraPlayerState->GetAttributePoints();
 			LoadSlot->SpellPoints = AuraPlayerState->GetSpellPoints();
 
+			// Last Transform Player Start
+			LoadSlot->PlayerLastTransform = GetActorTransform();
+				
 			/** Attributes */
 			UAuraAttributeSet* AuraAttributeSet = Cast<UAuraAttributeSet>(AttributeSet);
 			LoadSlot->Strength = AuraAttributeSet->GetStrength();

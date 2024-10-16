@@ -21,26 +21,31 @@ class AURA_API AAuraGameModeBase : public AGameModeBase
 	GENERATED_BODY()
 	
 public:
+	// Default RPG Info
 	UPROPERTY(EditDefaultsOnly, Category = "Character Class Default")
 	TObjectPtr<UCharacterClassInfo> CharacterClassInfo;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Character Class Default")
 	TObjectPtr<UAbilityInfo> AbilityInfo;
-	
+
+	// Save, Load, Delete AuraSaveGame, Init SaveGameSlot
 	void SaveGame_LoadSlot(const UMVVM_LoadSlot* LoadSlot) const;
 
 	UAuraSaveGame_LoadSlot* LoadSaveGame_LoadSlot(const UMVVM_LoadSlot* LoadSlot) const;
 	UAuraSaveGame_LoadSlot* LoadSaveGame_LoadSlot(const FString& SlotName, const int32 SlotIndex) const;
 	
 	static void DeleteSaveGame_LoadSlot(const UMVVM_LoadSlot* LoadSlot);
-
-	void LoadMap(const UMVVM_LoadSlot* LoadSlot) const;
-
-	// Save InGameProgressData
+	
+	// Save, Load Current AuraSaveGame, Save and Load SaveGameSlot
+	void SaveInGameProgressData(UAuraSaveGame_LoadSlot* LoadSlot) const;
+	
 	UAuraSaveGame_LoadSlot* LoadInGameProgressData() const;
 
-	void SaveInGameProgressData(UAuraSaveGame_LoadSlot* LoadSlot);
-	
+	// Save Actors
+	void SaveWorldState(const UWorld* World) const;
+	void LoadWorldState(const UWorld* World) const;
+
+	// Load selected slot Map
 	UPROPERTY(EditDefaultsOnly, Category = "Map")
 	FString DefaultMapName;
 
@@ -50,7 +55,13 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Map")
 	TMap<FString, TSoftObjectPtr<UWorld>> MapNameToMap;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Map")
+	void LoadMap(const UMVVM_LoadSlot* LoadSlot) const;
+
+	// Play Start
+	UPROPERTY(EditDefaultsOnly, Category = "Player Start")
+	bool bUsePlayerLastTransform = false;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Player Start")
 	FName DefaultPlayerStartTag;
 	
 	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
