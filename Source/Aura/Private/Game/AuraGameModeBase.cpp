@@ -168,8 +168,8 @@ AActor* AAuraGameModeBase::ChoosePlayerStart_Implementation(AController* Player)
 	// If We Use Player Last Transform
 	if(!AuraGameInstance->bInitializeGame && bUsePlayerLastTransform)
 	{
-		// TODO: Player Forward Vector is InCorrect
-		return GetWorld()->SpawnActor<APlayerStart>(APlayerStart::StaticClass(), AuraGameInstance->PlayerLastTransform);
+		APlayerStart* PlayerStart = GetWorld()->SpawnActor<APlayerStart>(APlayerStart::StaticClass(), AuraGameInstance->PlayerLastTransform.GetLocation(), FRotator::ZeroRotator);
+		return PlayerStart;
 	}
 	
 	TArray<AActor*> Actors;
