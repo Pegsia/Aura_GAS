@@ -8,6 +8,7 @@
 #include "GameplayTagContainer.h"
 #include "AuraPlayerController.generated.h"
 
+class IHighLightInterface;
 class AAuraMagicCircleActor;
 class UNiagaraSystem;
 class UDamageTextComponent;
@@ -17,6 +18,13 @@ struct FInputActionValue;
 class UAuraInputConfig;
 class UAuraAbilitySystemComponent;
 class USplineComponent;
+
+enum class ETargetingStatus :uint8
+{
+	TargetingEnemy,
+	TargetingNonEnemy,
+	NotTargeting
+};
 
 UCLASS()
 class AURA_API AAuraPlayerController : public APlayerController
@@ -64,8 +72,15 @@ private:
 	// Show Enemy Outline
 	FHitResult CursorHit;
 	void CursorTrace();
-	TScriptInterface<IEnemyInterface> LastEnemyActor;
-	TScriptInterface<IEnemyInterface> ThisEnemyActor;
+	
+	UPROPERTY()
+	TObjectPtr<AActor> LastActor;
+	UPROPERTY()
+	TObjectPtr<AActor> ThisActor;
+	ETargetingStatus TargetingStatus = ETargetingStatus::NotTargeting;
+	
+	static void HighlightActor(AActor* InActor);
+	static void UnHighlightActor(AActor* InActor);
 
 	// Input CallBacks
 	void AbilityInputTagPressed(FGameplayTag InputTag);
@@ -84,8 +99,7 @@ private:
 	// Click To Move
 	FVector CachedDestination = FVector::ZeroVector;
 	float FollowTime = 0.f;
-	float ShortPressThreshold = 0.5f;
-	bool bTargeting = false;
+	float ShortPressThreshold = 0.5f;	
 
 	// Auto Run
 	bool bAutoRunning = false;

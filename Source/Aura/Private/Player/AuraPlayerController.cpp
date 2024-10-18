@@ -15,6 +15,7 @@
 #include "DamageTextComponent.h"
 #include "NiagaraFunctionLibrary.h"
 #include "AuraMagicCircleActor.h"
+#include "HighLightInterface.h"
 #include "Aura/Aura.h"
 
 AAuraPlayerController::AAuraPlayerController()
@@ -113,26 +114,48 @@ void AAuraPlayerController::AutoRun()
 	}
 }
 
+void AAuraPlayerController::HighlightActor(AActor* InActor)
+{
+	if (IsValid(InActor) && InActor->Implements<UHighLightInterface>())
+	{
+		IHighLightInterface::Execute_HighLightActor(InActor);
+	}
+}
+
+void AAuraPlayerController::UnHighlightActor(AActor* InActor)
+{
+	if (IsValid(InActor) && InActor->Implements<UHighLightInterface>())
+	{
+		IHighLightInterface::Execute_UnHighLightActor(InActor);
+	}
+}
+
 void AAuraPlayerController::CursorTrace()
 {
 	if(GetAuraASC() && GetAuraASC()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Player_Block_CursorTrace))
 	{
-		if(LastEnemyActor) { LastEnemyActor->UnHighLightActor(); LastEnemyActor = nullptr;}
-		if(ThisEnemyActor) { ThisEnemyActor->UnHighLightActor(); ThisEnemyActor = nullptr;}
+		if(LastActor) { UnHighlightActor(LastActor); LastActor = nullptr;}
+		if(ThisActor) { UnHighlightActor(LastActor); ThisActor = nullptr;}
 		return;
 	}
 
 	const ECollisionChannel TraceChannel = IsValid(MagicCircle) ? ECC_ExcludePlayers : ECC_Visibility;
 	if (!GetHitResultUnderCursor(TraceChannel, false, CursorHit)) return;
-
-	// IEnemyInterface
-	LastEnemyActor = ThisEnemyActor;
-	ThisEnemyActor = CursorHit.GetActor();
-
-	if (LastEnemyActor != ThisEnemyActor) // Changed
+	
+	LastActor = ThisActor;
+	if (IsValid(CursorHit.GetActor()) && CursorHit.GetActor()->Implements<UHighLightInterface>())
 	{
-		if(LastEnemyActor) LastEnemyActor->UnHighLightActor();
-		if(ThisEnemyActor) ThisEnemyActor->HighLightActor();
+		ThisActor = CursorHit.GetActor();
+	}
+	else
+	{
+		ThisActor = nullptr;
+	}
+
+	if (LastActor != ThisActor) // Changed
+	{
+		UnHighlightActor(LastActor);
+		HighlightActor(ThisActor);
 	}
 }
 
@@ -154,8 +177,15 @@ void AAuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 	// 点击时判断是否正在攻击敌人
 	if (InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB))
 	{
-		bTargeting = ThisEnemyActor ? true : false;
-		bAutoRunning = false;
+		if(IsValid(ThisActor))
+		{
+			TargetingStatus = ThisActor->Implements<UEnemyInterface>() ? ETargetingStatus::TargetingEnemy : ETargetingStatus::TargetingNonEnemy;
+			bAutoRunning = false;
+		}
+		else
+		{
+			TargetingStatus = ETargetingStatus::NotTargeting;
+		}
 	}
 
 	GetAuraASC()->AbilityInputPressed(InputTag);	
@@ -174,7 +204,7 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 
 	GetAuraASC()->AbilityInputReleased(InputTag);
 
-	if (!bTargeting && !bShiftDown) // Not Targeting 
+	if (TargetingStatus != ETargetingStatus::TargetingEnemy && !bShiftDown) // Not Targeting 
 	{
 		// Auto Running
 		if(GetAuraASC()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Player_Block_InputPressed)) return;
@@ -201,7 +231,7 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 			}
 		}
 		FollowTime = 0.f;
-		bTargeting = false;
+		TargetingStatus = ETargetingStatus::NotTargeting;
 	}
 }
 
@@ -216,7 +246,7 @@ void AAuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag) // Tick
 		return;
 	}
 
-	if (bTargeting || bShiftDown) // Targeting || ShiftDown
+	if (TargetingStatus == ETargetingStatus::TargetingEnemy || bShiftDown) // Targeting || ShiftDown
 	{
 		GetAuraASC()->AbilityInputHeld(InputTag);
 	}

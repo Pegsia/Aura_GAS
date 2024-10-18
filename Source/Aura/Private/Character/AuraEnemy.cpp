@@ -126,7 +126,7 @@ void AAuraEnemy::InitHealthBar()
 	}
 }
 
-void AAuraEnemy::HighLightActor()
+void AAuraEnemy::HighLightActor_Implementation()
 {
 	// PostProcessVolume- Post Process Materials
 	GetMesh()->SetRenderCustomDepth(true);
@@ -135,7 +135,7 @@ void AAuraEnemy::HighLightActor()
 	Weapon->SetCustomDepthStencilValue(CUSTOM_DEPTH_RED);
 }
 
-void AAuraEnemy::UnHighLightActor()
+void AAuraEnemy::UnHighLightActor_Implementation()
 {
 	GetMesh()->SetRenderCustomDepth(false);
 	Weapon->SetRenderCustomDepth(false);
