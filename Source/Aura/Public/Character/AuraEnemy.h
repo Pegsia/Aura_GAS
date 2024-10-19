@@ -6,6 +6,7 @@
 #include "Character/AuraCharacterBase.h"
 #include "EnemyInterface.h"
 #include "HighLightInterface.h"
+#include "Aura/Aura.h"
 #include "UI/WidgetController/OverlayWidgetController.h"
 #include "AuraEnemy.generated.h"
 
@@ -30,6 +31,7 @@ public:
 	//~ Begin IHighLightInterface
 	virtual void HighLightActor_Implementation() override;
 	virtual void UnHighLightActor_Implementation() override;
+	virtual void SetMoveToLocation_Implementation(FVector& OutLocation) override;
 	//~ End IHighLightInterface
 	
 	//~ Begin IEnemyInterface
@@ -73,6 +75,9 @@ public:
 	
 	UPROPERTY(VisibleAnywhere)
 	FName RangedAttackerKey = "RangedAttacker";
+
+	UPROPERTY(EditDefaultsOnly, Category = "Glow")
+	TEnumAsByte<ECustomDepthColor> HighLightColor;
 	
 protected:
 	//~ Begin AuraCharacterBase Interface

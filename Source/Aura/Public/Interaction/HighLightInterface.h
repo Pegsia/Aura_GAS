@@ -6,7 +6,7 @@
 #include "UObject/Interface.h"
 #include "HighLightInterface.generated.h"
 
-UINTERFACE(MinimalAPI)
+UINTERFACE(MinimalAPI, BlueprintType)
 class UHighLightInterface : public UInterface
 {
 	GENERATED_BODY()
@@ -25,4 +25,7 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent)
 	void UnHighLightActor();
+
+	UFUNCTION(BlueprintNativeEvent)
+	void SetMoveToLocation(FVector& OutLocation);
 };

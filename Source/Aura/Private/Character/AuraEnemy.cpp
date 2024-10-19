@@ -2,7 +2,6 @@
 
 
 #include "Character/AuraEnemy.h"
-#include "Aura/Aura.h"
 #include "AuraAbilitySystemComponent.h"
 #include "AuraAbilitySystemLibrary.h"
 #include "AuraAIController.h"
@@ -12,7 +11,6 @@
 #include "AuraUserWidget.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardComponent.h"
-#include "Debuff/AuraDebuffNiagaraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 AAuraEnemy::AAuraEnemy()
@@ -58,6 +56,11 @@ void AAuraEnemy::PossessedBy(AController* NewController)
 void AAuraEnemy::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	// For OutLineColor
+	GetMesh()->SetCustomDepthStencilValue(HighLightColor.GetIntValue());
+	Weapon->SetCustomDepthStencilValue(HighLightColor.GetIntValue());
+	
 	GetCharacterMovement()->MaxWalkSpeed = BaseWalkSpeed;
 	
 	InitialAbilityActorInfo();		// Init ASC
@@ -130,15 +133,18 @@ void AAuraEnemy::HighLightActor_Implementation()
 {
 	// PostProcessVolume- Post Process Materials
 	GetMesh()->SetRenderCustomDepth(true);
-	GetMesh()->SetCustomDepthStencilValue(CUSTOM_DEPTH_RED);
 	Weapon->SetRenderCustomDepth(true);
-	Weapon->SetCustomDepthStencilValue(CUSTOM_DEPTH_RED);
 }
 
 void AAuraEnemy::UnHighLightActor_Implementation()
 {
 	GetMesh()->SetRenderCustomDepth(false);
 	Weapon->SetRenderCustomDepth(false);
+}
+
+void AAuraEnemy::SetMoveToLocation_Implementation(FVector& OutLocation)
+{
+	// Don't Implement this, we do nothing for Enemies 
 }
 
 void AAuraEnemy::SetCombatTarget_Implementation(AActor* InCombatTarget)

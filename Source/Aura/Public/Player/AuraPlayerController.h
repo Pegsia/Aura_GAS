@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
-#include "EnemyInterface.h"
 #include "GameplayTagContainer.h"
 #include "AuraPlayerController.generated.h"
 
@@ -84,8 +83,8 @@ private:
 
 	// Input CallBacks
 	void AbilityInputTagPressed(FGameplayTag InputTag);
-	void AbilityInputTagReleased(FGameplayTag InputTag);
 	void AbilityInputTagHeld(FGameplayTag InputTag);
+	void AbilityInputTagReleased(FGameplayTag InputTag);
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	TObjectPtr<UAuraInputConfig> InputConfig; // FAuraInputAction: UInputAcion, FGameplayTag

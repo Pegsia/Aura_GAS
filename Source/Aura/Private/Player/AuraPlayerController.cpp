@@ -16,6 +16,7 @@
 #include "NiagaraFunctionLibrary.h"
 #include "AuraMagicCircleActor.h"
 #include "HighLightInterface.h"
+#include "EnemyInterface.h"
 #include "Aura/Aura.h"
 
 AAuraPlayerController::AAuraPlayerController()
@@ -191,50 +192,6 @@ void AAuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 	GetAuraASC()->AbilityInputPressed(InputTag);	
 }
 
-void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
-{
-	if(GetAuraASC() && GetAuraASC()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Player_Block_InputReleased)) return;
-	
-	// Not Moving
-	if (!InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB))
-	{
-		GetAuraASC()->AbilityInputReleased(InputTag);
-		return;
-	}
-
-	GetAuraASC()->AbilityInputReleased(InputTag);
-
-	if (TargetingStatus != ETargetingStatus::TargetingEnemy && !bShiftDown) // Not Targeting 
-	{
-		// Auto Running
-		if(GetAuraASC()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Player_Block_InputPressed)) return;
-		
-		const APawn* ControlledPawn = GetPawn();
-		if (FollowTime <= ShortPressThreshold && ControlledPawn)
-		{			
-			UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ClickNiagaraSystem, CachedDestination);
-			
-			// Need a NavMesh
-			if (UNavigationPath* NavPath = UNavigationSystemV1::FindPathToLocationSynchronously(this, ControlledPawn->GetActorLocation(), CachedDestination))
-			{
-				SplineComponent->ClearSplinePoints();
-				for (const FVector& PointLocation : NavPath->PathPoints)
-				{
-					SplineComponent->AddSplinePoint(PointLocation, ESplineCoordinateSpace::World);
-					//DrawDebugSphere(GetWorld(), PointLocation, 16.f, 8, FColor::Cyan, false, 3.f);
-				}
-				if (NavPath->PathPoints.Num() > 0)
-				{
-					CachedDestination = NavPath->PathPoints.Last(); // 将终点设置为path最后的点，确保该点可达
-				}
-				bAutoRunning = true;
-			}
-		}
-		FollowTime = 0.f;
-		TargetingStatus = ETargetingStatus::NotTargeting;
-	}
-}
-
 void AAuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag) // Tick
 {
 	if(GetAuraASC() && GetAuraASC()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Player_Block_InputHeld)) return;
@@ -267,6 +224,58 @@ void AAuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag) // Tick
 				ControlledPawn->AddMovementInput(MoveDirection);
 			}
 		}
+	}
+}
+
+void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
+{
+	if(GetAuraASC() && GetAuraASC()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Player_Block_InputReleased)) return;
+	
+	// Not Moving
+	if (!InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB))
+	{
+		GetAuraASC()->AbilityInputReleased(InputTag);
+		return;
+	}
+
+	GetAuraASC()->AbilityInputReleased(InputTag);
+
+	if (TargetingStatus != ETargetingStatus::TargetingEnemy && !bShiftDown) // Not Targeting 
+	{
+		// Auto Running
+		if(GetAuraASC()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Player_Block_InputPressed)) return;
+		
+		const APawn* ControlledPawn = GetPawn();
+		if (FollowTime <= ShortPressThreshold && ControlledPawn)
+		{
+			if(IsValid(ThisActor) && ThisActor->Implements<UHighLightInterface>())
+			{
+				IHighLightInterface::Execute_SetMoveToLocation(ThisActor, CachedDestination);
+			}
+			else
+			{
+				// Clicked UnHighLightActor, Spawn Click Niagara
+				UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ClickNiagaraSystem, CachedDestination);
+			}
+			
+			// Need a NavMesh
+			if (UNavigationPath* NavPath = UNavigationSystemV1::FindPathToLocationSynchronously(this, ControlledPawn->GetActorLocation(), CachedDestination))
+			{
+				SplineComponent->ClearSplinePoints();
+				for (const FVector& PointLocation : NavPath->PathPoints)
+				{
+					SplineComponent->AddSplinePoint(PointLocation, ESplineCoordinateSpace::World);
+					//DrawDebugSphere(GetWorld(), PointLocation, 16.f, 8, FColor::Cyan, false, 3.f);
+				}
+				if (NavPath->PathPoints.Num() > 0)
+				{
+					CachedDestination = NavPath->PathPoints.Last(); // 将终点设置为path最后的点，确保该点可达
+				}
+				bAutoRunning = true;
+			}
+		}
+		FollowTime = 0.f;
+		TargetingStatus = ETargetingStatus::NotTargeting;
 	}
 }
 

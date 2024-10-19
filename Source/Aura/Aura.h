@@ -4,9 +4,16 @@
 
 #include "CoreMinimal.h"
 
-#define CUSTOM_DEPTH_RED 250 // AuraEnemy.cpp
-#define CUSTOM_DEPTH_BLUE 251 
-#define CUSTOM_DEPTH_TAN 252 
+// High Light Color
+UENUM(BlueprintType)
+enum ECustomDepthColor : uint8
+{
+	None,
+	Red = 250,
+	Blue = 251,
+	Tan = 252	
+};
+
 #define ECC_Projectile ECollisionChannel::ECC_GameTraceChannel1
 #define ECC_CursorTarget ECollisionChannel::ECC_GameTraceChannel2
 #define ECC_ExcludePlayers ECollisionChannel::ECC_GameTraceChannel3
