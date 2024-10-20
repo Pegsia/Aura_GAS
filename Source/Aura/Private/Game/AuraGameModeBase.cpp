@@ -81,13 +81,19 @@ UAuraSaveGame_LoadSlot* AAuraGameModeBase::LoadInGameProgressData() const
 }
 
 // Save Actors
-void AAuraGameModeBase::SaveWorldState(const UWorld* World) const
+void AAuraGameModeBase::SaveWorldState(const UWorld* World, const FString& DestinationMapAssetName) const
 {
 	FString MapName = World->GetMapName();
 	MapName.RemoveFromStart(World->StreamingLevelsPrefix);
 	
 	if(UAuraSaveGame_LoadSlot* AuraSaveGame = LoadInGameProgressData())
 	{
+		if(DestinationMapAssetName != FString(""))
+		{
+			AuraSaveGame->MapName = GetMapNameFromMapAssetName(DestinationMapAssetName);
+			AuraSaveGame->DestinationMapAssetName = DestinationMapAssetName;
+		}
+		
 		// Create Current SavedMap
 		// Save SavedMap's Saved Actors
 		// Replace SavedMaps with Current SavedMap
@@ -191,6 +197,18 @@ AActor* AAuraGameModeBase::ChoosePlayerStart_Implementation(AController* Player)
 		return SelectedActor;
 	}
 	return nullptr;
+}
+
+FString AAuraGameModeBase::GetMapNameFromMapAssetName(const FString& MapAssetName) const
+{
+	for(const TTuple<FString, TSoftObjectPtr<UWorld>>& Pair : MapNameToMap)
+	{
+		if(Pair.Value.ToSoftObjectPath().GetAssetName() == MapAssetName)
+		{
+			return Pair.Key;
+		}
+	}
+	return FString();
 }
 
 void AAuraGameModeBase::LoadMap(const UMVVM_LoadSlot* LoadSlot) const

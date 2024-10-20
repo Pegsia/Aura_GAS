@@ -38,7 +38,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	UFUNCTION()
-	void OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	virtual void OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	UFUNCTION()
 	void OnBoxOverlapWithoutSave(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
@@ -61,19 +61,19 @@ protected:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UStaticMeshComponent> CheckpointMesh;
-	
-private:
+
 	UPROPERTY(SaveGame)
 	bool bReached = false;
 
-	UPROPERTY()
-	TObjectPtr<UMaterialInstanceDynamic> GlowDynamicMaterialInstance;
-	
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UBoxComponent> BoxComponent;
 
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<USceneComponent> MoveToComponent;
+	
+private:
+	UPROPERTY()
+	TObjectPtr<UMaterialInstanceDynamic> GlowDynamicMaterialInstance;
 
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UTimelineComponent> NativeGlowTimeLine;

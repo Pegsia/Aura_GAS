@@ -100,6 +100,9 @@ public:
 	FString MapName = FString("Default Map Name");
 
 	UPROPERTY()
+	FString DestinationMapAssetName = FString("Default Destination Map Asset Name");
+	
+	UPROPERTY()
 	TEnumAsByte<ESaveGameSlotStatus> SlotStatus = Vacant;
 
 	UPROPERTY()

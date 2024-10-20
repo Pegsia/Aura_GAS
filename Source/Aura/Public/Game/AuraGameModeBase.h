@@ -42,7 +42,7 @@ public:
 	UAuraSaveGame_LoadSlot* LoadInGameProgressData() const;
 
 	// Save Actors
-	void SaveWorldState(const UWorld* World) const;
+	void SaveWorldState(const UWorld* World, const FString& DestinationMapAssetName = FString("")) const;
 	void LoadWorldState(const UWorld* World) const;
 
 	// Load selected slot Map
@@ -55,6 +55,8 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Map")
 	TMap<FString, TSoftObjectPtr<UWorld>> MapNameToMap;
 
+	FString GetMapNameFromMapAssetName(const FString& MapAssetName) const;
+	
 	void LoadMap(const UMVVM_LoadSlot* LoadSlot) const;
 
 	// Play Start
