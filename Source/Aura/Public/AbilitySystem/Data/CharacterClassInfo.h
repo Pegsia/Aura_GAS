@@ -51,6 +51,7 @@ public:
 
 	FCharacterClassDefaultInfo GetClassDefaultInfo(const ECharacterClass& CharacterClass) const;
 
+	// Common
 	UPROPERTY(EditDefaultsOnly, Category = "Common Class Defaults")
 	TSubclassOf<UGameplayEffect> PrimaryAttributesSetByCaller;
 	

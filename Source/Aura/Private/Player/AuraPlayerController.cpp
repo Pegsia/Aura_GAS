@@ -168,7 +168,9 @@ void AAuraPlayerController::SetupInputComponent()
 	AuraInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AAuraPlayerController::Move);
 	AuraInputComponent->BindAction(ShiftAction, ETriggerEvent::Started, this, &AAuraPlayerController::ShiftPressed);
 	AuraInputComponent->BindAction(ShiftAction, ETriggerEvent::Completed, this, &AAuraPlayerController::ShiftReleased); // 根据绑定的函数选择特定的delegate
-	AuraInputComponent->BindAbilityActions(InputConfig, this, &AAuraPlayerController::AbilityInputTagPressed, &AAuraPlayerController::AbilityInputTagReleased, &AAuraPlayerController::AbilityInputTagHeld);
+	AuraInputComponent->BindAbilityActions(InputConfig, this, &AAuraPlayerController::AbilityInputTagPressed, &AAuraPlayerController::AbilityInputTagHeld, &AAuraPlayerController::AbilityInputTagReleased);
+
+	// AuraInputComponent->BindAction(LookAroundAction, ETriggerEvent::Triggered, this, &AAuraPlayerController::LookAround);
 }
 
 void AAuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
@@ -276,6 +278,23 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 		}
 		FollowTime = 0.f;
 		TargetingStatus = ETargetingStatus::NotTargeting;
+	}
+}
+
+void AAuraPlayerController::LookAround(const FInputActionValue& InputActionValue)
+{
+	if(APawn* MyPawn = GetPawn())
+	{
+		const FVector2d Value = InputActionValue.Get<FVector2d>();
+		if (Value.X != 0.0f)
+		{
+			MyPawn->AddControllerYawInput(Value.X);
+		}
+
+		if (Value.Y != 0.0f)
+		{
+			MyPawn->AddControllerPitchInput(Value.Y);
+		}
 	}
 }
 
