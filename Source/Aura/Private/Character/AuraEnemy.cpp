@@ -58,7 +58,7 @@ void AAuraEnemy::BeginPlay()
 	Super::BeginPlay();
 	
 	// For OutLineColor
-	GetMesh()->SetCustomDepthStencilValue(HighLightColor.GetIntValue());
+	GetMesh()->SetCustomDepthStencilValue(HighLightColor.GetIntValue()); // 放在构造函数中只能使用默认值，因为在蓝图中更改需要程序运行阶段的反射起作用
 	Weapon->SetCustomDepthStencilValue(HighLightColor.GetIntValue());
 	
 	GetCharacterMovement()->MaxWalkSpeed = BaseWalkSpeed;

@@ -16,6 +16,7 @@ class UAbilitySystemComponent;
 class UAttributeSet;
 class UGameplayEffect;
 class UGameplayAbility;
+class AAuraEnemySpawnPoint;
 
 UCLASS(Abstract)
 class AURA_API AAuraCharacterBase : public ACharacter, public IAbilitySystemInterface, public ICombatInterface
@@ -63,6 +64,9 @@ public:
 	
 	UFUNCTION(NetMulticast, Reliable)
 	virtual void MulticastHandleCharacterDeath(const FVector& ImpulseVector);
+
+	// For Enemy Spawn 
+	friend AAuraEnemySpawnPoint;
 	
 protected:
 	virtual void BeginPlay() override;

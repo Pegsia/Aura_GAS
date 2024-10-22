@@ -17,7 +17,7 @@ class AURA_API UMMC_MaxMana : public UGameplayModMagnitudeCalculation
 public:
 	UMMC_MaxMana();
 
-	float CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const override;
+	virtual float CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const override;
 
 private:
 	FGameplayEffectAttributeCaptureDefinition IntelligenceDef;
