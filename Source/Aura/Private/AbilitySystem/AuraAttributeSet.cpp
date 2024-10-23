@@ -144,12 +144,15 @@ void UAuraAttributeSet::HandleIncomingDamage(const FEffectProperties& Props)
 			SendXPEvent(Props);
 		}
 
+		// Passive
 		HandlePassiveEffect(Props, LocalIncomingDamage);
-		
+
+		// UI
 		const bool bBlockedHit = UAuraAbilitySystemLibrary::IsBlockedHit(Props.EffectContextHandle);
 		const bool bCriticalHit = UAuraAbilitySystemLibrary::IsCriticalHit(Props.EffectContextHandle);
 		ShowFloatingDamage(Props, LocalIncomingDamage, bBlockedHit, bCriticalHit);
-		
+
+		// Debuff
 		if(UAuraAbilitySystemLibrary::IsSuccessfulDebuff(Props.EffectContextHandle))
 		{
 			HandleDebuff(Props);
@@ -299,16 +302,10 @@ void UAuraAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData
 	{
 		OutProps.SourceAvatarActor = OutProps.SourceASC->GetAvatarActor();
 		OutProps.SourceController = OutProps.SourceASC->AbilityActorInfo->PlayerController.Get();
+		OutProps.SourceCharacter = Cast<ACharacter>(OutProps.SourceAvatarActor);
 		if (OutProps.SourceController == nullptr && OutProps.SourceAvatarActor != nullptr)
 		{
-			if (APawn* Pawn = Cast<APawn>(OutProps.SourceAvatarActor))
-			{
-				OutProps.SourceController = Pawn->GetController();
-			}
-		}
-		if (OutProps.SourceController)
-		{
-			OutProps.SourceCharacter = Cast<ACharacter>(OutProps.SourceController->GetPawn());
+			OutProps.SourceController = OutProps.SourceCharacter->GetController();
 		}
 	}
 

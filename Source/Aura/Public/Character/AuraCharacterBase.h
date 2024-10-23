@@ -89,7 +89,8 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	FName TailSocketName;
-	
+
+	UPROPERTY(BlueprintReadOnly) // For ABP_Aura and IsDead
 	bool bDead = false;
 	
 	// Initial Ability Actor Info(PC, PS, ASC, AS)

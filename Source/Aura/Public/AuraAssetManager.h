@@ -7,7 +7,8 @@
 #include "AuraAssetManager.generated.h"
 
 /**
- * 
+ * A singleton UObject that is responsible for loading and unloading PrimaryAssets
+ * and maintaining game-specific asset references
  */
 UCLASS()
 class AURA_API UAuraAssetManager : public UAssetManager
@@ -18,5 +19,5 @@ public:
 	static UAuraAssetManager& Get();
 
 protected:
-	virtual void StartInitialLoading();
+	virtual void StartInitialLoading() override;
 };

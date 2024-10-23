@@ -67,6 +67,9 @@ public:
 	FName DefaultPlayerStartTag;
 	
 	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
+
+	// Player Dead
+	void PlayerDead(ACharacter* Character);
 	
 protected:
 	virtual void BeginPlay() override;

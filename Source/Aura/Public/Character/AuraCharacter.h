@@ -43,6 +43,7 @@ public:
 	
 	//~ Begin ICombatInterface
 	virtual int32 GetPlayerLevel_Implementation() override;
+	virtual void CharacterDeath(const FVector& ImpulseVector) override;
 	//~ End ICombatInterface
 
 protected:
@@ -64,6 +65,11 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Component")
 	FRotator AuraRotationRate{0.f, 400.f, 0.f};
 
+	UPROPERTY(EditDefaultsOnly, Category = "Dead")
+	float DeathWaitTime = 5.f;
+
+	FTimerHandle DeathTimerHandle;
+	
 private:
 	//~ Begin AuraCharacterBase Interface
 	virtual void InitialAbilityActorInfo() override;

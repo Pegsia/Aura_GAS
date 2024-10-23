@@ -11,6 +11,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Serialization/ObjectAndNameAsStringProxyArchive.h"
 #include "UI/ViewModel/MVVM_LoadSlot.h"
+#include "GameFramework/Character.h"
 
 void AAuraGameModeBase::BeginPlay()
 {
@@ -27,6 +28,7 @@ void AAuraGameModeBase::SaveGame_LoadSlot(const UMVVM_LoadSlot* LoadSlot) const
 	DeleteSaveGame_LoadSlot(LoadSlot);
 	UAuraSaveGame_LoadSlot* SaveGame_LoadSlot = Cast<UAuraSaveGame_LoadSlot>(UGameplayStatics::CreateSaveGameObject(SaveGameLoadSlotClass));
 	SaveGame_LoadSlot->MapName = LoadSlot->GetMapName();
+	SaveGame_LoadSlot->DestinationMapAssetName = LoadSlot->MapAssetName;
 	SaveGame_LoadSlot->PlayerName = LoadSlot->GetPlayerName();
 	SaveGame_LoadSlot->SlotStatus = LoadSlot->SaveGame_SlotStatus;
 	SaveGame_LoadSlot->PlayerStartTag = LoadSlot->SaveGame_PlayerStartTag;
@@ -90,6 +92,8 @@ void AAuraGameModeBase::SaveWorldState(const UWorld* World, const FString& Desti
 	{
 		if(DestinationMapAssetName != FString(""))
 		{
+			// MapName: First Dungeon, DestinationMapAssetName: Dungeon
+			//MapNameToMap.Emplace(DefaultMapName, DefaultMap);
 			AuraSaveGame->MapName = GetMapNameFromMapAssetName(DestinationMapAssetName);
 			AuraSaveGame->DestinationMapAssetName = DestinationMapAssetName;
 		}
@@ -197,6 +201,14 @@ AActor* AAuraGameModeBase::ChoosePlayerStart_Implementation(AController* Player)
 		return SelectedActor;
 	}
 	return nullptr;
+}
+
+void AAuraGameModeBase::PlayerDead(ACharacter* Character)
+{
+	if(UAuraSaveGame_LoadSlot* AuraSaveGame = LoadInGameProgressData())
+	{
+		UGameplayStatics::OpenLevel(Character, FName(AuraSaveGame->DestinationMapAssetName));
+	}
 }
 
 FString AAuraGameModeBase::GetMapNameFromMapAssetName(const FString& MapAssetName) const

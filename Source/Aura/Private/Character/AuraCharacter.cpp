@@ -211,6 +211,22 @@ int32 AAuraCharacter::GetPlayerLevel_Implementation() // ExecCalc, MMC
 	return GetAuraPSChecked()->GetPlayerLevel();
 }
 
+void AAuraCharacter::CharacterDeath(const FVector& ImpulseVector)
+{
+	Super::CharacterDeath(ImpulseVector);
+
+	if(AAuraGameModeBase* GameModeBase = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(this)))
+	{
+		FTimerDelegate DeathTimerDelegate;
+		DeathTimerDelegate.BindLambda([this, GameModeBase]()
+		{
+			GameModeBase->PlayerDead(this);
+		});
+		GetWorldTimerManager().SetTimer(DeathTimerHandle, DeathTimerDelegate, DeathWaitTime, false);
+		CameraComponent->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform); // 死亡之后摄像机会掉下去
+	}
+}
+
 void AAuraCharacter::OnRep_Burned()
 {
 	if(bIsBurned)
