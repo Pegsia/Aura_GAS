@@ -9,6 +9,7 @@
 #include "GameFramework/PlayerStart.h"
 #include "AuraCheckpoint.generated.h"
 
+class UWidgetComponent;
 class UTimelineComponent;
 class USphereComponent;
 class UBoxComponent;
@@ -70,8 +71,14 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<USceneComponent> MoveToComponent;
+
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<UUserWidget> SaveWidgetClass;
 	
 private:
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UWidgetComponent> SaveMessageComponent;
+	
 	UPROPERTY()
 	TObjectPtr<UMaterialInstanceDynamic> GlowDynamicMaterialInstance;
 

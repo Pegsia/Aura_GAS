@@ -159,6 +159,7 @@ AActor* AAuraEnemy::GetCombatTarget_Implementation() const
 
 void AAuraEnemy::CharacterDeath(const FVector& ImpulseVector)
 {
+	SpawnLootItems();
 	HealthBarComponent->DestroyComponent();
 	AuraAIController->GetBrainComponent()->StopLogic(TEXT("Died"));
 	SetLifeSpan(EnemyLifeSpan);

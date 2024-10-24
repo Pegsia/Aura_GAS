@@ -80,6 +80,10 @@ public:
 	TEnumAsByte<ECustomDepthColor> HighLightColor;
 	
 protected:
+	// Loot
+	UFUNCTION(BlueprintImplementableEvent)
+	void SpawnLootItems();
+	
 	//~ Begin AuraCharacterBase Interface
 	virtual void InitialAbilityActorInfo() override;
 	//~ End AuraCharacterBase Interface

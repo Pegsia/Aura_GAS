@@ -15,6 +15,7 @@
 #include "CombatInterface.h"
 #include "Aura/Aura.h"
 #include "ScalableFloat.h"
+#include "Components/WidgetComponent.h"
 
 bool UAuraAbilitySystemLibrary::GetWidgetControllerParams(const UObject* WorldContextObject, FWidgetControllerParams& OutWCParams, AAuraHUD*& OutAuraHUD)
 {
@@ -196,6 +197,13 @@ FGameplayEffectContextHandle UAuraAbilitySystemLibrary::ApplyDamageEffect(const 
 	return EffectContextHandle;
 }
 
+ULootTiersInfo* UAuraAbilitySystemLibrary::GetLootTiersInfo(const UObject* WorldContextObject)
+{
+	AAuraGameModeBase* AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
+	if (AuraGameMode == nullptr)	return nullptr;
+	return AuraGameMode->LootTiersInfo;
+}
+
 void UAuraAbilitySystemLibrary::GetLivePlayersWithinRadius(const UObject* WorldContextObject, TArray<AActor*>& OutOverlappedActors, const TArray<AActor*>& ActorsToIgnore, const FVector& SphereOrigin, float Radius)
 {
 	FCollisionQueryParams QueryParams;
@@ -275,6 +283,21 @@ TArray<FVector> UAuraAbilitySystemLibrary::EvenlySpacedVectors(const FVector& Fo
 		}
 	}
 	return Vectors;
+}
+
+void UAuraAbilitySystemLibrary::ShowPopUpWidget(TSubclassOf<UUserWidget> InWidgetClass, UObject* Outer,	USceneComponent* AttachComponent, float DurationTime)
+{
+	UWidgetComponent* SaveWidgetComponent = NewObject<UWidgetComponent>(Outer, UWidgetComponent::StaticClass());
+	SaveWidgetComponent->RegisterComponent();
+	SaveWidgetComponent->AttachToComponent(AttachComponent, FAttachmentTransformRules::KeepRelativeTransform);
+	SaveWidgetComponent->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform); // 马上脱离不会跟着角色移动
+			
+	SaveWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
+	SaveWidgetComponent->SetWidgetClass(InWidgetClass);
+	FTimerHandle DestroyHandle;
+	FTimerDelegate Delegate;
+	Delegate.BindLambda([SaveWidgetComponent](){ SaveWidgetComponent->DestroyComponent(); });
+	Outer->GetWorld()->GetTimerManager().SetTimer(DestroyHandle, Delegate, DurationTime, false);
 }
 
 /* Getter */

@@ -8,6 +8,7 @@
 #include "UI/ViewModel/MVVM_LoadSlot.h"
 #include "AuraGameModeBase.generated.h"
 
+class ULootTiersInfo;
 class UMVVM_LoadSlot;
 class USaveGame;
 class UAbilityInfo;
@@ -21,13 +22,16 @@ class AURA_API AAuraGameModeBase : public AGameModeBase
 	GENERATED_BODY()
 	
 public:
-	// Default RPG Info
-	UPROPERTY(EditDefaultsOnly, Category = "Character Class Default")
+	// Default RPG Information
+	UPROPERTY(EditDefaultsOnly, Category = "Information")
 	TObjectPtr<UCharacterClassInfo> CharacterClassInfo;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Character Class Default")
+	UPROPERTY(EditDefaultsOnly, Category = "Information")
 	TObjectPtr<UAbilityInfo> AbilityInfo;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Information")
+	TObjectPtr<ULootTiersInfo> LootTiersInfo;
+	
 	// Save, Load, Delete AuraSaveGame, Init SaveGameSlot
 	void SaveGame_LoadSlot(const UMVVM_LoadSlot* LoadSlot) const;
 

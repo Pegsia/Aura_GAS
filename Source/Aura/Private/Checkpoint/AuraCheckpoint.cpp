@@ -3,10 +3,12 @@
 
 #include "Checkpoint/AuraCheckpoint.h"
 
+#include "AuraAbilitySystemLibrary.h"
 #include "AuraGameModeBase.h"
 #include "PlayerInterface.h"
 #include "Components/BoxComponent.h"
 #include "Components/TimelineComponent.h"
+#include "Components/WidgetComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 AAuraCheckpoint::AAuraCheckpoint(const FObjectInitializer& ObjectInitializer)
@@ -29,6 +31,9 @@ AAuraCheckpoint::AAuraCheckpoint(const FObjectInitializer& ObjectInitializer)
 	MoveToComponent->SetupAttachment(GetRootComponent());
 
 	NativeGlowTimeLine = CreateDefaultSubobject<UTimelineComponent>("NativeGlowTimeLine");
+
+	SaveMessageComponent = CreateDefaultSubobject<UWidgetComponent>("SaveMessage");
+	SaveMessageComponent->SetupAttachment(CheckpointMesh);
 }
 
 void AAuraCheckpoint::BeginPlay()
@@ -57,6 +62,10 @@ void AAuraCheckpoint::LoadActor_Implementation()
 	if(bReached)
 	{
 		HandleGlowEffect();
+		if(IsValid(SaveMessageComponent))
+		{
+			SaveMessageComponent->DestroyComponent();
+		}
 	}
 }
 
@@ -74,6 +83,17 @@ void AAuraCheckpoint::OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 		}
 		IPlayerInterface::Execute_SaveProgress(OtherActor, PlayerStartTag);
 		HandleGlowEffect();
+
+		CheckpointMesh->SetRenderCustomDepth(false);
+		if(IsValid(SaveMessageComponent))
+		{
+			SaveMessageComponent->DestroyComponent();
+		}
+		
+		if(IsValid(OtherActor) && SaveWidgetClass)
+		{
+			UAuraAbilitySystemLibrary::ShowPopUpWidget(SaveWidgetClass, OtherActor, CheckpointMesh, 3.f);
+		}
 	}
 }
 
@@ -102,11 +122,21 @@ void AAuraCheckpoint::CheckpointReachedNative(const float Glow) const
 
 void AAuraCheckpoint::HighLightActor_Implementation()
 {
+	if(bReached) return;
+	if(UUserWidget* Message = SaveMessageComponent->GetWidget())
+	{
+		Message->SetVisibility(ESlateVisibility::Visible);
+	}
 	CheckpointMesh->SetRenderCustomDepth(true);
 }
 
 void AAuraCheckpoint::UnHighLightActor_Implementation()
 {
+	if(bReached) return;
+	if(UUserWidget* Message = SaveMessageComponent->GetWidget())
+	{
+		Message->SetVisibility(ESlateVisibility::Hidden);
+	}
 	CheckpointMesh->SetRenderCustomDepth(false);
 }
 

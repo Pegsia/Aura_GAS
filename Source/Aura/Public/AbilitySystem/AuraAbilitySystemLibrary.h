@@ -9,6 +9,7 @@
 #include "AuraAbilitySystemLibrary.generated.h"
 
 
+class ULootTiersInfo;
 class UAuraSaveGame_LoadSlot;
 class AAuraHUD;
 struct FWidgetControllerParams;
@@ -28,7 +29,7 @@ class AURA_API UAuraAbilitySystemLibrary : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 	
 public:
-	// Widget Controller 
+	/** Widget Controller */ 
 	UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|WidgetController", meta = (DefaultToSelf = "WorldContextObject"))
 	static bool GetWidgetControllerParams(const UObject* WorldContextObject, FWidgetControllerParams& OutWCParams, AAuraHUD*& OutAuraHUD);
 	
@@ -47,7 +48,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|Abilities")
 	static float GetEffectTimeRemainingByCooldownTag(const UAbilitySystemComponent* InASC, const FGameplayTag& CooldownTag);
 	
-	// Initial Character Or Get RPG CharacterInfo By Character Info 
+	/** Initial Character Or Get RPG CharacterInfo By Character Info */ 
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|CharacterClassDefault")
 	static UCharacterClassInfo* GetCharacterClassInfo(const UObject* WorldContextObject);
 	
@@ -57,7 +58,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|CharacterClassDefault")
 	static void InitializeCharacterDefaultAttributesFromSaveData(const UObject* WorldContextObject, UAbilitySystemComponent* ASC, const UAuraSaveGame_LoadSlot* LoadSlot);
 	
-	// Start Up Abilities
+	/** Start Up Abilities */
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|Ability")
 	static UAbilityInfo* GetAbilityInfo(const UObject* WorldContextObject);
 	
@@ -69,8 +70,12 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|DamageEffect")
 	static FGameplayEffectContextHandle ApplyDamageEffect(const FDamageEffectProperties& DamageEffectProps);
+
+	/** Loot */
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|Loot")
+	static ULootTiersInfo* GetLootTiersInfo(const UObject* WorldContextObject);
 	
-	// Combat Detection
+	/** Combat Detection */
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayMechanics")
 	static void GetLivePlayersWithinRadius(const UObject* WorldContextObject, TArray<AActor*>& OutOverlappedActors, const TArray<AActor*>& ActorsToIgnore, const FVector& SphereOrigin, float Radius);
 
@@ -80,17 +85,20 @@ public:
 	UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|GameplayMechanics")
 	static bool IsFriend(const AActor* FirstActor, const AActor* SecondActor);
 
-	// Projectiles
+	/** Projectiles */
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayMechanics")
 	static TArray<FRotator> EvenlySpacedRotators(const FVector& ForwardVector, const float& Spread, const int32& NumRotators, const FVector& Axis = FVector::UpVector);
 
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayMechanics")
 	static TArray<FVector> EvenlySpacedVectors(const FVector& ForwardVector, const float& Spread, const int32& NumVectors, const FVector& Axis = FVector::UpVector);
 
-	/* ------------------------------------------------------------
+	/** Pop Widget */
+	static void ShowPopUpWidget(TSubclassOf<UUserWidget> InWidgetClass, UObject* Outer, USceneComponent* AttachComponent, float DurationTime);
+	
+	/** ------------------------------------------------------------
 	 * Aura Gameplay Effect Context Handle
 	 * ------------------------------------------------------------*/ 	
-	/* Getter */
+	/** Getter */
 	UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|GameplayEffects")
 	static bool IsBlockedHit(const FGameplayEffectContextHandle& EffectContextHandle);
 	
@@ -130,7 +138,7 @@ public:
 	UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|GameplayEffects")
 	static float GetRadialDamageOuterRadius(const FGameplayEffectContextHandle& EffectContextHandle);
 	
-	/* Setter */
+	/** Setter */
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
 	static void SetIsBlockedHit(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, bool bInIsBlockedHit);
 	
@@ -170,7 +178,7 @@ public:
 	UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|GameplayEffects")
 	static void SetRadialDamageOuterRadius(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, const float& InRadialDamageOuterRadius);
 
-	// FDamageEffectProperties
+	/** FDamageEffectProperties */
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|DamageEffectProps")
 	static void SetDamageEffectPropRadialDamage(UPARAM(ref) FDamageEffectProperties& DamageEffectParams, bool InIsRadialDamage, float InnerRadius, float OuterRadius, FVector Origin);
 	
