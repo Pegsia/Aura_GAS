@@ -45,7 +45,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Apllied Effect")
 	bool bApplyEffectsToEnemies = false;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Apllied Effect")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Apllied Effect")
 	float ActorLevel = 1.f;
 
 	UFUNCTION(BlueprintCallable)

@@ -247,7 +247,7 @@ bool UAuraAbilitySystemLibrary::IsFriend(const AActor* FirstActor, const AActor*
 	return bBothPlayers || bBothEnemies;
 }
 
-TArray<FRotator> UAuraAbilitySystemLibrary::EvenlySpacedRotators(const FVector& ForwardVector, const float& Spread,	const int32& NumRotators, const FVector& Axis)
+TArray<FRotator> UAuraAbilitySystemLibrary::EvenlySpacedRotators(const FVector& ForwardVector, const float Spread,	const int32 NumRotators, const FVector& Axis)
 {
 	TArray<FRotator> Rotators;
 	if(NumRotators <= 1) Rotators.Emplace(ForwardVector.Rotation());
@@ -266,7 +266,7 @@ TArray<FRotator> UAuraAbilitySystemLibrary::EvenlySpacedRotators(const FVector& 
 	return Rotators;
 }
 
-TArray<FVector> UAuraAbilitySystemLibrary::EvenlySpacedVectors(const FVector& ForwardVector, const float& Spread, const int32& NumVectors, const FVector& Axis)
+TArray<FVector> UAuraAbilitySystemLibrary::EvenlySpacedVectors(const FVector& ForwardVector, const float Spread, const int32 NumVectors, const FVector& Axis)
 {
 	TArray<FVector> Vectors;
 	if(NumVectors <= 1) Vectors.Emplace(ForwardVector);
