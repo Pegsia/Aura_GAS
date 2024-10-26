@@ -32,13 +32,37 @@ class AURA_API AAuraEffectActor : public AActor
 	
 public:	
 	AAuraEffectActor();
+
+	virtual void Tick(float DeltaSeconds) override;
 	
 protected:
 	virtual void BeginPlay() override;
 
-	UFUNCTION(CallInEditor)
-	void TestCallInEditor();
+	/** Tick Movement */
+	UPROPERTY(EditDefaultsOnly, Category = "TickMovement")
+	bool bRotateMovement = false;
+
+	UPROPERTY(EditDefaultsOnly, Category = "TickMovement")
+	float RotationRate = 45.f;
+
+	FRotator InitializeRotation;
 	
+	UPROPERTY(EditDefaultsOnly, Category = "TickMovement")
+	bool bSinusoidalMovement = false;
+
+	FVector InitializeLocation;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "TickMovement")
+	float SineAmplitude = 1.f;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "TickMovement")
+	float SinePeriodConstant = 1.f;
+
+	float SinePeriod = 2 * PI;
+	
+	void TickMovement(float DeltaTime) const;
+	
+	/** Effect Apply */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Apllied Effect")
 	bool bDestroyOnEffectApplication = false;
 
@@ -82,4 +106,10 @@ protected:
 	EEffectRemovalPolicy InfiniteEffectRemovalPolicy = EEffectRemovalPolicy::DoNotRemove;
 
 	TMap<FActiveGameplayEffectHandle, UAbilitySystemComponent*> ActiveEffectHandleMap;
+
+private:
+	float RunningTime = 0.f;
+	
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UStaticMeshComponent> EffectMesh;
 };

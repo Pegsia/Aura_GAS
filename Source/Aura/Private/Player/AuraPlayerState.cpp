@@ -63,8 +63,8 @@ void AAuraPlayerState::AddToXP(int32 InXP)
 		const int32 AttributePointsToReward = LevelUpInfo->LevelUpInformation[Level].AttributePointReward;
 		const int32 SpellPointsToReward = LevelUpInfo->LevelUpInformation[Level].SpellPointReward;
 		AddToAttributePoints(AttributePointsToReward);
-		AddToSpellPoints(SpellPointsToReward);		
-		AddToLevel(1);		
+		AddToSpellPoints(SpellPointsToReward);
+		AddToLevel(1);
 	}
 	if(bLeveledUp) // Don't do this in while loop, when leveling up multiply times ABILITYLIST_SCOPE_LOCK will prevent as adding abilities
 	{

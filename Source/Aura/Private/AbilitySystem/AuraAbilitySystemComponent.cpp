@@ -39,6 +39,8 @@ void UAuraAbilitySystemComponent::AddCharacterLoadedAbilities(const UAuraSaveGam
 		GiveAbility(AbilitySpec);
 		if(Ability.AbilityStatusTag.MatchesTagExact(AuraGameplayTags.Abilities_Status_Equipped))
 		{
+			// If player spend point at other passive spell and equip them replace the passive spell which given by function GiveAbilityAndActivateOnce,
+			// when EndAbility, it's AbilitySpec will be removed from GetActivateableAbilities() returns,
 			TryActivateAbility(AbilitySpec.Handle); // Don't just give and activate 
 		}
 	}
@@ -156,6 +158,7 @@ void UAuraAbilitySystemComponent::AbilityInputPressed(const FGameplayTag& InputT
 			AbilitySpecInputPressed(AbilitySpec);
 			if (AbilitySpec.IsActive()) // Active, InvokeReplicatedEvent
 			{
+				// Wait Input Pressed, Wait Input Released in GA_Lightning
 				InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputPressed, AbilitySpec.Handle, AbilitySpec.ActivationInfo.GetActivationPredictionKey());
 			}
 		}

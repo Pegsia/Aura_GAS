@@ -8,19 +8,45 @@
 
 AAuraEffectActor::AAuraEffectActor()
 {
- 	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 	SetRootComponent(CreateDefaultSubobject<USceneComponent>("SceneRoot"));
+
+	EffectMesh = CreateDefaultSubobject<UStaticMeshComponent>("EffectMesh");
+	EffectMesh->SetupAttachment(GetRootComponent());
 }
 
 void AAuraEffectActor::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	if(!bRotateMovement && !bSinusoidalMovement)
+	{
+		PrimaryActorTick.SetTickFunctionEnable(false);
+	}
+	InitializeRotation = GetActorRotation();
+	InitializeLocation = GetActorLocation();
+	SinePeriod = 2 * PI / SinePeriodConstant;
 }
 
-void AAuraEffectActor::TestCallInEditor()
+void AAuraEffectActor::Tick(float DeltaSeconds)
 {
-	UE_LOG(LogTemp, Error, TEXT("TestCallInEditor"));
+	Super::Tick(DeltaSeconds);
+
+	RunningTime += DeltaSeconds;
+	if(RunningTime >= SinePeriod) RunningTime = 0.f;
+	TickMovement(DeltaSeconds);
+}
+
+void AAuraEffectActor::TickMovement(float DeltaTime) const
+{
+	if(bRotateMovement)
+	{
+		EffectMesh->AddRelativeRotation(FRotator(0.f, RotationRate * DeltaTime, 0.f));
+	}
+	if(bSinusoidalMovement)
+	{
+		EffectMesh->SetRelativeLocation(FVector(0.f, 0.f, SineAmplitude * FMath::Sin(RunningTime * SinePeriodConstant)));
+	}
 }
 
 void AAuraEffectActor::ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGameplayEffect> GameplayEffectClass)
@@ -48,7 +74,6 @@ void AAuraEffectActor::ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGam
 		Destroy();
 	}
 }
-
 
 void AAuraEffectActor::OnBeginOverlap(AActor* TargetActor)
 {
