@@ -9,6 +9,7 @@
 
 class UGameplayEffect;
 class UAbilitySystemComponent;
+class UTimelineComponent;
 
 UENUM(BlueprintType)
 enum class EEffectApplicationPolicy
@@ -44,13 +45,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "TickMovement")
 	float RotationRate = 45.f;
-
-	FRotator InitializeRotation;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "TickMovement")
 	bool bSinusoidalMovement = false;
-
-	FVector InitializeLocation;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "TickMovement")
 	float SineAmplitude = 1.f;
@@ -59,6 +56,14 @@ protected:
 	float SinePeriodConstant = 1.f;
 
 	float SinePeriod = 2 * PI;
+
+	UFUNCTION(BlueprintCallable)
+	void SetSpawnEffect();
+	
+	UFUNCTION(BlueprintNativeEvent)
+	void SpawnTransform();
+
+	bool bPauseTickMovement = false;
 	
 	void TickMovement(float DeltaTime) const;
 	

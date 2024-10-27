@@ -23,8 +23,6 @@ void AAuraEffectActor::BeginPlay()
 	{
 		PrimaryActorTick.SetTickFunctionEnable(false);
 	}
-	InitializeRotation = GetActorRotation();
-	InitializeLocation = GetActorLocation();
 	SinePeriod = 2 * PI / SinePeriodConstant;
 }
 
@@ -34,7 +32,19 @@ void AAuraEffectActor::Tick(float DeltaSeconds)
 
 	RunningTime += DeltaSeconds;
 	if(RunningTime >= SinePeriod) RunningTime = 0.f;
-	TickMovement(DeltaSeconds);
+	if(!bPauseTickMovement) TickMovement(DeltaSeconds);	
+}
+
+void AAuraEffectActor::SetSpawnEffect()
+{
+	bPauseTickMovement = true;
+	SpawnTransform();
+	SetLifeSpan(10.f);
+}
+
+void AAuraEffectActor::SpawnTransform_Implementation()
+{
+	bPauseTickMovement = false;
 }
 
 void AAuraEffectActor::TickMovement(float DeltaTime) const
