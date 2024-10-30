@@ -111,3 +111,8 @@ void UOverlayWidgetController::OnAbilityEquip(const FGameplayTag& AbilityTag, co
 	NewInfo.AbilityStatusTag = StateTag;
 	AbilityInfoDelegate.Broadcast(NewInfo);
 }
+
+void UOverlayWidgetController::SetMenuButtonEnable(bool bEnable) const
+{
+	OnMenuButtonEnableDelegate.Broadcast(bEnable);
+}

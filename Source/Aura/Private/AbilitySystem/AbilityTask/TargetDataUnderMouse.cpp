@@ -24,12 +24,12 @@ void UTargetDataUnderMouse::Activate()
 		const FGameplayAbilitySpecHandle SpecHandle = GetAbilitySpecHandle();
 		const FPredictionKey ActivationPredictionKey = GetActivationPredictionKey();
 		
-		// Bind FAbilityTargetDataSetDelegate CallBack
+		// When Server received TargetData, this delegate will broadcast, Bind FAbilityTargetDataSetDelegate CallBack
 		AbilitySystemComponent.Get()->AbilityTargetDataSetDelegate(SpecHandle, ActivationPredictionKey).AddUObject(this, &UTargetDataUnderMouse::OnTargetDataReplicatedCallBack);
 		
-		// Listed FAbilityTargetDataSetDelegate
+		// Call the Delegate
 		const bool bCalledDelegate = AbilitySystemComponent.Get()->CallReplicatedTargetDataDelegatesIfSet(SpecHandle, ActivationPredictionKey);
-		if (!bCalledDelegate)
+		if (!bCalledDelegate) // If client hasn't sent target data yet, wait for data
 		{
 			SetWaitingOnRemotePlayerData(); // 等待收到广播
 		}
@@ -38,7 +38,7 @@ void UTargetDataUnderMouse::Activate()
 
 void UTargetDataUnderMouse::SendMouseTargetData() const
 {
-	//To be called on server when a new prediction key is received from the client(In an RPC).
+	// Server allows Client to do things below i.e. predicted. Generate AbilitySystemComponent->ScopedPredictionKey blow
 	FScopedPredictionWindow ScopedPrediction(AbilitySystemComponent.Get());
 
 	APlayerController* PC = Ability->GetCurrentActorInfo()->PlayerController.Get();

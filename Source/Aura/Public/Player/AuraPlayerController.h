@@ -45,6 +45,13 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void HideMagicCircle();
+
+	UFUNCTION(BlueprintCallable)
+	void SetAuraInput();
+
+	UFUNCTION(BlueprintCallable)
+	void TogglePauseMenu();
+	
 protected:
 	//~ Begin APlayerController Interface
 	virtual void BeginPlay() override;
@@ -62,6 +69,15 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputAction> LookAroundAction;
 
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<UInputAction> PauseMenuAction;
+
+	UPROPERTY(EditDefaultsOnly, Category = "PauseMenu")
+	TSubclassOf<UUserWidget> PauseMenuClass;
+
+	UPROPERTY()
+	TObjectPtr<UUserWidget> PauseMenuInstance;
+	
 	void LookAround(const FInputActionValue& InputActionValue);
 	
 	void Move(const FInputActionValue& InputActionValue);

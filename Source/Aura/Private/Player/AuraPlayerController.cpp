@@ -7,6 +7,7 @@
 #include "AuraInputComponent.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AuraAbilitySystemComponent.h"
+#include "AuraAbilitySystemLibrary.h"
 #include "AuraGameplayTags.h"
 #include "NavigationSystem.h"
 #include "NavigationPath.h"
@@ -17,7 +18,9 @@
 #include "AuraMagicCircleActor.h"
 #include "HighLightInterface.h"
 #include "EnemyInterface.h"
+#include "OverlayWidgetController.h"
 #include "Aura/Aura.h"
+#include "Kismet/GameplayStatics.h"
 
 AAuraPlayerController::AAuraPlayerController()
 {
@@ -40,10 +43,7 @@ void AAuraPlayerController::BeginPlay()
 	bShowMouseCursor = true;
 	DefaultMouseCursor = EMouseCursor::Default;
 
-	FInputModeGameAndUI InputModeData;
-	InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-	InputModeData.SetHideCursorDuringCapture(false);
-	SetInputMode(InputModeData);
+	SetAuraInput();
 }
 
 void AAuraPlayerController::PlayerTick(float DeltaTime)
@@ -75,6 +75,14 @@ void AAuraPlayerController::HideMagicCircle()
 		bShowMouseCursor = true;
 		MagicCircle->Destroy();
 	}
+}
+
+void AAuraPlayerController::SetAuraInput()
+{
+	FInputModeGameAndUI InputModeData;
+	InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+	InputModeData.SetHideCursorDuringCapture(false);
+	SetInputMode(InputModeData);
 }
 
 void AAuraPlayerController::SetMagicCircleLocation()
@@ -168,6 +176,7 @@ void AAuraPlayerController::SetupInputComponent()
 	AuraInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AAuraPlayerController::Move);
 	AuraInputComponent->BindAction(ShiftAction, ETriggerEvent::Started, this, &AAuraPlayerController::ShiftPressed);
 	AuraInputComponent->BindAction(ShiftAction, ETriggerEvent::Completed, this, &AAuraPlayerController::ShiftReleased); // 根据绑定的函数选择特定的delegate
+	AuraInputComponent->BindAction(PauseMenuAction, ETriggerEvent::Triggered, this, &AAuraPlayerController::TogglePauseMenu);
 	AuraInputComponent->BindAbilityActions(InputConfig, this, &AAuraPlayerController::AbilityInputTagPressed, &AAuraPlayerController::AbilityInputTagHeld, &AAuraPlayerController::AbilityInputTagReleased);
 
 	// AuraInputComponent->BindAction(LookAroundAction, ETriggerEvent::Triggered, this, &AAuraPlayerController::LookAround);
@@ -278,6 +287,33 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 		}
 		FollowTime = 0.f;
 		TargetingStatus = ETargetingStatus::NotTargeting;
+	}
+}
+
+void AAuraPlayerController::TogglePauseMenu()
+{
+	if(IsValid(PauseMenuInstance) && PauseMenuInstance->IsInViewport())
+	{
+		PauseMenuInstance->RemoveFromParent();
+		PauseMenuInstance = nullptr;
+
+		UGameplayStatics::SetGamePaused(this, false);
+		UAuraAbilitySystemLibrary::GetOverlayWidgetController(this)->SetMenuButtonEnable(true);
+		// SetAuraInput();
+		return;
+	}
+	if(PauseMenuClass)
+	{
+		PauseMenuInstance = CreateWidget<UUserWidget>(this, PauseMenuClass);
+		if(PauseMenuInstance)
+		{
+			PauseMenuInstance->AddToViewport(200);
+		}
+		
+		UGameplayStatics::SetGamePaused(this, true);
+		UAuraAbilitySystemLibrary::GetOverlayWidgetController(this)->SetMenuButtonEnable(false);
+		bShowMouseCursor = true;
+		// SetInputMode(FInputModeUIOnly());
 	}
 }
 

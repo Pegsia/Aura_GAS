@@ -35,6 +35,7 @@ struct FUIWidgetRow : public FTableRowBase
 // Delegate Signature
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeChangedSignature, float, NewValue);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMessageWidgetRowSignature, FUIWidgetRow, Row);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMenuButtonEnableSignature, bool, bEnable);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAbilityCommittedSignature, const FGameplayTagContainer&, CooldownTags, float, TimeRemaining);
 
 UCLASS(BlueprintType, Blueprintable)
@@ -69,6 +70,11 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category="GAS|Level")
 	FOnLevelChangedSignature OnLevelChangedDelegate;
+
+	UPROPERTY(BlueprintAssignable, Category="UI")
+	FOnMenuButtonEnableSignature OnMenuButtonEnableDelegate;
+
+	void SetMenuButtonEnable(bool bEnable) const;
 	
 	//~ Begin UAuraWidgetController Interface	
 	virtual void BindCallBacksToDependencies() override;
