@@ -21,6 +21,7 @@
 #include "NiagaraComponent.h"
 #include "Debuff/AuraDebuffNiagaraComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Passive/AuraPassiveNiagaraComponent.h"
 
 AAuraCharacter::AAuraCharacter()
 {
@@ -53,6 +54,21 @@ AAuraCharacter::AAuraCharacter()
 	
 	CharacterClass = ECharacterClass::HeroAura;
 	Tags.Emplace(ACTOR_TAG_PLAYER);
+	
+	//  Passive Niagara Component
+	EffectAttachComponent = CreateDefaultSubobject<USceneComponent>("EffectAttachPoint");
+	EffectAttachComponent->SetupAttachment(GetRootComponent());
+	EffectAttachComponent->SetUsingAbsoluteRotation(true);   // Don't Rotate with Root
+	EffectAttachComponent->SetWorldRotation(FRotator::ZeroRotator);
+		
+	HaloOfProtectionNiagaraComponent = CreateDefaultSubobject<UAuraPassiveNiagaraComponent>("HaloOfProtectionComponent");
+	HaloOfProtectionNiagaraComponent->SetupAttachment(EffectAttachComponent);
+	
+	LifeSiphonNiagaraComponent = CreateDefaultSubobject<UAuraPassiveNiagaraComponent>("LifeSiphonNiagaraComponent");
+	LifeSiphonNiagaraComponent->SetupAttachment(EffectAttachComponent);
+	
+	ManaSiphonNiagaraComponent = CreateDefaultSubobject<UAuraPassiveNiagaraComponent>("ManaSiphonNiagaraComponent");
+	ManaSiphonNiagaraComponent->SetupAttachment(EffectAttachComponent);
 }
 
 void AAuraCharacter::PossessedBy(AController* NewController)

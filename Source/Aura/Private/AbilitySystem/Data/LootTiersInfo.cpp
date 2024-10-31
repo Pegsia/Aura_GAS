@@ -4,7 +4,7 @@
 #include "AbilitySystem/Data/LootTiersInfo.h"
 
 
-TArray<FLootItemInfo> ULootTiersInfo::GetSpawnLootItemInfos()
+TArray<FLootItemInfo> ULootTiersInfo::GetSpawnLootItemsInfo()
 {
 	TArray<FLootItemInfo> OutLootItemInfo;
 	for(const FLootItemInfo& ItemInfo : LootItemInfos)

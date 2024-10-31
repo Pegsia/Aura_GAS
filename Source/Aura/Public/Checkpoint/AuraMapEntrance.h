@@ -19,10 +19,10 @@ public:
 	
 	virtual void LoadActor_Implementation() override;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Destination")
 	TSoftObjectPtr<UWorld> DestinationMap;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Destination")
 	FName DestinationPlayerTag;
 	
 protected:

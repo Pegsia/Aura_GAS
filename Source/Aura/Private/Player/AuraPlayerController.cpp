@@ -22,6 +22,9 @@
 #include "Aura/Aura.h"
 #include "Kismet/GameplayStatics.h"
 
+DECLARE_CYCLE_STAT(TEXT("DamageTextUI"), STAT_DamageText, STATGROUP_Aura);
+DECLARE_CYCLE_STAT(TEXT("PauseMenuUI"), STAT_PauseMenu, STATGROUP_Aura);
+
 AAuraPlayerController::AAuraPlayerController()
 {
 	bReplicates = true;
@@ -94,7 +97,9 @@ void AAuraPlayerController::SetMagicCircleLocation()
 }
 
 void AAuraPlayerController::ShowDamageNumber_Implementation(float DamageAmount, ACharacter* TargetCharacter, bool bBlockedHit, bool bCriticalHit)
-{	
+{
+	SCOPE_CYCLE_COUNTER(STAT_DamageText);
+	TRACE_BOOKMARK(TEXT("DamageText"));
 	if(IsValid(TargetCharacter) && DamageTextComponentClass)
 	{
 		UDamageTextComponent* DamageTextComponent = NewObject<UDamageTextComponent>(TargetCharacter, DamageTextComponentClass);
@@ -292,6 +297,7 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 
 void AAuraPlayerController::TogglePauseMenu()
 {
+	SCOPE_CYCLE_COUNTER(STAT_PauseMenu);
 	if(IsValid(PauseMenuInstance) && PauseMenuInstance->IsInViewport())
 	{
 		PauseMenuInstance->RemoveFromParent();
@@ -299,7 +305,6 @@ void AAuraPlayerController::TogglePauseMenu()
 
 		UGameplayStatics::SetGamePaused(this, false);
 		UAuraAbilitySystemLibrary::GetOverlayWidgetController(this)->SetMenuButtonEnable(true);
-		// SetAuraInput();
 		return;
 	}
 	if(PauseMenuClass)
@@ -313,7 +318,6 @@ void AAuraPlayerController::TogglePauseMenu()
 		UGameplayStatics::SetGamePaused(this, true);
 		UAuraAbilitySystemLibrary::GetOverlayWidgetController(this)->SetMenuButtonEnable(false);
 		bShowMouseCursor = true;
-		// SetInputMode(FInputModeUIOnly());
 	}
 }
 

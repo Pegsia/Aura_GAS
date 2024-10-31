@@ -33,7 +33,15 @@ class AURA_API AAuraEffectActor : public AActor
 	
 public:	
 	AAuraEffectActor();
-
+	
+	bool bPauseTickMovement = false;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Apllied Effect")
+	float ActorLevel = 1.f;
+	
+	UFUNCTION(BlueprintNativeEvent)
+	void SpawnTransform();
+	
 	virtual void Tick(float DeltaSeconds) override;
 	
 protected:
@@ -57,14 +65,6 @@ protected:
 
 	float SinePeriod = 2 * PI;
 
-	UFUNCTION(BlueprintCallable)
-	void SetSpawnEffect();
-	
-	UFUNCTION(BlueprintNativeEvent)
-	void SpawnTransform();
-
-	bool bPauseTickMovement = false;
-	
 	void TickMovement(float DeltaTime) const;
 	
 	/** Effect Apply */
@@ -73,9 +73,6 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Apllied Effect")
 	bool bApplyEffectsToEnemies = false;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Apllied Effect")
-	float ActorLevel = 1.f;
 
 	UFUNCTION(BlueprintCallable)
 	void OnBeginOverlap(AActor* TargetActor);

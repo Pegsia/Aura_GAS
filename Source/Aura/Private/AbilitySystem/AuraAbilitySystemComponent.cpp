@@ -11,6 +11,9 @@
 #include "AuraSaveGame_LoadSlot.h"
 #include "PlayerInterface.h"
 #include "Aura/AuraLogChannels.h"
+#include "Aura/Aura.h"
+
+DECLARE_CYCLE_STAT(TEXT("ActivateAbility"), STAT_ActivateAbility, STATGROUP_Aura);
 
 void UAuraAbilitySystemComponent::AbilityActorInfoSet()
 {
@@ -179,6 +182,7 @@ void UAuraAbilitySystemComponent::AbilityInputHeld(const FGameplayTag& InputTag)
 			AbilitySpecInputPressed(AbilitySpec);
 			if (!AbilitySpec.IsActive()) //Do Not Active it again
 			{
+				SCOPE_CYCLE_COUNTER(STAT_ActivateAbility);
 				TryActivateAbility(AbilitySpec.Handle);
 			}
 		}

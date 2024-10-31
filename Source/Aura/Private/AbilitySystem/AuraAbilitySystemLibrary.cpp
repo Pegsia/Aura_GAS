@@ -17,6 +17,8 @@
 #include "ScalableFloat.h"
 #include "Components/WidgetComponent.h"
 
+DECLARE_CYCLE_STAT(TEXT("GetPlayersWithinRadius"), STAT_GetPlayersWithinRadius, STATGROUP_Aura);
+
 bool UAuraAbilitySystemLibrary::GetWidgetControllerParams(const UObject* WorldContextObject, FWidgetControllerParams& OutWCParams, AAuraHUD*& OutAuraHUD)
 {
 	// Widget Only exist on clients, PC is the local controlled controller
@@ -206,6 +208,7 @@ ULootTiersInfo* UAuraAbilitySystemLibrary::GetLootTiersInfo(const UObject* World
 
 void UAuraAbilitySystemLibrary::GetLivePlayersWithinRadius(const UObject* WorldContextObject, TArray<AActor*>& OutOverlappedActors, const TArray<AActor*>& ActorsToIgnore, const FVector& SphereOrigin, float Radius)
 {
+	SCOPE_CYCLE_COUNTER(STAT_GetPlayersWithinRadius);
 	FCollisionQueryParams QueryParams;
 	QueryParams.AddIgnoredActors(ActorsToIgnore);
 

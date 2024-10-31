@@ -35,7 +35,7 @@ class AURA_API ULootTiersInfo : public UDataAsset
 
 public:
 	UFUNCTION(BlueprintCallable)
-	TArray<FLootItemInfo> GetSpawnLootItemInfos();
+	TArray<FLootItemInfo> GetSpawnLootItemsInfo();
 	
 	UPROPERTY(EditAnywhere, Category = "LootTiers|Spawning")
 	TArray<FLootItemInfo> LootItemInfos;

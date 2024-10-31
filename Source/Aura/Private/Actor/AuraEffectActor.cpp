@@ -6,11 +6,14 @@
 #include "AbilitySystemComponent.h"
 #include "Aura/Aura.h"
 
+DECLARE_CYCLE_STAT(TEXT("EffectActorTick"), STAT_EffectActorTick, STATGROUP_Aura);
+
 AAuraEffectActor::AAuraEffectActor()
 {
 	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.TickInterval = 0.05f;
 	SetRootComponent(CreateDefaultSubobject<USceneComponent>("SceneRoot"));
-
+	
 	EffectMesh = CreateDefaultSubobject<UStaticMeshComponent>("EffectMesh");
 	EffectMesh->SetupAttachment(GetRootComponent());
 }
@@ -30,16 +33,10 @@ void AAuraEffectActor::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
+	SCOPE_CYCLE_COUNTER(STAT_EffectActorTick);
 	RunningTime += DeltaSeconds;
 	if(RunningTime >= SinePeriod) RunningTime = 0.f;
 	if(!bPauseTickMovement) TickMovement(DeltaSeconds);	
-}
-
-void AAuraEffectActor::SetSpawnEffect()
-{
-	bPauseTickMovement = true;
-	SpawnTransform();
-	SetLifeSpan(10.f);
 }
 
 void AAuraEffectActor::SpawnTransform_Implementation()

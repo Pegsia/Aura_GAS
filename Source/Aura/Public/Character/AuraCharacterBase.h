@@ -177,15 +177,4 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	TObjectPtr<UAnimMontage> HitReactMontage;
 
-	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<USceneComponent> EffectAttachComponent; // Root for UAuraPassiveNiagaraComponent
-	
-	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<UAuraPassiveNiagaraComponent> HaloOfProtectionNiagaraComponent;
-	
-	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<UAuraPassiveNiagaraComponent> LifeSiphonNiagaraComponent;
-	
-	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<UAuraPassiveNiagaraComponent> ManaSiphonNiagaraComponent;	
 };

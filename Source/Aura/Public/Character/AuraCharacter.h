@@ -82,6 +82,18 @@ private:
 
 	void LoadProgress();
 	
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<USceneComponent> EffectAttachComponent; // Root for UAuraPassiveNiagaraComponent
+	
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UAuraPassiveNiagaraComponent> HaloOfProtectionNiagaraComponent;
+	
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UAuraPassiveNiagaraComponent> LifeSiphonNiagaraComponent;
+	
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UAuraPassiveNiagaraComponent> ManaSiphonNiagaraComponent;
+	
 	AAuraPlayerState* GetAuraPSChecked() const;
 	AAuraPlayerController* GetAuraPCChecked() const;
 	UAuraAbilitySystemComponent* GetAuraASCChecked() const;

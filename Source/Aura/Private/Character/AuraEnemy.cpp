@@ -6,6 +6,7 @@
 #include "AuraAbilitySystemLibrary.h"
 #include "AuraAIController.h"
 #include "AuraAttributeSet.h"
+#include "AuraEffectActor.h"
 #include "AuraGameplayTags.h"
 #include "UMG/Public/Components/WidgetComponent.h"
 #include "AuraUserWidget.h"
@@ -92,6 +93,44 @@ void AAuraEnemy::InitEffects()
 	);
 }
 
+void AAuraEnemy::SpawnLootItem()
+{
+	if(ULootTiersInfo* LootTiersInfo = UAuraAbilitySystemLibrary::GetLootTiersInfo(this))
+	{
+		SpawnLootCount = 0;
+		LootItemsInfo = LootTiersInfo->GetSpawnLootItemsInfo();
+		LootRotations = UAuraAbilitySystemLibrary::EvenlySpacedRotators(GetActorForwardVector(), 360.f, LootItemsInfo.Num());
+		
+		FTimerDelegate SpawnDelegate;
+		SpawnDelegate.BindUObject(this, &AAuraEnemy::SpawnOneItem);
+		GetWorldTimerManager().SetTimer(SpawnHandle, SpawnDelegate, 0.1f, true);
+	}
+}
+
+void AAuraEnemy::SpawnOneItem()
+{
+	if(SpawnLootCount >= LootItemsInfo.Num())
+	{
+		GetWorldTimerManager().ClearTimer(SpawnHandle);
+		return;
+	}
+	
+	const FLootItemInfo& ItemInfo = LootItemsInfo[SpawnLootCount];
+	FTransform SpawnTransform;
+	SpawnTransform.SetLocation(LootRotations[SpawnLootCount].Vector() * FMath::FRandRange(25.f, 150.f) + GetActorLocation());
+	SpawnTransform.SetRotation(LootRotations[SpawnLootCount].Quaternion());
+	AAuraEffectActor* LootItem = GetWorld()->SpawnActorDeferred<AAuraEffectActor>(ItemInfo.LootItemClass, SpawnTransform, this, this, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+	if(LootItem && ItemInfo.bLootLevelOverride)
+	{
+		LootItem->ActorLevel = Level;
+		LootItem->bPauseTickMovement = true;
+		LootItem->SetLifeSpan(10.f);
+	}
+	LootItem->FinishSpawning(SpawnTransform);
+	LootItem->SpawnTransform();
+	++SpawnLootCount;
+}
+
 void AAuraEnemy::HitReactTagChanged(const FGameplayTag CallBackTag, int32 TagCount)
 {
 	bHitReacting = TagCount > 0;
@@ -159,7 +198,7 @@ AActor* AAuraEnemy::GetCombatTarget_Implementation() const
 
 void AAuraEnemy::CharacterDeath(const FVector& ImpulseVector)
 {
-	SpawnLootItems();
+	SpawnLootItem();
 	HealthBarComponent->DestroyComponent();
 	AuraAIController->GetBrainComponent()->StopLogic(TEXT("Died"));
 	SetLifeSpan(EnemyLifeSpan);

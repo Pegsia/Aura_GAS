@@ -16,7 +16,8 @@ void UAuraGameplayAbility_FireBolt::ProjectileEventReceived(FGameplayEventData P
 void UAuraGameplayAbility_FireBolt::SpawnProjectiles(const FVector& ProjectileTargetLocation, AActor* HomingTarget)
 {
 	if (!GetAvatarActorFromActorInfo()->HasAuthority()) return;
-	
+
+	TRACE_BOOKMARK(TEXT("Fire Bolt"));
 	if (GetAvatarActorFromActorInfo()->Implements<UCombatInterface>())
 	{
 		const FVector SpawnLocation = ICombatInterface::Execute_GetCombatSocketLocation(GetAvatarActorFromActorInfo(), DamageAbilityProperties.AttackSocketTag);

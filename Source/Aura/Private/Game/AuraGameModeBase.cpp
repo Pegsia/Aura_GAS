@@ -93,7 +93,7 @@ void AAuraGameModeBase::SaveWorldState(const UWorld* World, const FString& Desti
 		if(DestinationMapAssetName != FString(""))
 		{
 			// MapName: First Dungeon, DestinationMapAssetName: Dungeon
-			//MapNameToMap.Emplace(DefaultMapName, DefaultMap);
+			// MapNameToMap.Emplace(DefaultMapName, DefaultMap);
 			AuraSaveGame->MapName = GetMapNameFromMapAssetName(DestinationMapAssetName);
 			AuraSaveGame->DestinationMapAssetName = DestinationMapAssetName;
 		}

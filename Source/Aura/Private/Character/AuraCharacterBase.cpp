@@ -34,21 +34,6 @@ AAuraCharacterBase::AAuraCharacterBase()
 	StunDebuffNiagaraComponent = CreateDefaultSubobject<UAuraDebuffNiagaraComponent>("StunDebuffNiagara");
 	StunDebuffNiagaraComponent->SetupAttachment(GetRootComponent());
 	StunDebuffNiagaraComponent->DebuffTag = FAuraGameplayTags::Get().Debuff_Stun;
-
-	//  Passive Niagara Component
-	EffectAttachComponent = CreateDefaultSubobject<USceneComponent>("EffectAttachPoint");
-	EffectAttachComponent->SetupAttachment(GetRootComponent());
-	EffectAttachComponent->SetUsingAbsoluteRotation(true);   // Don't Rotate with Root
-	EffectAttachComponent->SetWorldRotation(FRotator::ZeroRotator);
-	
-	HaloOfProtectionNiagaraComponent = CreateDefaultSubobject<UAuraPassiveNiagaraComponent>("HaloOfProtectionComponent");
-	HaloOfProtectionNiagaraComponent->SetupAttachment(EffectAttachComponent);
-	
-	LifeSiphonNiagaraComponent = CreateDefaultSubobject<UAuraPassiveNiagaraComponent>("LifeSiphonNiagaraComponent");
-	LifeSiphonNiagaraComponent->SetupAttachment(EffectAttachComponent);
-	
-	ManaSiphonNiagaraComponent = CreateDefaultSubobject<UAuraPassiveNiagaraComponent>("ManaSiphonNiagaraComponent");
-	ManaSiphonNiagaraComponent->SetupAttachment(EffectAttachComponent);
 }
 
 void AAuraCharacterBase::BeginPlay()

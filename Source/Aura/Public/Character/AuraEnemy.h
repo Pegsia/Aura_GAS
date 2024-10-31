@@ -8,6 +8,7 @@
 #include "HighLightInterface.h"
 #include "Aura/Aura.h"
 #include "UI/WidgetController/OverlayWidgetController.h"
+#include "LootTiersInfo.h"
 #include "AuraEnemy.generated.h"
 
 class AAuraAIController;
@@ -16,7 +17,6 @@ class UWidgetComponent;
 class UAuraUserWidget;
 class UAuraWidgetController;
 struct FWidgetControllerParams;
-
 
 UCLASS()
 class AURA_API AAuraEnemy : public AAuraCharacterBase, public IEnemyInterface, public IHighLightInterface
@@ -79,10 +79,21 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Glow")
 	TEnumAsByte<ECustomDepthColor> HighLightColor;
 	
-protected:
 	// Loot
-	UFUNCTION(BlueprintImplementableEvent)
-	void SpawnLootItems();
+	FTimerHandle SpawnHandle;
+	
+	int32 SpawnLootCount = 0;
+	
+	TArray<FLootItemInfo> LootItemsInfo;
+	
+	TArray<FRotator> LootRotations;
+	
+	UFUNCTION(BlueprintCallable)
+	void SpawnLootItem();
+
+	void SpawnOneItem();
+	
+protected:
 	
 	//~ Begin AuraCharacterBase Interface
 	virtual void InitialAbilityActorInfo() override;
