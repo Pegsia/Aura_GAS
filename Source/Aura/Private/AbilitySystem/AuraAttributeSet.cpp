@@ -76,6 +76,20 @@ void UAuraAttributeSet::PostAttributeChange(const FGameplayAttribute& Attribute,
 	}
 }
 
+bool UAuraAttributeSet::PreGameplayEffectExecute(FGameplayEffectModCallbackData& Data)
+{
+	if(!Super::PreGameplayEffectExecute(Data))
+	{
+		return false;
+	}
+	if(!IsValid(Data.Target.AbilityActorInfo->AvatarActor.Get()))
+	{
+		return false;
+	}
+
+	return true;
+}
+
 void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
 {
 	Super::PostGameplayEffectExecute(Data);
@@ -141,6 +155,7 @@ void UAuraAttributeSet::HandleIncomingDamage(const FEffectProperties& Props)
 			{
 				CombatInterface->CharacterDeath(UAuraAbilitySystemLibrary::GetDeathImpulse(Props.EffectContextHandle));
 			}
+			if(Props.TargetCharacter->Implements<UPlayerInterface>()) return;
 			SendXPEvent(Props);
 		}
 

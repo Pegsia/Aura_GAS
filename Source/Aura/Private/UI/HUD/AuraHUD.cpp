@@ -57,3 +57,21 @@ void AAuraHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySyst
 
 	OverlayWidget->AddToViewport();
 }
+
+void AAuraHUD::CharacterDeadStart()
+{
+	if(DeadWidgetClass)
+	{
+		DeadWidget = CreateWidget<UUserWidget>(GetWorld(), DeadWidgetClass);
+		DeadWidget->AddToViewport();
+	}
+	OverlayWidget->RemoveFromParent();
+}
+
+void AAuraHUD::CharacterDeadFinished()
+{
+	if(DeadWidget)
+	{
+		DeadWidget->RemoveFromParent();
+	}
+}

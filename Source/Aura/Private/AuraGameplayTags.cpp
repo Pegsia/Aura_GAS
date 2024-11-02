@@ -144,6 +144,9 @@ void FAuraGameplayTags::AddAllTags(UGameplayTagsManager& Manager)
 
 	// Gameplay Cue
 	AddTag(GameplayCue_FireBlast, "GameplayCue.FireBlast", "GameplayCue FireBlast");
+
+	AddTag(RemoveAfterDead, "RemoveAfterDead", "RemoveAfterDead");
+	
 }
 
 void FAuraGameplayTags::AddTag(FGameplayTag& OutTag, const ANSICHAR* TagName, const ANSICHAR* TagComment)

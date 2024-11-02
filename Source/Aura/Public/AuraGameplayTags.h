@@ -138,6 +138,9 @@ public:
 
 	// Gameplay Cue
 	FGameplayTag GameplayCue_FireBlast;
+
+	// Remove After Player Dead
+	FGameplayTag RemoveAfterDead;
 	
 protected:
 	// Copy From Lyra

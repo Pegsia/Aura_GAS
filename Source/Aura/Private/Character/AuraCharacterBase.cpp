@@ -85,7 +85,8 @@ void AAuraCharacterBase::MulticastHandleCharacterDeath_Implementation(const FVec
 	GetMesh()->AddImpulse(ImpulseVector, NAME_None, true);
 	
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-
+	GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECR_Ignore);
+	
 	Dissolve();
 
 	OnDeathDelegate.Broadcast(this);

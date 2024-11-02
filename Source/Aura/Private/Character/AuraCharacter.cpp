@@ -19,6 +19,7 @@
 #include "MotionWarpingComponent.h"
 #include "Aura/Aura.h"
 #include "NiagaraComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "Debuff/AuraDebuffNiagaraComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Passive/AuraPassiveNiagaraComponent.h"
@@ -230,17 +231,38 @@ int32 AAuraCharacter::GetPlayerLevel_Implementation() // ExecCalc, MMC
 void AAuraCharacter::CharacterDeath(const FVector& ImpulseVector)
 {
 	Super::CharacterDeath(ImpulseVector);
-
+	
 	if(AAuraGameModeBase* GameModeBase = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(this)))
 	{
-		FTimerDelegate DeathTimerDelegate;
-		DeathTimerDelegate.BindLambda([this, GameModeBase]()
-		{
-			GameModeBase->PlayerDead(this);
-		});
-		GetWorldTimerManager().SetTimer(DeathTimerHandle, DeathTimerDelegate, DeathWaitTime, false);
 		CameraComponent->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform); // 死亡之后摄像机会掉下去
+		DisableCharMovement();
+		
+		APlayerController* PC = GetController<APlayerController>();
+		GameModeBase->PlayerDead(PC);
+		
+		if(AAuraHUD* AuraHUD = PC->GetHUD<AAuraHUD>())
+		{
+			AuraHUD->CharacterDeadStart();
+		}
+		
+		const FAuraGameplayTags& AuraTags = FAuraGameplayTags::Get();
+		AbilitySystemComponent->RemoveActiveEffectsWithTags(FGameplayTagContainer(AuraTags.RemoveAfterDead)); // Remove Secondary Attribute
+		
+		// DetachFromControllerPendingDestroy(); // UnPossess之后摄像机也不会动了，放到GM中
+		SetLifeSpan(2.f);
 	}
+}
+
+void AAuraCharacter::DisableCharMovement() const
+{
+	if (Controller)
+	{
+		Controller->SetIgnoreMoveInput(true);
+	}
+	
+	UCharacterMovementComponent* MoveComp = GetCharacterMovement();
+	MoveComp->StopMovementImmediately();
+	MoveComp->DisableMovement();
 }
 
 void AAuraCharacter::OnRep_Burned()

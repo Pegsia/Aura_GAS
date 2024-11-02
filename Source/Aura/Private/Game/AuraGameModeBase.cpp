@@ -4,6 +4,7 @@
 #include "Game/AuraGameModeBase.h"
 
 #include "AuraGameInstance.h"
+#include "AuraHUD.h"
 #include "AuraSaveGame_LoadSlot.h"
 #include "EngineUtils.h"
 #include "SaveGameInterface.h"
@@ -203,12 +204,26 @@ AActor* AAuraGameModeBase::ChoosePlayerStart_Implementation(AController* Player)
 	return nullptr;
 }
 
-void AAuraGameModeBase::PlayerDead(ACharacter* Character)
+void AAuraGameModeBase::PlayerDead(APlayerController* PC) const
 {
-	if(UAuraSaveGame_LoadSlot* AuraSaveGame = LoadInGameProgressData())
+	FTimerHandle DeathTimerHandle;
+	FTimerDelegate DeathTimerDelegate;
+	
+	DeathTimerDelegate.BindLambda([PC]()
 	{
-		UGameplayStatics::OpenLevel(Character, FName(AuraSaveGame->DestinationMapAssetName));
-	}
+		if(AAuraHUD* AuraHUD = PC->GetHUD<AAuraHUD>())
+		{
+			AuraHUD->CharacterDeadFinished();
+		}
+		PC->UnPossess();
+		PC->ServerRestartPlayer();
+	});
+	GetWorldTimerManager().SetTimer(DeathTimerHandle, DeathTimerDelegate, 2.f, false);
+	
+	// if(UAuraSaveGame_LoadSlot* AuraSaveGame = LoadInGameProgressData())
+	// {
+	// 	UGameplayStatics::OpenLevel(Character, FName(AuraSaveGame->DestinationMapAssetName));
+	// }
 }
 
 FString AAuraGameModeBase::GetMapNameFromMapAssetName(const FString& MapAssetName) const

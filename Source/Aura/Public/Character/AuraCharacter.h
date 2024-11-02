@@ -46,6 +46,8 @@ public:
 	virtual void CharacterDeath(const FVector& ImpulseVector) override;
 	//~ End ICombatInterface
 
+	void DisableCharMovement() const;
+	
 protected:
 	virtual void OnRep_Burned() override;
 	virtual void OnRep_Stunned() override;

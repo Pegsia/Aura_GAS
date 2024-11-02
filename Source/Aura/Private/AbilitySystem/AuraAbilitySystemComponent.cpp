@@ -40,7 +40,8 @@ void UAuraAbilitySystemComponent::AddCharacterLoadedAbilities(const UAuraSaveGam
 		AbilitySpec.DynamicAbilityTags.AddTag(Ability.AbilityInputTag);
 		AbilitySpec.DynamicAbilityTags.AddTag(Ability.AbilityStatusTag);
 		GiveAbility(AbilitySpec);
-		if(Ability.AbilityStatusTag.MatchesTagExact(AuraGameplayTags.Abilities_Status_Equipped))
+		if(Ability.AbilityStatusTag.MatchesTagExact(AuraGameplayTags.Abilities_Status_Equipped)
+			&& Ability.AbilityTypeTag.MatchesTagExact(AuraGameplayTags.Abilities_Type_Passive))
 		{
 			// If player spend point at other passive spell and equip them replace the passive spell which given by function GiveAbilityAndActivateOnce,
 			// when EndAbility, it's AbilitySpec will be removed from GetActivateableAbilities() returns,

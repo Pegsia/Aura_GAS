@@ -27,10 +27,10 @@ public:
 	USpellMenuWidgetController* GetSpellMenuWidgetController(const FWidgetControllerParams& WCParams);
 
 	void InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UAttributeSet* AS);
-	
-protected:
-	
 
+	void CharacterDeadStart();
+	void CharacterDeadFinished();
+	
 private:
 	// Overlay Widget 
 	UPROPERTY(EditAnywhere, Category = "AuraHUD")
@@ -44,6 +44,13 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<UOverlayWidgetController> OverlayWidgetController;
+
+	// Dead Widget
+	UPROPERTY(EditAnywhere, Category = "AuraHUD")
+	TSubclassOf<UUserWidget> DeadWidgetClass;
+
+	UPROPERTY()
+	TObjectPtr<UUserWidget> DeadWidget;
 	
 	// Attribute Menu Widget Controller
 	UPROPERTY(EditDefaultsOnly, Category = "AuraHUD")
