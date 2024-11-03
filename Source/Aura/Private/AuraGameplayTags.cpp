@@ -97,6 +97,7 @@ void FAuraGameplayTags::AddAllTags(UGameplayTagsManager& Manager)
 	AddTag(Abilities_Fire_FireBlast, "Abilities.Fire.FireBlast", "FireBlast Ability Tag");
 	
 	AddTag(Abilities_Lightning_Electrocute, "Abilities.Lightning.Electrocute", "Electrocute Ability Tag");
+	AddTag(Abilities_Lightning_Teleport, "Abilities.Lightning.Teleport", "Teleport Ability Tag");
 	
 	AddTag(Abilities_Arcane_ArcaneShards, "Abilities.Arcane.ArcaneShards", "Arcane Shards Ability Tag");
 	
@@ -113,6 +114,7 @@ void FAuraGameplayTags::AddAllTags(UGameplayTagsManager& Manager)
 	// Abilities Cooldown
 	AddTag(Cooldown_Fire_FireBolt, "Cooldown.Fire.FireBolt", "FireBolt Cooldown Tag");
 	AddTag(Cooldown_Lightning_Electrocute, "Cooldown.Lightning.Electrocute", "Electrocute Cooldown Tag");
+	AddTag(Cooldown_Lightning_Teleport, "Cooldown.Lightning.Teleport", "Teleport Cooldown Tag");
 	
 	// Ability Status and Type
 	AddTag(Abilities_Status_Locked, "Abilities.Status.Locked", "Locked Status");
