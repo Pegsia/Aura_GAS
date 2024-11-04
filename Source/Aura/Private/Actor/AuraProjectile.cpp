@@ -79,7 +79,10 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 			DamageEffectProperties.TargetASC = TargetASC;
 			UAuraAbilitySystemLibrary::ApplyDamageEffect(DamageEffectProperties);
 		}
-		Destroy();
+		if(bDestroyAfterOverlap)
+		{
+			Destroy();
+		}		
 	}
 	else
 	{

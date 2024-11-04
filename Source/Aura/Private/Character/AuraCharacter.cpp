@@ -19,7 +19,6 @@
 #include "MotionWarpingComponent.h"
 #include "Aura/Aura.h"
 #include "NiagaraComponent.h"
-#include "Components/CapsuleComponent.h"
 #include "Debuff/AuraDebuffNiagaraComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Passive/AuraPassiveNiagaraComponent.h"

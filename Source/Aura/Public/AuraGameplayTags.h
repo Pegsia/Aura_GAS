@@ -88,6 +88,7 @@ public:
 	
 	FGameplayTag Abilities_Fire_FireBolt;
 	FGameplayTag Abilities_Fire_FireBlast;
+	FGameplayTag Abilities_Fire_FireTornado;
 
 	FGameplayTag Abilities_Lightning_Electrocute;
 	FGameplayTag Abilities_Lightning_Teleport;
@@ -105,6 +106,7 @@ public:
 	
 	// Abilities Cooldown
 	FGameplayTag Cooldown_Fire_FireBolt;
+	FGameplayTag Cooldown_Fire_FireTornado;
 	FGameplayTag Cooldown_Lightning_Electrocute;
 	FGameplayTag Cooldown_Lightning_Teleport;
 	

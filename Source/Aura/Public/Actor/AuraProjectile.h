@@ -24,6 +24,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UProjectileMovementComponent> MovementComponent;
+
+	UPROPERTY(EditDefaultsOnly, Category = "LifeTime")
+	bool bDestroyAfterOverlap = true;
 	
 protected:
 	virtual void BeginPlay() override;	
@@ -43,8 +46,8 @@ protected:
 	TObjectPtr<UAudioComponent> LoopingSoundComponent;
 	
 private:	
-	UPROPERTY(EditDefaultsOnly)
-	float LifeSpan = 15.f;
+	UPROPERTY(EditDefaultsOnly, Category = "LifeTime")
+	float LifeSpan = 10.f;
 	
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<USphereComponent> SphereComponent;
