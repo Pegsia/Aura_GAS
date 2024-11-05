@@ -96,6 +96,23 @@ void AAuraPlayerController::SetMagicCircleLocation()
 	}
 }
 
+void AAuraPlayerController::InitTutorial()
+{	
+	if(UUserWidget* TutorialWidget = CreateWidget<UUserWidget>(this, TutorialWidgetClass))
+	{
+		TutorialWidget->AddToViewport();
+		FTimerHandle TutorialHandle;
+		FTimerDelegate TutorialDelegate = FTimerDelegate::CreateLambda([TutorialWidget]()
+		{
+			if(TutorialWidget)
+			{
+				TutorialWidget->RemoveFromParent();
+			}
+		});
+		GetWorldTimerManager().SetTimer(TutorialHandle, TutorialDelegate, 10.f, false);
+	}
+}
+
 void AAuraPlayerController::ShowDamageNumber_Implementation(float DamageAmount, ACharacter* TargetCharacter, bool bBlockedHit, bool bCriticalHit)
 {
 	SCOPE_CYCLE_COUNTER(STAT_DamageText);
@@ -348,9 +365,10 @@ void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
 	const FRotator YawRotation(0.f, GetControlRotation().Yaw, 0.f);
 	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X); // RotationMatrix第一行，即X轴方向
 	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);   // RotationMatrix第二行，即Y轴方向
-
+	
 	if (APawn* ControlledPawn = GetPawn<APawn>())
 	{
+		// DrawDebugLine(GetWorld(), ControlledPawn->GetActorLocation(), ControlledPawn->GetActorLocation() + ForwardDirection * 100.f, FColor::Blue, true);
 		ControlledPawn->AddMovementInput(ForwardDirection, InputActionVector.Y); // W和S在FVector2D（二维）中的Y轴
 		ControlledPawn->AddMovementInput(RightDirection, InputActionVector.X);
 	}

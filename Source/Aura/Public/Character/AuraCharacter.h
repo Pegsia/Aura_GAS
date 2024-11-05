@@ -82,6 +82,8 @@ private:
 	UFUNCTION(NetMulticast, Unreliable)
 	void MulticastLevelUpVFX(bool bLoading) const;
 
+	void InitTutorial();
+	
 	void LoadProgress();
 	
 	UPROPERTY(VisibleAnywhere)

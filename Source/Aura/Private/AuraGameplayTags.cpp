@@ -101,6 +101,7 @@ void FAuraGameplayTags::AddAllTags(UGameplayTagsManager& Manager)
 	AddTag(Abilities_Lightning_Teleport, "Abilities.Lightning.Teleport", "Teleport Ability Tag");
 	
 	AddTag(Abilities_Arcane_ArcaneShards, "Abilities.Arcane.ArcaneShards", "Arcane Shards Ability Tag");
+	AddTag(Abilities_Arcane_ArcaneDrain, "Abilities.Arcane.ArcaneDrain", "Arcane Drain Ability Tag");
 	
 	// Passive Abilities
 	AddTag(Abilities_Passive_ListenForEvents, "Abilities.Passive.ListenForEvents", " XP and Attribute Added Event");
@@ -115,8 +116,11 @@ void FAuraGameplayTags::AddAllTags(UGameplayTagsManager& Manager)
 	// Abilities Cooldown
 	AddTag(Cooldown_Fire_FireBolt, "Cooldown.Fire.FireBolt", "FireBolt Cooldown Tag");
 	AddTag(Cooldown_Fire_FireTornado, "Cooldown.Fire.FireTornado", "FireTornado Cooldown Tag");
+	
 	AddTag(Cooldown_Lightning_Electrocute, "Cooldown.Lightning.Electrocute", "Electrocute Cooldown Tag");
 	AddTag(Cooldown_Lightning_Teleport, "Cooldown.Lightning.Teleport", "Teleport Cooldown Tag");
+
+	AddTag(Cooldown_Arcane_ArcaneDrain, "Cooldown.Arcane.ArcaneDrain", "ArcaneDrain Cooldown Tag");
 	
 	// Ability Status and Type
 	AddTag(Abilities_Status_Locked, "Abilities.Status.Locked", "Locked Status");

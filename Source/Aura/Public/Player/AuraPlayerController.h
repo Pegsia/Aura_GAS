@@ -52,6 +52,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void TogglePauseMenu();
 	
+	void InitTutorial();
+	
 protected:
 	//~ Begin APlayerController Interface
 	virtual void BeginPlay() override;
@@ -59,6 +61,10 @@ protected:
 	//~ End APlayerController Interface
 
 private:
+	// Tutorial Message
+	UPROPERTY(EditAnywhere, Category = "Tutorial")
+	TSubclassOf<UUserWidget> TutorialWidgetClass;
+	
 	// Input Context
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputMappingContext> AuraContext;

@@ -135,6 +135,7 @@ void AAuraCharacter::LoadProgress()
 		{
 			if(LoadSlot->bInitializingSaveGame) //Create a save game,use default
 			{
+				InitTutorial();
 				InitAuraStartupAbilities(); // Called Before Widget Controller Set
 				InitialDefaultAttributes(); // Init Attribute through GameplayEffects in AuraCharacterBase, 可以只在Server端调用，因为所有变量都是Replicated的，而且ASC复制模式为Mixed 
 			}
@@ -146,6 +147,11 @@ void AAuraCharacter::LoadProgress()
 			}			
 		}
 	}
+}
+
+void AAuraCharacter::InitTutorial()
+{
+	GetAuraPCChecked()->InitTutorial();
 }
 
 void AAuraCharacter::InitialStateFromSaveGame(const UAuraSaveGame_LoadSlot* LoadSlot)

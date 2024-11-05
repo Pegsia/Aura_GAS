@@ -94,6 +94,7 @@ public:
 	FGameplayTag Abilities_Lightning_Teleport;
 
 	FGameplayTag Abilities_Arcane_ArcaneShards;
+	FGameplayTag Abilities_Arcane_ArcaneDrain;
 	
 	// Passive Abilities
 	FGameplayTag Abilities_Passive_ListenForEvents;
@@ -107,8 +108,11 @@ public:
 	// Abilities Cooldown
 	FGameplayTag Cooldown_Fire_FireBolt;
 	FGameplayTag Cooldown_Fire_FireTornado;
+	
 	FGameplayTag Cooldown_Lightning_Electrocute;
 	FGameplayTag Cooldown_Lightning_Teleport;
+	
+	FGameplayTag Cooldown_Arcane_ArcaneDrain;
 	
 	// Ability Status and Type
 	FGameplayTag Abilities_Status_Locked;
