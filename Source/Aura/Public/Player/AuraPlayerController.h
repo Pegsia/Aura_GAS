@@ -127,6 +127,12 @@ private:
 	float FollowTime = 0.f;
 	float ShortPressThreshold = 0.5f;	
 
+	// Interact
+	UFUNCTION(Server, Reliable)
+	void ServerInteract(AActor* TargetActor);
+	
+	bool bInteractionItem = false;
+	
 	// Auto Run
 	bool bAutoRunning = false;
 

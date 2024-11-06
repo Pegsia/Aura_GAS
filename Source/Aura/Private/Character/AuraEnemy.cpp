@@ -127,7 +127,7 @@ void AAuraEnemy::SpawnOneItem()
 		LootItem->SetLifeSpan(10.f);
 	}
 	LootItem->FinishSpawning(SpawnTransform);
-	LootItem->SpawnTransform();
+	LootItem->NetMulticastSpawnTransform();
 	++SpawnLootCount;
 }
 

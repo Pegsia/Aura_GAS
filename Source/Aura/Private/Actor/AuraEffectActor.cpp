@@ -5,6 +5,7 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 #include "Aura/Aura.h"
+#include "Aura/AuraLogChannels.h"
 
 DECLARE_CYCLE_STAT(TEXT("EffectActorTick"), STAT_EffectActorTick, STATGROUP_Aura);
 
@@ -16,6 +17,8 @@ AAuraEffectActor::AAuraEffectActor()
 	
 	EffectMesh = CreateDefaultSubobject<UStaticMeshComponent>("EffectMesh");
 	EffectMesh->SetupAttachment(GetRootComponent());
+
+	SetReplicates(true);
 }
 
 void AAuraEffectActor::BeginPlay()
@@ -27,6 +30,13 @@ void AAuraEffectActor::BeginPlay()
 		PrimaryActorTick.SetTickFunctionEnable(false);
 	}
 	SinePeriod = 2 * PI / SinePeriodConstant;
+}
+
+void AAuraEffectActor::NetMulticastSpawnTransform_Implementation()
+{
+	ENetMode N = GetNetMode();
+	UE_LOG(LogAura, Log, TEXT("Spawn"))
+	SpawnTransform();
 }
 
 void AAuraEffectActor::Tick(float DeltaSeconds)

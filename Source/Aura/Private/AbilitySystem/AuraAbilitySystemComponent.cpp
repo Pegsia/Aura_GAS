@@ -26,6 +26,7 @@ void UAuraAbilitySystemComponent::ClientEffectApplied_Implementation(UAbilitySys
 	FGameplayTagContainer AssetTagContainer;
 	EffectSpec.GetAllAssetTags(AssetTagContainer);
 
+	// PopUp Message
 	EffectAssetTagsDelegate.Broadcast(AssetTagContainer);
 }
 

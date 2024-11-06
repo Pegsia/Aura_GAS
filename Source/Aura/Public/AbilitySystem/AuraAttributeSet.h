@@ -74,6 +74,8 @@ private:
 	void HandlePassiveEffect(const FEffectProperties& Props, const float& LocalIncomingDamage);
 	void HandleDebuff(const FEffectProperties& Props);
 	void HandleIncomingXP(const FEffectProperties& Props);
+	void HandleIncomingSpellPoint(const FEffectProperties& Props);
+	void HandleIncomingAttributePoint(const FEffectProperties& Props);
 	
 	// Store Effect Properties when a GameplayEffect is applied
 	void SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& OutProps) const;
@@ -96,6 +98,12 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, Category = "Meat Attributes")
 	FGameplayAttributeData IncomingXP;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Meat Attributes")
+	FGameplayAttributeData IncomingSpellPoint;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Meat Attributes")
+	FGameplayAttributeData IncomingAttributePoint;
 	
 	/**
 	 * Vital  Attributes
@@ -232,6 +240,8 @@ public:
 	 */
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, IncomingDamage);
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, IncomingXP);
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, IncomingSpellPoint);
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, IncomingAttributePoint);
 
 	/**
 	 * Vital  Attributes

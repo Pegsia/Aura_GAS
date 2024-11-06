@@ -29,7 +29,7 @@ struct FUIWidgetRow : public FTableRowBase
 	FText MessageText = FText();
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	UTexture2D* Image = nullptr;
+	TSoftObjectPtr<UTexture2D> Image = nullptr;
 };
 
 // Delegate Signature

@@ -38,8 +38,11 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Apllied Effect")
 	float ActorLevel = 1.f;
+
+	UFUNCTION(NetMulticast, Unreliable)
+	void NetMulticastSpawnTransform();
 	
-	UFUNCTION(BlueprintNativeEvent)
+	UFUNCTION(Client,BlueprintNativeEvent)
 	void SpawnTransform();
 	
 	virtual void Tick(float DeltaSeconds) override;

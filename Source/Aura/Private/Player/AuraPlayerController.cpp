@@ -18,6 +18,7 @@
 #include "AuraMagicCircleActor.h"
 #include "HighLightInterface.h"
 #include "EnemyInterface.h"
+#include "InteractionInterface.h"
 #include "OverlayWidgetController.h"
 #include "Aura/Aura.h"
 #include "Kismet/GameplayStatics.h"
@@ -208,16 +209,23 @@ void AAuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 {
 	if(GetAuraASC() && GetAuraASC()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Player_Block_InputPressed)) return;
 	
-	// 点击时判断是否正在攻击敌人
+	// 点击时判断是否是左键
 	if (InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB))
 	{
 		if(IsValid(ThisActor))
 		{
+			if(ThisActor->Implements<UInteractionInterface>())
+			{
+				ServerInteract(ThisActor);
+			}
+			// 是否正在攻击敌人
 			TargetingStatus = ThisActor->Implements<UEnemyInterface>() ? ETargetingStatus::TargetingEnemy : ETargetingStatus::TargetingNonEnemy;
 			bAutoRunning = false;
+			bInteractionItem = true;
 		}
 		else
 		{
+			bInteractionItem = false;
 			TargetingStatus = ETargetingStatus::NotTargeting;
 		}
 	}
@@ -273,7 +281,7 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 
 	GetAuraASC()->AbilityInputReleased(InputTag);
 
-	if (TargetingStatus != ETargetingStatus::TargetingEnemy && !bShiftDown) // Not Targeting 
+	if (TargetingStatus != ETargetingStatus::TargetingEnemy && !bShiftDown && !bInteractionItem) // Not Targeting 
 	{
 		// Auto Running
 		if(GetAuraASC()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Player_Block_InputPressed)) return;
@@ -310,6 +318,11 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 		FollowTime = 0.f;
 		TargetingStatus = ETargetingStatus::NotTargeting;
 	}
+}
+
+void AAuraPlayerController::ServerInteract_Implementation(AActor* TargetActor)
+{
+	IInteractionInterface::Execute_Interact(TargetActor);
 }
 
 void AAuraPlayerController::TogglePauseMenu()

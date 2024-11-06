@@ -119,6 +119,14 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 	{
 		HandleIncomingXP(Props);
 	}
+	if(Data.EvaluatedData.Attribute == GetIncomingSpellPointAttribute())
+	{
+		HandleIncomingSpellPoint(Props);
+	}
+	if(Data.EvaluatedData.Attribute == GetIncomingAttributePointAttribute())
+	{
+		HandleIncomingAttributePoint(Props);
+	}
 }
 
 void UAuraAttributeSet::HandleIncomingDamage(const FEffectProperties& Props)
@@ -267,6 +275,26 @@ void UAuraAttributeSet::HandleIncomingXP(const FEffectProperties& Props)
 	if(Props.SourceCharacter->Implements<UPlayerInterface>())
 	{
 		IPlayerInterface::Execute_AddToXP(Props.SourceCharacter, LocalIncomingXP);
+	}
+}
+
+void UAuraAttributeSet::HandleIncomingSpellPoint(const FEffectProperties& Props)
+{
+	const float LocalIncomingSpellPoint = GetIncomingSpellPoint();
+	SetIncomingSpellPoint(0.f);
+	if(Props.SourceCharacter->Implements<UPlayerInterface>())
+	{
+		IPlayerInterface::Execute_AddToSpellPoints(Props.SourceCharacter, LocalIncomingSpellPoint);
+	}
+}
+
+void UAuraAttributeSet::HandleIncomingAttributePoint(const FEffectProperties& Props)
+{
+	const float LocalIncomingAttributePoint = GetIncomingAttributePoint();
+	SetIncomingAttributePoint(0.f);
+	if(Props.SourceCharacter->Implements<UPlayerInterface>())
+	{
+		IPlayerInterface::Execute_AddToAttributePoints(Props.SourceCharacter, LocalIncomingAttributePoint);
 	}
 }
 
