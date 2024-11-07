@@ -322,16 +322,15 @@ void UAuraAttributeSet::SendXPEvent(const FEffectProperties& Props)
 
 void UAuraAttributeSet::ShowFloatingDamage(const FEffectProperties& Props, float Damage, bool bBlockedHit, bool bCriticalHit)
 {
-	if(Props.SourceCharacter != Props.TargetCharacter)
+	// if(Props.SourceCharacter != Props.TargetCharacter) {}
+
+	if(AAuraPlayerController* PC = Cast<AAuraPlayerController>(Props.SourceController)) // Target is Enemy
 	{
-		if(AAuraPlayerController* PC = Cast<AAuraPlayerController>(Props.SourceController)) // Target is Enemy
-		{
-			PC->ShowDamageNumber(Damage, Props.TargetCharacter, bBlockedHit, bCriticalHit);
-		}
-		else if(AAuraPlayerController* PlayerPC = Cast<AAuraPlayerController>(Props.TargetController)) // Target is Player
-		{
-			PlayerPC->ShowDamageNumber(Damage, Props.TargetCharacter, bBlockedHit, bCriticalHit);
-		}
+		PC->ShowDamageNumber(Damage, Props.TargetCharacter, bBlockedHit, bCriticalHit);
+	}
+	else if(AAuraPlayerController* PlayerPC = Cast<AAuraPlayerController>(Props.TargetController)) // Target is Player
+	{
+		PlayerPC->ShowDamageNumber(Damage, Props.TargetCharacter, bBlockedHit, bCriticalHit);
 	}
 }
 

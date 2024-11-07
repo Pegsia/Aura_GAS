@@ -32,7 +32,7 @@ public:
 	
 	// Init Ability
 	void AddCharacterLoadedAbilities(const UAuraSaveGame_LoadSlot* SaveGame_LoadSlot);
-	
+
 	void AddCharacterStartupAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupAbilities);
 	bool bStartupAbilitiesGiven = false;
 

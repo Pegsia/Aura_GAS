@@ -42,7 +42,7 @@ public:
 	UFUNCTION(NetMulticast, Unreliable)
 	void NetMulticastSpawnTransform();
 	
-	UFUNCTION(Client,BlueprintNativeEvent)
+	UFUNCTION(BlueprintNativeEvent)
 	void SpawnTransform();
 	
 	virtual void Tick(float DeltaSeconds) override;

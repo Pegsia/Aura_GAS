@@ -17,6 +17,8 @@ AAuraEffectActor::AAuraEffectActor()
 	
 	EffectMesh = CreateDefaultSubobject<UStaticMeshComponent>("EffectMesh");
 	EffectMesh->SetupAttachment(GetRootComponent());
+	EffectMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	EffectMesh->SetGenerateOverlapEvents(false);
 
 	SetReplicates(true);
 }

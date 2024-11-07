@@ -59,7 +59,10 @@ void UAuraGameplayAbility_FireBolt::SpawnProjectiles(const FVector& ProjectileTa
 				Projectile->MovementComponent->HomingTargetComponent = HomingTargetSceneComponent;			
 			}
 			Projectile->MovementComponent->HomingAccelerationMagnitude = FMath::FRandRange(MinHomingAcceleration, MaxHomingAcceleration);
-			Projectile->MovementComponent->bIsHomingProjectile = bLaunchHomingProjectiles;
+			if(GetAbilityLevel() > 1 && bLaunchHomingProjectiles)
+			{
+				Projectile->MovementComponent->bIsHomingProjectile = bLaunchHomingProjectiles;
+			}			
 			
 			Projectile->FinishSpawning(SpawnTransform);
 		}

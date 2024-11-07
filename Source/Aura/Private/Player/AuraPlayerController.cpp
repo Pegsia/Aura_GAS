@@ -216,12 +216,16 @@ void AAuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 		{
 			if(ThisActor->Implements<UInteractionInterface>())
 			{
+				bInteractionItem = true;
 				ServerInteract(ThisActor);
+			}
+			else
+			{
+				bInteractionItem = false;
 			}
 			// 是否正在攻击敌人
 			TargetingStatus = ThisActor->Implements<UEnemyInterface>() ? ETargetingStatus::TargetingEnemy : ETargetingStatus::TargetingNonEnemy;
 			bAutoRunning = false;
-			bInteractionItem = true;
 		}
 		else
 		{

@@ -38,7 +38,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(ReplicatedUsing = "OnRep_LidOpened", BlueprintReadOnly, SaveGame, Category = "Net")
-	bool bLidOpened;
+	bool bLidOpened = false;
 
 	UFUNCTION()
 	void OnRep_LidOpened();
@@ -47,10 +47,8 @@ protected:
 	TEnumAsByte<ECustomDepthColor> HighLightColor = Blue;
 	
 private:
-	// UFUNCTION(Server, Reliable)
-	void OpenChest();
+	void OpenChest() const;
 
-	// UFUNCTION(Server, Reliable)
 	void SpawnItems();
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Spawn")
@@ -64,4 +62,7 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = "Component")
 	TObjectPtr<UStaticMeshComponent> LidMesh;
+
+	UPROPERTY(VisibleAnywhere, Category = "Component")
+	TObjectPtr<UStaticMeshComponent> OpenEffectMesh;
 };

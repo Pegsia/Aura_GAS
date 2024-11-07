@@ -16,6 +16,10 @@ AAuraItemChest::AAuraItemChest()
 	LidMesh = CreateDefaultSubobject<UStaticMeshComponent>("LidMesh");
 	LidMesh->SetupAttachment(GetRootComponent());
 
+	OpenEffectMesh = CreateDefaultSubobject<UStaticMeshComponent>("OpenEffectMesh");
+	OpenEffectMesh->SetupAttachment(GetRootComponent());
+	OpenEffectMesh->SetVisibility(false, false);
+	
 	SetReplicates(true);
 }
 
@@ -51,9 +55,10 @@ void AAuraItemChest::LoadActor_Implementation()
 }
 
 // void AAuraItemChest::OpenChest_Implementation()
-void AAuraItemChest::OpenChest()
+void AAuraItemChest::OpenChest() const
 {
 	LidMesh->SetRelativeRotation(FRotator(110.f, 0.f, 0.f));
+	OpenEffectMesh->SetVisibility(true, false);
 }
 
 // void AAuraItemChest::SpawnItems_Implementation()
@@ -61,7 +66,7 @@ void AAuraItemChest::SpawnItems()
 {
 	FTransform SpawnTransform;
 	FVector SpawnLocation = BaseMesh->GetSocketLocation(SpawnSocketName);
-	SpawnTransform.SetLocation(SpawnLocation + GetActorForwardVector() * FMath::FRandRange(30.f, 100.f));
+	SpawnTransform.SetLocation(SpawnLocation + GetActorForwardVector() * FMath::FRandRange(80.f, 130.f));
 	SpawnTransform.SetRotation(GetActorRotation().Quaternion());
 	for(const TSubclassOf<AActor> ActorClass : ItemsToSpawn)
 	{
